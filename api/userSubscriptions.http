@@ -1,0 +1,49 @@
+@baseUrl =  http://localhost:3000/api/userSubscriptions
+
+# User API
+
+# @name Getall
+GET {{baseUrl}} 
+
+
+###
+# @name GetbyId
+GET {{baseUrl}}/64c290ee173cda17c307a2fa
+
+###
+
+# @name Create
+POST {{baseUrl}}/store
+Content-Type: application/json
+
+{
+"userId": "5f9b9b3b1c9d440000d9d0a1",
+"duration":"monthly",
+"endDate":"2020-11-01",
+"paymentAmount": 100000,
+"paymentMethod": "cash",
+"subscriptionId": "5f9b9b3b1c9d440000d9d0a1"
+}
+
+###
+# @name CreateMany
+POST {{baseUrl}}/store-many
+Content-Type: application/json
+
+
+###
+
+# @name Update
+PUT {{baseUrl}}/update/64c49abd0f65b44d75a7c931
+Content-Type: application/json
+
+{
+   "duration": "yearly"
+}
+
+###
+
+# @name Delete
+DELETE {{baseUrl}}/delete/64c49abd0f65b44d75a7c931
+
+###

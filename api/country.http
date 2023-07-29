@@ -1,0 +1,71 @@
+@baseUrl =  http://localhost:3000/api/countries
+
+# User API
+
+# @name Getall
+GET {{baseUrl}} 
+
+
+###
+# @name GetbyId
+GET {{baseUrl}}/64c290ee173cda17c307a2fa
+
+###
+
+# @name Create
+POST {{baseUrl}}/store
+Content-Type: application/json
+
+{
+    "name": "Phim ca nhạc"
+}
+
+###
+# @name CreateMany
+POST {{baseUrl}}/store-many
+Content-Type: application/json
+
+[
+  {
+    "name": "Hollywood",
+    "language": "Tiếng Anh",
+    "currency": "USD"
+  },
+  {
+    "name": "Ấn Độ",
+    "language": "Tiếng Hindi",
+    "currency": "INR"
+  },
+  {
+    "name": "Anh",
+    "language": "Tiếng Anh",
+    "currency": "GBP"
+  },
+  {
+    "name": "Pháp",
+    "language": "Tiếng Pháp",
+    "currency": "EUR"
+  },
+  {
+    "name": "Ý",
+    "language": "Tiếng Ý",
+    "currency": "EUR"
+  }
+]
+
+###
+
+# @name Update
+PUT {{baseUrl}}/update/64c290ee173cda17c307a2fa
+Content-Type: application/json
+
+{
+   "name": "demo mới"
+}
+
+###
+
+# @name Delete
+DELETE {{baseUrl}}/delete/64c290ee173cda17c307a2fa
+
+###

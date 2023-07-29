@@ -1,0 +1,64 @@
+@baseUrl =  http://localhost:3000/api/users
+
+# User API
+
+# @name Getall
+GET {{baseUrl}} 
+
+
+###
+# @name GetbyId
+GET {{baseUrl}}/64c290ee173cda17c307a2fa
+
+###
+
+# @name Create
+POST {{baseUrl}}/store
+Content-Type: application/json
+
+{
+  "_id": "64c290ee173cda17c307a2fa",
+  "fullName": "demo"
+}
+
+###
+# @name CreateMany
+POST {{baseUrl}}/store-many
+Content-Type: application/json
+
+[
+  {
+  "imageUrl": "https://example.com/banners/banner1.jpg",
+  "order": 1,
+  "link": "https://example.com/page1"
+},
+
+{
+  "imageUrl": "https://example.com/banners/banner2.jpg",
+  "order": 2,
+  "link": "https://example.com/page2"  
+},
+
+{
+  "imageUrl": "https://example.com/banners/banner3.jpg",
+  "order": 3,
+  "link": "https://example.com/page3"
+}
+]
+
+###
+
+# @name Update
+PUT {{baseUrl}}/update/64c290ee173cda17c307a2fa
+Content-Type: application/json
+
+{
+   "fullName": "demo mới"
+}
+
+###
+
+# @name Delete
+DELETE {{baseUrl}}/delete/64c290ee173cda17c307a2fa
+
+###
