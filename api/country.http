@@ -26,30 +26,61 @@ POST {{baseUrl}}/store-many
 Content-Type: application/json
 
 [
-  {
-    "name": "Hollywood",
-    "language": "Tiếng Anh",
-    "currency": "USD"
+ {
+    "name": "Philippines",
+    "code": "PH",
+    "language": "Filipino, English",
+    "currency": "Philippine peso",
+    "telephone": "+63"
   },
   {
-    "name": "Ấn Độ",
-    "language": "Tiếng Hindi",
-    "currency": "INR"
+    "name": "Myanmar",
+    "code": "MM",
+    "language": "Burmese",
+    "currency": "Burmese kyat",
+    "telephone": "+95"
   },
   {
-    "name": "Anh",
-    "language": "Tiếng Anh",
-    "currency": "GBP"
+    "name": "Cambodia",
+    "code": "KH",
+    "language": "Khmer",
+    "currency": "Cambodian riel",
+    "telephone": "+855"
   },
   {
-    "name": "Pháp",
-    "language": "Tiếng Pháp",
-    "currency": "EUR"
+    "name": "Laos",
+    "code": "LA",
+    "language": "Lao",
+    "currency": "Lao kip",
+    "telephone": "+856"
   },
   {
-    "name": "Ý",
-    "language": "Tiếng Ý",
-    "currency": "EUR"
+    "name": "Australia",
+    "code": "AU",
+    "language": "English",
+    "currency": "Australian dollar",
+    "telephone": "+61"
+  },
+  {
+    "name": "Canada",
+    "code": "CA",
+    "language": "English, French",
+    "currency": "Canadian dollar",
+    "telephone": "+1"
+  },
+  {
+    "name": "Germany",
+    "code": "DE",
+    "language": "German",
+    "currency": "Euro",
+    "telephone": "+49"
+  },
+  {
+    "name": "France",
+    "code": "FR",
+    "language": "French",
+    "currency": "Euro",
+    "telephone": "+33"
   }
 ]
 

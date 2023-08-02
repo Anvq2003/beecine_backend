@@ -1,4 +1,4 @@
-@baseUrl =  http://localhost:3000/api/subscriptions
+@baseUrl =  http://localhost:3000/api/profiles
 
 # User API
 
@@ -17,9 +17,8 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Gói Cơ bản",
-    "price": 100000,
-    "duration": 30
+    "name": "Phim ca nhạc",
+    "avatarUrl": "https://example.com/avatars/avatar1.jpg"
 }
 
 ###
@@ -41,6 +40,6 @@ Content-Type: application/json
 ###
 
 # @name Delete
-DELETE {{baseUrl}}/delete/64c290ee173cda17c307a2fa
+DELETE {{baseUrl}}/delete/64ca04fd4a3535573014cd4b
 
 ###

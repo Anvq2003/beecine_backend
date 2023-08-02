@@ -18,7 +18,9 @@ Content-Type: application/json
 
 {
   "_id": "64c290ee173cda17c307a2fa",
-  "fullName": "demo"
+  "avatarUrl": "https://example.com/avatars/avatar1.jpg",
+  "fullName": "demo",
+  "email": "quocan$"
 }
 
 ###

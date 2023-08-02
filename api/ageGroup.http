@@ -1,4 +1,4 @@
-@baseUrl =  http://localhost:3000/api/subscriptions
+@baseUrl =  http://localhost:3000/api/age-groups
 
 # User API
 
@@ -17,16 +17,15 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Gói Cơ bản",
-    "price": 100000,
-    "duration": 30
+"name": "demo",
+"description":  "demo",
+"minimum":  1
 }
 
 ###
 # @name CreateMany
 POST {{baseUrl}}/store-many
 Content-Type: application/json
-
 
 ###
 
@@ -41,6 +40,6 @@ Content-Type: application/json
 ###
 
 # @name Delete
-DELETE {{baseUrl}}/delete/64c290ee173cda17c307a2fa
+DELETE {{baseUrl}}/delete/64ca0544810d3f714e7c202f
 
 ###

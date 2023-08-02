@@ -3,14 +3,11 @@ const Schema = mongoose.Schema;
 
 const countrySchema = new Schema({
   name: { type: String, required: true },
-  slug: { type: String, required: true, unique: true },
+  code: { type: String, required: true },
   language: { type: String },
   currency: { type: String },
-  status: {
-    type: Boolean,
-    required: true,
-    default: true,
-  },
+  telephone: { type: String },
+  status: { type: String, enum: ['active', 'inactive'], default: 'active' },
 
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

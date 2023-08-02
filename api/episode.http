@@ -1,4 +1,4 @@
-@baseUrl =  http://localhost:3000/api/subscriptions
+@baseUrl =  http://localhost:3000/api/episodes
 
 # User API
 
@@ -17,9 +17,12 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Gói Cơ bản",
-    "price": 100000,
-    "duration": 30
+  "movieId": "64c290ee173cda17c307a2fa",
+  "thumbnailUrl": "https://www.youtube.com/watch?v=1roy4o4tqQM",
+  "title": "demo",
+  "description" : "demo",
+  "airDate": "2020-11-01",
+  "duration": 120
 }
 
 ###
@@ -41,6 +44,6 @@ Content-Type: application/json
 ###
 
 # @name Delete
-DELETE {{baseUrl}}/delete/64c290ee173cda17c307a2fa
+DELETE {{baseUrl}}/delete/64ca0980a202ffce3e50fd45
 
 ###

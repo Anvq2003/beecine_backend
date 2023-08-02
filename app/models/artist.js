@@ -1,13 +1,18 @@
 const mongoose = require('mongoose');
 
-const genre = new mongoose.Schema({
+const artistSchema = new mongoose.Schema({
+  avatarUrl: { type: String, required: true },
   name: { type: String, required: true },
   slug: { type: String, required: true, unique: true },
-  isChildren: { type: Boolean, required: true, default: false },
+  role: { type: String, required: true },
+  bio: { type: String },
+  country: { type: String, required: true },
   status: { type: String, enum: ['active', 'inactive'], default: 'active' },
 
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Genre', genre);
+const Artist = mongoose.model('Artist', artistSchema);
+
+module.exports = Artist;

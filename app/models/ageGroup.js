@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 
-const genre = new mongoose.Schema({
+const ageGroupSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  slug: { type: String, required: true, unique: true },
-  isChildren: { type: Boolean, required: true, default: false },
+  description: { type: String },
+  minimum: { type: Number, required: true },
   status: { type: String, enum: ['active', 'inactive'], default: 'active' },
 
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Genre', genre);
+const AgeGroup = mongoose.model('AgeGroup', ageGroupSchema);
+
+module.exports = AgeGroup;

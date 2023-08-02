@@ -1,0 +1,102 @@
+@baseUrl =  http://localhost:3000/api/comments
+
+# User API
+
+# @name Getall
+GET {{baseUrl}} 
+
+
+###
+# @name GetbyId
+GET {{baseUrl}}/64c4c69b8f02e1f31bdc33af
+
+###
+
+# @name Create
+POST {{baseUrl}}/store
+Content-Type: application/json
+
+{
+  "profileId": "64c290ee173cda17c307a2fa",
+  "movieId": "64c290ee173cda17c307a2fa",
+  "comment": "demo"
+}
+
+###
+
+# @name Create
+POST {{baseUrl}}/reply
+Content-Type: application/json
+
+{
+  "commentId":"64c9f4add9d2246b5d568107",
+  "profileId": "64c290ee173cda17c307a2fa",
+  "comment": "demo"
+}
+
+###
+
+# @name ToggleLike
+POST {{baseUrl}}/like-dislike
+Content-Type: application/json
+
+{
+  "commentId":"64c9f4add9d2246b5d568107",
+  "profileId": "64c290ee173cda17c307a2fa",
+  "action": "dislike"
+}
+
+###
+
+# @name ToggleReplyLike
+POST {{baseUrl}}/replies/like-dislike
+Content-Type: application/json
+
+{
+  "commentId":"64c9f4add9d2246b5d568107",
+  "profileId": "64c290ee173cda17c307a2fa",
+  "replyId":"64c9f512fe36fb77e3c4226c",
+  "action": "like"
+}
+
+###
+# @name CreateMany
+POST {{baseUrl}}/store-many
+Content-Type: application/json
+
+[
+  {
+  "imageUrl": "https://example.com/banners/banner1.jpg",
+  "order": 1,
+  "link": "https://example.com/page1"
+},
+
+{
+  "imageUrl": "https://example.com/banners/banner2.jpg",
+  "order": 2,
+  "link": "https://example.com/page2"  
+},
+
+{
+  "imageUrl": "https://example.com/banners/banner3.jpg",
+  "order": 3,
+  "link": "https://example.com/page3"
+}
+]
+
+###
+
+# @name Update
+PUT {{baseUrl}}/update/64c290ee173cda17c307a2fa
+Content-Type: application/json
+
+{
+   "name": "demo mới"
+}
+
+###
+
+# @name Delete
+DELETE {{baseUrl}}/delete/64c4c69b8f02e1f31bdc33af
+
+###

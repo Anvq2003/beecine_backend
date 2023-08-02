@@ -1,4 +1,4 @@
-@baseUrl =  http://localhost:3000/api/userSubscriptions
+@baseUrl =  http://localhost:3000/api/bills
 
 # User API
 
@@ -17,12 +17,12 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-"userId": "5f9b9b3b1c9d440000d9d0a1",
-"duration":"monthly",
-"endDate":"2020-11-01",
-"paymentAmount": 100000,
-"paymentMethod": "cash",
-"subscriptionId": "5f9b9b3b1c9d440000d9d0a1"
+   "userId": "5f9b9b3b1c9d440000d9d0a1",
+   "subscriptionId": "5f9b9b3b1c9d440000d9d0a1",
+   "endDate":"2020-11-01",
+   "startDate":"2020-11-01",
+   "total": 100000,
+   "paymentMethod": "cash"
 }
 
 ###
@@ -34,7 +34,7 @@ Content-Type: application/json
 ###
 
 # @name Update
-PUT {{baseUrl}}/update/64c49abd0f65b44d75a7c931
+PUT {{baseUrl}}/update/5f9b9b3b1c9d440000d9d0a1
 Content-Type: application/json
 
 {
@@ -44,6 +44,6 @@ Content-Type: application/json
 ###
 
 # @name Delete
-DELETE {{baseUrl}}/delete/64c49abd0f65b44d75a7c931
+DELETE {{baseUrl}}/delete/5f9b9b3b1c9d440000d9d0a1
 
 ###

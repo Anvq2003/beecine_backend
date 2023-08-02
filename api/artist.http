@@ -1,9 +1,9 @@
-@baseUrl =  http://localhost:3000/api/genres
+@baseUrl =  http://localhost:3000/api/artists
 
 # User API
 
 # @name Getall
-GET {{baseUrl}}?slug=phim-ca-nhac
+GET {{baseUrl}}
 
 
 ###
@@ -17,7 +17,12 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Phim ca nhạc"
+    "avatarUrl":"Demo",
+    "name":"Demo",
+    "slug":"Demo",
+    "role":"Demo",
+    "bio":"Demo",
+    "country":"Demo"
 }
 
 ###

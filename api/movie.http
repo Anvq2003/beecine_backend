@@ -1,0 +1,79 @@
+@baseUrl =  http://localhost:3000/api/movies
+
+# User API
+
+# @name Getall
+GET {{baseUrl}} 
+
+
+###
+# @name GetbyId
+GET {{baseUrl}}/64c290ee173cda17c307a2fa
+
+###
+
+# @name Create
+POST {{baseUrl}}/store
+Content-Type: application/json
+
+{
+  "genres": [
+    {
+      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
+      "slug": "action",
+      "name": "Action"
+    }
+  ],
+  "contry": {
+      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
+      "name": "Action"
+    },
+  "cast": [
+    {
+      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
+      "slug": "action",
+      "name": "Action"
+    }
+  ],
+  "director": [
+    {
+      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
+      "slug": "action",
+      "name": "Action"
+    }
+  ],
+  "title": "demo",
+  "description" : "demo",
+  "releaseDate": "2020-11-01",
+  "isSeries": false,
+  "duration": 120,
+  "Rating": 5,
+  "thumbnailUrl": "https://www.youtube.com/watch?v=1roy4o4tqQM",
+  "trailerUrl": "https://www.youtube.com/watch?v=1roy4o4tqQM",
+  "tags": [
+    "demo"
+  ]
+}
+
+###
+# @name CreateMany
+POST {{baseUrl}}/store-many
+Content-Type: application/json
+
+
+###
+
+# @name Update
+PUT {{baseUrl}}/update/64c290ee173cda17c307a2fa
+Content-Type: application/json
+
+{
+   "name": "demo mới"
+}
+
+###
+
+# @name Delete
+DELETE {{baseUrl}}/delete/64ca077850513d08c92f7e15
+
+###

@@ -1,17 +1,31 @@
+const siteRouter = require('./site');
+const bannerRouter = require('./banners');
 const genresRouter = require('./genres');
 const countriesRouter = require('./countries');
 const subscriptionsRouter = require('./subscriptions');
-const userSubscriptionsRouter = require('./userSubscriptions');
-const bannerRouter = require('./banners');
+const billsRouter = require('./bills');
 const usersRouter = require('./users');
+const commentsRouter = require('./comments');
+const profilesRouter = require('./profiles');
+const ageGroupsRouter = require('./ageGroups');
+const artistsRouter = require('./artists');
+const moviesRouter = require('./movies');
+const episodesRouter = require('./episodes');
 
 function routes(app) {
+  app.use('/', siteRouter);
+  app.use('/api/banners', bannerRouter);
   app.use('/api/genres', genresRouter);
   app.use('/api/countries', countriesRouter);
-  app.use('/api/banners', bannerRouter);
-  app.use('/api/users', usersRouter);
   app.use('/api/subscriptions', subscriptionsRouter);
-  app.use('/api/userSubscriptions', userSubscriptionsRouter);
+  app.use('/api/bills', billsRouter);
+  app.use('/api/users', usersRouter);
+  app.use('/api/comments', commentsRouter);
+  app.use('/api/profiles', profilesRouter);
+  app.use('/api/age-groups', ageGroupsRouter);
+  app.use('/api/artists', artistsRouter);
+  app.use('/api/movies', moviesRouter);
+  app.use('/api/episodes', episodesRouter);
 }
 
 module.exports = routes;

@@ -1,36 +1,36 @@
 const mongoose = require('mongoose');
-const UserSubscriptionModel = require('../models/userSubscription');
+const BillModel = require('../models/bill');
 
-class UserSubscriptionController {
-  // [GET] api/userSubscriptions
+class BillController {
+  // [GET] api/bills
   async getQuery(req, res) {
     try {
       const query = Object.assign({}, req.query);
-      const data = await UserSubscriptionModel.find(query);
+      const data = await BillModel.find(query);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error);
     }
   }
 
-  // [GET] api/userSubscriptions/:id
+  // [GET] api/bills/:id
   async getOne(req, res) {
     try {
       const { id } = req.params;
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ error: 'Invalid product ID' });
       }
-      const data = await UserSubscriptionModel.findById(req.params.id);
+      const data = await BillModel.findById(req.params.id);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error);
     }
   }
 
-  // [POST] api/userSubscriptions/store
+  // [POST] api/bills/store
   async create(req, res) {
     try {
-      const data = new UserSubscriptionModel(req.body);
+      const data = new BillModel(req.body);
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);
     } catch (error) {
@@ -38,30 +38,30 @@ class UserSubscriptionController {
     }
   }
 
-  // [POST] api/userSubscriptions/store-many
+  // [POST] api/bills/store-many
   async createMany(req, res) {
     try {
-      const data = await UserSubscriptionModel.insertMany(req.body);
+      const data = await BillModel.insertMany(req.body);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error);
     }
   }
 
-  // [PUT] api/userSubscriptions/update/:id
+  // [PUT] api/bills/update/:id
   async update(req, res) {
     try {
-      const data = await UserSubscriptionModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
+      const data = await BillModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error);
     }
   }
 
-  // [DELETE] api/userSubscriptions/delete/:id
+  // [DELETE] api/bills/delete/:id
   async delete(req, res) {
     try {
-      await UserSubscriptionModel.findByIdAndDelete(req.params.id);
+      await BillModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {
       res.status(500).json(error);
@@ -69,4 +69,4 @@ class UserSubscriptionController {
   }
 }
 
-module.exports = new UserSubscriptionController();
+module.exports = new BillController();
