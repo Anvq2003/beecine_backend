@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const MovieController = require('../app/controllers/MovieController');
+const MovieController = require('../controllers/MovieController');
 
 router.get('/', MovieController.getQuery);
 router.get('/:id', MovieController.getOne);

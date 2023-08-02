@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const EpisodeController = require('../app/controllers/EpisodeController');
+const EpisodeController = require('../controllers/EpisodeController');
 
 router.get('/', EpisodeController.getQuery);
 router.get('/:id', EpisodeController.getOne);

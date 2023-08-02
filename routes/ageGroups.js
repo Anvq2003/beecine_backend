@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const AgeGroupController = require('../app/controllers/AgeGroupController');
+const AgeGroupController = require('../controllers/AgeGroupController');
 
 router.get('/', AgeGroupController.getQuery);
 router.get('/:id', AgeGroupController.getOne);

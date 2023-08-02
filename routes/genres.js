@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const GenreController = require('../app/controllers/GenreController');
+const GenreController = require('../controllers/GenreController');
 
 router.get('/', GenreController.getQuery);
 router.get('/:id', GenreController.getOne);

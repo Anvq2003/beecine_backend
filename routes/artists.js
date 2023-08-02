@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const ArtistController = require('../app/controllers/ArtistController');
+const ArtistController = require('../controllers/ArtistController');
 
 router.get('/', ArtistController.getQuery);
 router.get('/:id', ArtistController.getOne);

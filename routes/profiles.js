@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const ProfileController = require('../app/controllers/ProfileController');
+const ProfileController = require('../controllers/ProfileController');
 
 router.get('/', ProfileController.getQuery);
 router.get('/:id', ProfileController.getOne);

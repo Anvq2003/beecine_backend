@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const BillController = require('../app/controllers/BillController');
+const BillController = require('../controllers/BillController');
 
 router.get('/', BillController.getQuery);
 router.get('/:id', BillController.getOne);

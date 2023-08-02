@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const CountryController = require('../app/controllers/CountryController');
+const CountryController = require('../controllers/CountryController');
 
 router.get('/', CountryController.getQuery);
 router.get('/:id', CountryController.getOne);

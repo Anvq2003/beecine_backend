@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const BannerController = require('../app/controllers/BannerController');
+const BannerController = require('../controllers/BannerController');
 
 router.get('/', BannerController.getQuery);
 router.get('/:id', BannerController.getOne);

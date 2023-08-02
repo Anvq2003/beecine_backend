@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const SubscriptionController = require('../app/controllers/SubscriptionController');
+const SubscriptionController = require('../controllers/SubscriptionController');
 
 router.get('/', SubscriptionController.getQuery);
 router.get('/:id', SubscriptionController.getOne);
