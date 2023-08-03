@@ -1,21 +1,26 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
 
-const billSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  subscriptionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' },
-  startDate: { type: Date, default: Date.now },
-  endDate: { type: Date },
-  status: {
-    type: String,
-    enum: ['active', 'expired', 'cancelled'],
-    default: 'active',
+const billSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    subscriptionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' },
+    startDate: { type: Date, default: Date.now },
+    endDate: { type: Date },
+    status: {
+      type: String,
+      enum: ['active', 'expired', 'cancelled'],
+      default: 'active',
+    },
+    total: { type: Number },
+    paymentMethod: { type: String },
   },
-  total: { type: Number },
-  paymentMethod: { type: String },
+  {
+    timestamps: true,
+  },
+);
 
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+billSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
 
 const Bill = mongoose.model('Bill', billSchema);
 

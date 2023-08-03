@@ -153,7 +153,48 @@ class CommentController {
   }
 
   // [DELETE] api/comments/delete/:id
-  async delete(req, res) {
+  async delete(req, res, next) {
+    try {
+      await Comment.delete({ _id: req.params.id });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/comments/delete-many
+  async deleteMany(req, res, next) {
+    const { ids } = req.body;
+    try {
+      await Comment.deleteMany({ _id: { $in: ids } });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [GET] api/comments/trash
+  async getTrash(req, res, next) {
+    try {
+      const data = await Comment.findDeleted();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [PATCH] api/comments/restore/:id
+  async restore(req, res, next) {
+    try {
+      const data = await Comment.restore({ _id: req.params.id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/comments/force/:id
+  async forceDelete(req, res, next) {
     try {
       await Comment.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');

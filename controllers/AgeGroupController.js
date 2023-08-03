@@ -61,6 +61,47 @@ class AgeGroupController {
   // [DELETE] api/age-groups/delete/:id
   async delete(req, res, next) {
     try {
+      await AgeGroupModel.delete({ _id: req.params.id });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/age-groups/delete-many
+  async deleteMany(req, res, next) {
+    const { ids } = req.body;
+    try {
+      await AgeGroupModel.deleteMany({ _id: { $in: ids } });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [GET] api/age-groups/trash
+  async getTrash(req, res, next) {
+    try {
+      const data = await AgeGroupModel.findDeleted();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [PATCH] api/age-groups/restore/:id
+  async restore(req, res, next) {
+    try {
+      const data = await AgeGroupModel.restore({ _id: req.params.id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/age-groups/force/:id
+  async forceDelete(req, res, next) {
+    try {
       await AgeGroupModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {

@@ -3,12 +3,12 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}?slug=phim-ca-nhac
+GET {{baseUrl}}
 
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/64c9ee2f999d05165d828c68
+GET {{baseUrl}}/64cb7b72da3e0702f7273acf
 
 ###
 
@@ -17,22 +17,48 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Phim ca nhạc"
+    "name": "Phim Lẻ"
 }
 
 ###
 
 # @name Update
-PUT {{baseUrl}}/update/64c290ee173cda17c307a2fa
+PUT {{baseUrl}}/update/64cb7b176f9c18a1ac68e7ab
 Content-Type: application/json
 
 {
-   "name": "demo mới"
+   "name": "Phim hài hước"
 }
 
 ###
 
 # @name Delete
-DELETE {{baseUrl}}/delete/64c9ee2f999d05165d828c68
+DELETE {{baseUrl}}/delete/64cb7f54f921928736b32b80
 
 ###
+
+# @name DeleteMany
+POST {{baseUrl}}/delete-many
+Content-Type: application/json
+
+{
+    "ids": [
+        "64cb784edbeafd46df22e8b1",
+        "64cb6b8569845c75fbab1d76",
+        "64cb7858dbeafd46df22e8b4",
+        "64cb785ddbeafd46df22e8b7",
+        "64cb7aab6f9c18a1ac68e7a7",
+        "64cb7b72da3e0702f7273acf"
+        ]
+}
+
+###
+# @name Trash
+GET {{baseUrl}}/trash
+
+###
+# @name Restore
+PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
+###
+# @name ForceDelete
+DELETE {{baseUrl}}/force/64cb7f5af921928736b32b83

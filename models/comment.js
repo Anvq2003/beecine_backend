@@ -1,34 +1,44 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
 
-const replySchema = new mongoose.Schema({
-  profileId: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
-  comment: { type: String, required: true },
-  likes: { type: Array, default: [] },
-  dislikes: { type: Array, default: [] },
-  status: {
-    type: String,
-    enum: ['active', 'inactive'],
-    default: 'active',
+const replySchema = new mongoose.Schema(
+  {
+    profileId: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
+    comment: { type: String, required: true },
+    likes: { type: Array, default: [] },
+    dislikes: { type: Array, default: [] },
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active',
+    },
   },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+  {
+    timestamps: true,
+  },
+);
 
-const commentSchema = new mongoose.Schema({
-  profileId: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
-  movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
-  comment: { type: String },
-  likes: { type: Array, default: [] },
-  dislikes: { type: Array, default: [] },
-  status: {
-    type: String,
-    enum: ['active', 'inactive'],
-    default: 'active',
+const commentSchema = new mongoose.Schema(
+  {
+    profileId: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
+    movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
+    comment: { type: String },
+    likes: { type: Array, default: [] },
+    dislikes: { type: Array, default: [] },
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active',
+    },
+    replies: [replySchema],
   },
-  replies: [replySchema],
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+  {
+    timestamps: true,
+  },
+);
+
+commentSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+replySchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
 
 const Comment = mongoose.model('Comment', commentSchema);
 const Reply = mongoose.model('Reply', replySchema);

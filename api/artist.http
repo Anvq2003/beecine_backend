@@ -18,8 +18,7 @@ Content-Type: application/json
 
 {
     "avatarUrl":"Demo",
-    "name":"Demo",
-    "slug":"Demo",
+    "name":"Demo 12",
     "role":"Demo",
     "bio":"Demo",
     "country":"Demo"

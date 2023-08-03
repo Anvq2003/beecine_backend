@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const unidecode = require('unidecode');
 const EpisodeModel = require('../models/episode');
 
 class EpisodeController {
@@ -31,11 +30,6 @@ class EpisodeController {
   // [POST] api/episodes/store
   async create(req, res, next) {
     try {
-      req.body.slug = unidecode(req.body.title)
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-        .replace(/-+/g, '-');
       const data = new EpisodeModel(req.body);
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);
@@ -47,11 +41,6 @@ class EpisodeController {
   // [PUT] api/episodes/update/:id
   async update(req, res, next) {
     try {
-      req.body.slug = unidecode(req.body.title)
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-        .replace(/-+/g, '-');
       const data = await EpisodeModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       res.status(200).json(data);
     } catch (error) {
@@ -61,6 +50,47 @@ class EpisodeController {
 
   // [DELETE] api/episodes/delete/:id
   async delete(req, res, next) {
+    try {
+      await EpisodeModel.delete({ _id: req.params.id });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/episodes/delete-many
+  async deleteMany(req, res, next) {
+    const { ids } = req.body;
+    try {
+      await EpisodeModel.deleteMany({ _id: { $in: ids } });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [GET] api/episodes/trash
+  async getTrash(req, res, next) {
+    try {
+      const data = await EpisodeModel.findDeleted();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [PATCH] api/episodes/restore/:id
+  async restore(req, res, next) {
+    try {
+      const data = await EpisodeModel.restore({ _id: req.params.id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/episodes/force/:id
+  async forceDelete(req, res, next) {
     try {
       await EpisodeModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');

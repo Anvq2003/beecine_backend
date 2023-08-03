@@ -61,6 +61,47 @@ class ProfileController {
   // [DELETE] api/profiles/delete/:id
   async delete(req, res, next) {
     try {
+      await ProfileModel.delete({ _id: req.params.id });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/profiles/delete-many
+  async deleteMany(req, res, next) {
+    const { ids } = req.body;
+    try {
+      await ProfileModel.deleteMany({ _id: { $in: ids } });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [GET] api/profiles/trash
+  async getTrash(req, res, next) {
+    try {
+      const data = await ProfileModel.findDeleted();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [PATCH] api/profiles/restore/:id
+  async restore(req, res, next) {
+    try {
+      const data = await ProfileModel.restore({ _id: req.params.id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/profiles/force/:id
+  async forceDelete(req, res, next) {
+    try {
       await ProfileModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {

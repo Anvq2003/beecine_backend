@@ -61,6 +61,47 @@ class SubscriptionController {
   // [DELETE] api/subscriptions/delete/:id
   async delete(req, res, next) {
     try {
+      await SubscriptionModel.delete({ _id: req.params.id });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/subscriptions/delete-many
+  async deleteMany(req, res, next) {
+    const { ids } = req.body;
+    try {
+      await SubscriptionModel.deleteMany({ _id: { $in: ids } });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [GET] api/subscriptions/trash
+  async getTrash(req, res, next) {
+    try {
+      const data = await SubscriptionModel.findDeleted();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [PATCH] api/subscriptions/restore/:id
+  async restore(req, res, next) {
+    try {
+      const data = await SubscriptionModel.restore({ _id: req.params.id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/subscriptions/force/:id
+  async forceDelete(req, res, next) {
+    try {
       await SubscriptionModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {

@@ -30,7 +30,7 @@ Content-Type: application/json
 ###
 
 # @name Update
-PUT {{baseUrl}}/update/64c290ee173cda17c307a2fa
+PUT {{baseUrl}}/update/64cba147782f6dd5332a968a
 Content-Type: application/json
 
 {
@@ -40,6 +40,16 @@ Content-Type: application/json
 ###
 
 # @name Delete
-DELETE {{baseUrl}}/delete/64ca04fd4a3535573014cd4b
+DELETE {{baseUrl}}/delete/64cba1a0782f6dd5332a968e
 
 ###
+# @name Trash
+GET {{baseUrl}}/trash
+
+###
+# @name Restore
+PATCH {{baseUrl}}/restore/64cba147782f6dd5332a968a
+###
+
+# @name ForceDelete
+DELETE {{baseUrl}}/force/64cba1a0782f6dd5332a968e

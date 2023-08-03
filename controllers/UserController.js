@@ -58,8 +58,49 @@ class UserController {
     }
   }
 
-  // [DELETE] api/user/delete/:id
+  // [DELETE] api/users/delete/:id
   async delete(req, res, next) {
+    try {
+      await UserModel.delete({ _id: req.params.id });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/users/delete-many
+  async deleteMany(req, res, next) {
+    const { ids } = req.body;
+    try {
+      await UserModel.deleteMany({ _id: { $in: ids } });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [GET] api/users/trash
+  async getTrash(req, res, next) {
+    try {
+      const data = await UserModel.findDeleted();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [PATCH] api/users/restore/:id
+  async restore(req, res, next) {
+    try {
+      const data = await UserModel.restore({ _id: req.params.id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/users/force/:id
+  async forceDelete(req, res, next) {
     try {
       await UserModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');

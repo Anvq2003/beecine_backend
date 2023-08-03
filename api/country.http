@@ -100,3 +100,7 @@ Content-Type: application/json
 DELETE {{baseUrl}}/delete/64c290ee173cda17c307a2fa
 
 ###
+
+# @name DeleteMany
+DELETE {{baseUrl}}/delete
+

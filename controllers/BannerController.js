@@ -61,6 +61,47 @@ class BannerController {
   // [DELETE] api/banners/delete/:id
   async delete(req, res, next) {
     try {
+      await BannerModel.delete({ _id: req.params.id });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/banners/delete-many
+  async deleteMany(req, res, next) {
+    const { ids } = req.body;
+    try {
+      await BannerModel.deleteMany({ _id: { $in: ids } });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [GET] api/banners/trash
+  async getTrash(req, res, next) {
+    try {
+      const data = await BannerModel.findDeleted();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [PATCH] api/banners/restore/:id
+  async restore(req, res, next) {
+    try {
+      const data = await BannerModel.restore({ _id: req.params.id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/banners/force/:id
+  async forceDelete(req, res, next) {
+    try {
       await BannerModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {

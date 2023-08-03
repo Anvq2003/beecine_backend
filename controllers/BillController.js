@@ -59,7 +59,48 @@ class BillController {
   }
 
   // [DELETE] api/bills/delete/:id
-  async delete(req, res) {
+  async delete(req, res, next) {
+    try {
+      await BillModel.delete({ _id: req.params.id });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/bills/delete-many
+  async deleteMany(req, res, next) {
+    const { ids } = req.body;
+    try {
+      await BillModel.deleteMany({ _id: { $in: ids } });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [GET] api/bills/trash
+  async getTrash(req, res, next) {
+    try {
+      const data = await BillModel.findDeleted();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [PATCH] api/bills/restore/:id
+  async restore(req, res, next) {
+    try {
+      const data = await BillModel.restore({ _id: req.params.id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/bills/force/:id
+  async forceDelete(req, res, next) {
     try {
       await BillModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');

@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
-const unidecode = require('unidecode');
 const ArtistModel = require('../models/artist');
 
 class ArtistController {
-  // [GET] api/genres
+  // [GET] api/artists
   async getQuery(req, res, next) {
     try {
       const query = Object.assign({}, req.query);
@@ -14,7 +13,7 @@ class ArtistController {
     }
   }
 
-  // [GET] api/genres/:id
+  // [GET] api/artists/:id
   async getOne(req, res, next) {
     try {
       const { id } = req.params;
@@ -28,14 +27,9 @@ class ArtistController {
     }
   }
 
-  // [POST] api/genres/store
+  // [POST] api/artists/store
   async create(req, res, next) {
     try {
-      req.body.slug = unidecode(req.body.name)
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-        .replace(/-+/g, '-');
       const data = new ArtistModel(req.body);
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);
@@ -44,14 +38,9 @@ class ArtistController {
     }
   }
 
-  // [PUT] api/genres/update/:id
+  // [PUT] api/artists/update/:id
   async update(req, res, next) {
     try {
-      req.body.slug = unidecode(req.body.name)
-        .toLowerCase()
-        .replace(/ /g, '-')
-        .replace(/[^\w-]+/g, '')
-        .replace(/-+/g, '-');
       const data = await ArtistModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       res.status(200).json(data);
     } catch (error) {
@@ -59,8 +48,49 @@ class ArtistController {
     }
   }
 
-  // [DELETE] api/genres/delete/:id
+  // [DELETE] api/artists/delete/:id
   async delete(req, res, next) {
+    try {
+      await ArtistModel.delete({ _id: req.params.id });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/artists/delete-many
+  async deleteMany(req, res, next) {
+    const { ids } = req.body;
+    try {
+      await ArtistModel.deleteMany({ _id: { $in: ids } });
+      res.status(200).json('Deleted successfully');
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [GET] api/artists/trash
+  async getTrash(req, res, next) {
+    try {
+      const data = await ArtistModel.findDeleted();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [PATCH] api/artists/restore/:id
+  async restore(req, res, next) {
+    try {
+      const data = await ArtistModel.restore({ _id: req.params.id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  // [DELETE] api/artists/force/:id
+  async forceDelete(req, res, next) {
     try {
       await ArtistModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
