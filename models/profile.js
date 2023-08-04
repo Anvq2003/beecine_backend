@@ -16,7 +16,7 @@ const profileSchema = new mongoose.Schema(
       },
     ],
     favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Episode' }],
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,

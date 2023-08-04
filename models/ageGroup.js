@@ -6,7 +6,7 @@ const ageGroupSchema = new mongoose.Schema(
     name: { type: String, required: true },
     description: { type: String },
     minimum: { type: Number, required: true },
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,

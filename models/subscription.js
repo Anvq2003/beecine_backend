@@ -8,7 +8,7 @@ const subscriptionSchema = new mongoose.Schema(
     duration: { type: Number, required: true },
     benefits: [{ type: String }],
     isFeatured: { type: Boolean, default: false },
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,

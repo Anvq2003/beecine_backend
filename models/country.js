@@ -9,7 +9,7 @@ const countrySchema = new Schema(
     language: { type: String },
     currency: { type: String },
     telephone: { type: String },
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,

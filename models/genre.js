@@ -7,7 +7,7 @@ const genre = new mongoose.Schema(
     name: { type: String, required: true },
     slug: { type: String, slug: 'name', unique: true },
     isChildren: { type: Boolean, required: true, default: false },
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,

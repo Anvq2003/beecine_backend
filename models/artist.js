@@ -10,7 +10,7 @@ const artistSchema = new mongoose.Schema(
     role: { type: String, required: true },
     bio: { type: String },
     country: { type: String, required: true },
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,

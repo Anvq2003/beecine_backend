@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
     points: { type: Number, default: 0 },
     subscriptionType: { type: String, default: 'free' },
     profiles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile' }],
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,

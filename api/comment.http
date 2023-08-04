@@ -100,3 +100,25 @@ Content-Type: application/json
 DELETE {{baseUrl}}/delete/64c4c69b8f02e1f31bdc33af
 
 ###
+###
+# @name DeleteMany
+POST {{baseUrl}}/delete-many
+Content-Type: application/json
+
+{
+    "ids": [
+        "64cb784edbeafd46df22e8b1",
+        ]
+}
+
+###
+# @name Trash
+GET {{baseUrl}}/trash
+
+###
+# @name Restore
+PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
+
+###
+# @name ForceDelete
+DELETE {{baseUrl}}/force/64cb7f5af921928736b32b83

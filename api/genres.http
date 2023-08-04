@@ -44,11 +44,6 @@ Content-Type: application/json
 {
     "ids": [
         "64cb784edbeafd46df22e8b1",
-        "64cb6b8569845c75fbab1d76",
-        "64cb7858dbeafd46df22e8b4",
-        "64cb785ddbeafd46df22e8b7",
-        "64cb7aab6f9c18a1ac68e7a7",
-        "64cb7b72da3e0702f7273acf"
         ]
 }
 
@@ -59,6 +54,7 @@ GET {{baseUrl}}/trash
 ###
 # @name Restore
 PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
+
 ###
 # @name ForceDelete
 DELETE {{baseUrl}}/force/64cb7f5af921928736b32b83

@@ -7,11 +7,7 @@ const replySchema = new mongoose.Schema(
     comment: { type: String, required: true },
     likes: { type: Array, default: [] },
     dislikes: { type: Array, default: [] },
-    status: {
-      type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
-    },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,
@@ -25,11 +21,7 @@ const commentSchema = new mongoose.Schema(
     comment: { type: String },
     likes: { type: Array, default: [] },
     dislikes: { type: Array, default: [] },
-    status: {
-      type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
-    },
+    status: { type: Boolean, default: true },
     replies: [replySchema],
   },
   {

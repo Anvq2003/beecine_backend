@@ -14,7 +14,7 @@ const episodeSchema = new mongoose.Schema(
     number: { type: Number },
     duration: { type: Number },
     airDate: { type: Date, required: true },
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,

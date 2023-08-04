@@ -53,7 +53,7 @@ const movieSchema = new mongoose.Schema(
     tags: { type: [String] },
     totalFavorites: { type: Number, default: 0 },
     totalComments: { type: Number, default: 0 },
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,
