@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const UserModel = require('../models/user');
+const { uploadImageSingle } = require('../services/uploadServices');
 
 class UserController {
   // [GET] api/user
@@ -61,6 +62,10 @@ class UserController {
   // [DELETE] api/users/delete/:id
   async delete(req, res, next) {
     try {
+      const file = req.file;
+      const uploadedFile = await uploadImageSingle(file);
+      req.body.avatarUrl = uploadedFile;
+
       await UserModel.delete({ _id: req.params.id });
       res.status(200).json('Deleted successfully');
     } catch (error) {

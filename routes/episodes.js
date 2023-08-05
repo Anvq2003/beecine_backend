@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
+const upload = require('../middlewares/multer');
 const EpisodeController = require('../controllers/EpisodeController');
 
 router.get('/', EpisodeController.getQuery);
 router.get('/trash', EpisodeController.getTrash);
 router.get('/:id', EpisodeController.getOne);
-router.post('/store', EpisodeController.create);
+router.post('/store', upload.single('image'), EpisodeController.create);
 router.put('/update/:id', EpisodeController.update);
 router.delete('/delete/:id', EpisodeController.delete);
 router.patch('/restore/:id', EpisodeController.restore);

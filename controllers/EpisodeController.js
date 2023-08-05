@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const EpisodeModel = require('../models/episode');
+const { uploadImageSingle } = require('../services/uploadServices');
 
 class EpisodeController {
   // [GET] api/episodes
@@ -30,6 +31,10 @@ class EpisodeController {
   // [POST] api/episodes/store
   async create(req, res, next) {
     try {
+      const file = req.file;
+      const uploadedFile = await uploadImageSingle(file);
+      req.body.thumbnailUrl = uploadedFile;
+
       const data = new EpisodeModel(req.body);
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);

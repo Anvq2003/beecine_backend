@@ -1,13 +1,22 @@
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var cors = require('cors');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors');
+const admin = require('firebase-admin');
+const serviceAccount = require('./beecine-key-firebase.json');
 
-var { connect } = require('./config/db.config');
-var routes = require('./routes');
+const { connect } = require('./config/db.config');
 
-var app = express();
+const routes = require('./routes');
+
+const app = express();
+
+// Initialize Firebase Admin
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: 'beecine-afb84.appspot.com',
+});
 
 // Connect to DB
 connect();

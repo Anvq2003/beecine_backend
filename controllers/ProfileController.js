@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const ProfileModel = require('../models/profile');
+const { uploadImageSingle } = require('../services/uploadServices');
 
 class ProfileController {
   // [GET] api/profiles
@@ -30,6 +31,10 @@ class ProfileController {
   // [POST] api/profiles/store
   async create(req, res, next) {
     try {
+      const file = req.file;
+      const uploadedFile = await uploadImageSingle(file);
+      req.body.avatarUrl = uploadedFile;
+
       const data = new ProfileModel(req.body);
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);

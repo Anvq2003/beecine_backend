@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const BannerModel = require('../models/banner');
-
+const { uploadImageSingle } = require('../services/uploadServices');
 class BannerController {
   // [GET] api/banners
   async getQuery(req, res, next) {
@@ -41,6 +41,10 @@ class BannerController {
   // [POST] api/banners/store-many
   async createMany(req, res, next) {
     try {
+      const file = req.file;
+      const uploadedFile = await uploadImageSingle(file);
+      req.body.imageUrl = uploadedFile;
+
       const data = await BannerModel.insertMany(req.body);
       res.status(200).json(data);
     } catch (error) {

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const MovieModel = require('../models/movie');
+const { uploadImageSingle } = require('../services/uploadServices');
 
 class MovieController {
   // [GET] api/movies
@@ -30,6 +31,10 @@ class MovieController {
   // [POST] api/movies/store
   async create(req, res, next) {
     try {
+      const file = req.file;
+      const uploadedFile = await uploadImageSingle(file);
+      req.body.thumbnailUrl = uploadedFile;
+
       const data = new MovieModel(req.body);
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);
