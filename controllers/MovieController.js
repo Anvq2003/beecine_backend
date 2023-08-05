@@ -46,6 +46,11 @@ class MovieController {
   // [PUT] api/movies/update/:id
   async update(req, res, next) {
     try {
+      if (req.file) {
+        const file = req.file;
+        const uploadedFile = await uploadImageSingle(file);
+        req.body.thumbnailUrl = uploadedFile;
+      }
       const data = await MovieModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       res.status(200).json(data);
     } catch (error) {

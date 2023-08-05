@@ -7,8 +7,8 @@ const movieSchema = new mongoose.Schema(
     genres: {
       type: [
         {
-          _id: { type: mongoose.Schema.Types.ObjectId, required: true },
-          slug: { type: String, required: true },
+          _id: { type: mongoose.Schema.Types.ObjectId },
+          slug: { type: String },
           name: { type: String, required: true },
         },
       ],
@@ -16,25 +16,25 @@ const movieSchema = new mongoose.Schema(
     },
     country: {
       type: {
-        _id: { type: mongoose.Schema.Types.ObjectId, required: true },
+        _id: { type: mongoose.Schema.Types.ObjectId },
+        slug: { type: String },
         name: { type: String, required: true },
       },
     },
     cast: {
       type: [
         {
-          _id: { type: mongoose.Schema.Types.ObjectId, required: true },
-          slug: { type: String, required: true },
+          _id: { type: mongoose.Schema.Types.ObjectId },
+          slug: { type: String },
           name: { type: String, required: true },
         },
       ],
-      required: true,
     },
     director: {
       type: [
         {
-          _id: { type: mongoose.Schema.Types.ObjectId, required: true },
-          slug: { type: String, required: true },
+          _id: { type: mongoose.Schema.Types.ObjectId },
+          slug: { type: String },
           name: { type: String, required: true },
         },
       ],

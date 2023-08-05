@@ -10,7 +10,7 @@ router.post('/store', upload.single('image'), UserController.create);
 router.post('/store-many', UserController.createMany);
 router.patch('/restore/:id', UserController.restore);
 router.delete('/force/:id', UserController.forceDelete);
-// router.put('/update/:id', UserController.update);
+// router.put('/update/:id', upload.single('image'), UserController.update);
 // router.delete('/delete/:id', UserController.delete);
 
 module.exports = router;
