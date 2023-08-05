@@ -4,41 +4,10 @@ var slug = require('mongoose-slug-updater');
 
 const movieSchema = new mongoose.Schema(
   {
-    genres: {
-      type: [
-        {
-          _id: { type: mongoose.Schema.Types.ObjectId },
-          slug: { type: String },
-          name: { type: String, required: true },
-        },
-      ],
-      required: true,
-    },
-    country: {
-      type: {
-        _id: { type: mongoose.Schema.Types.ObjectId },
-        slug: { type: String },
-        name: { type: String, required: true },
-      },
-    },
-    cast: {
-      type: [
-        {
-          _id: { type: mongoose.Schema.Types.ObjectId },
-          slug: { type: String },
-          name: { type: String, required: true },
-        },
-      ],
-    },
-    director: {
-      type: [
-        {
-          _id: { type: mongoose.Schema.Types.ObjectId },
-          slug: { type: String },
-          name: { type: String, required: true },
-        },
-      ],
-    },
+    genres: [{ type: mongoose.Schema.Types.ObjectId }],
+    country: { type: String, required: true },
+    cast: [{ type: mongoose.Schema.Types.ObjectId }],
+    director: [{ type: mongoose.Schema.Types.ObjectId }],
     ageGroup: { type: String, default: 'all' },
     title: { type: String, required: true },
     slug: { type: String, slug: 'title', unique: true },
