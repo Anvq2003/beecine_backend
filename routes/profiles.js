@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const ProfileController = require('../controllers/ProfileController');
+const upload = require('../middlewares/multer');
 
 router.get('/', ProfileController.getQuery);
 router.get('/trash', ProfileController.getTrash);

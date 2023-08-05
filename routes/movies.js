@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const upload = require('../middlewares/multer');
 const MovieController = require('../controllers/MovieController');
 
 router.get('/', MovieController.getQuery);
