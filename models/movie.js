@@ -49,6 +49,7 @@ const movieSchema = new mongoose.Schema(
     rating: { type: Number },
     thumbnailUrl: { type: String },
     trailerUrl: { type: String },
+    videoUrl: { type: String },
     type: { type: String, default: 'free' },
     tags: { type: [String] },
     totalFavorites: { type: Number, default: 0 },
