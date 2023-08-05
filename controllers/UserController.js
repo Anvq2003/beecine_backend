@@ -42,6 +42,9 @@ class UserController {
   // [POST] api/user/store-many
   async createMany(req, res, next) {
     try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'Invalid file' });
+      }
       const data = await UserModel.insertMany(req.body);
       res.status(200).json(data);
     } catch (error) {

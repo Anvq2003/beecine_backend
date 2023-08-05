@@ -31,6 +31,9 @@ class MovieController {
   // [POST] api/movies/store
   async create(req, res, next) {
     try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'Invalid file' });
+      }
       const file = req.file;
       const uploadedFile = await uploadImageSingle(file);
       req.body.thumbnailUrl = uploadedFile;
