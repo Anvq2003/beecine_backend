@@ -5,7 +5,7 @@ var slug = require('mongoose-slug-updater');
 const movieSchema = new mongoose.Schema(
   {
     genres: [{ type: mongoose.Schema.Types.ObjectId }],
-    country: { type: String, required: true },
+    country: { type: mongoose.Schema.Types.ObjectId },
     cast: [{ type: mongoose.Schema.Types.ObjectId }],
     director: [{ type: mongoose.Schema.Types.ObjectId }],
     ageGroup: { type: String, default: 'all' },
