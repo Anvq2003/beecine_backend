@@ -22,13 +22,24 @@ Content-Type: application/json
       "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
       "slug": "action",
       "name": "Action"
+    },
+    {
+      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
+      "slug": "action",
+      "name": "Action"
     }
   ],
-  "contry": {
+  "country": {
       "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
-      "name": "Action"
+      "name": "Action",
+      "slug": "action"
     },
   "cast": [
+    {
+      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
+      "slug": "action",
+      "name": "Action"
+    },
     {
       "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
       "slug": "action",

@@ -24,6 +24,20 @@ Content-Type: application/json
   "airDate": "2020-11-01",
   "duration": 120
 }
+###
+
+# @name Create
+POST {{baseUrl}}/store-single
+Content-Type: application/json
+
+{
+  "movieId": "64c290ee173cda17c307a2fa",
+  "thumbnailUrl": "https://www.youtube.com/watch?v=1roy4o4tqQM",
+  "title": "demo 1",
+  "videoUrl": "https://www.youtube.com/watch?v=1roy4o4tqQM"
+}
+
+
 
 ###
 # @name CreateMany

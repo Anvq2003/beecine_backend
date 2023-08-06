@@ -9,7 +9,7 @@ class BillController {
       const data = await BillModel.find(query);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -23,7 +23,7 @@ class BillController {
       const data = await BillModel.findById(req.params.id);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -34,7 +34,7 @@ class BillController {
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -44,7 +44,7 @@ class BillController {
       const data = await BillModel.insertMany(req.body);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -54,7 +54,7 @@ class BillController {
       const data = await BillModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -64,7 +64,7 @@ class BillController {
       await BillModel.delete({ _id: req.params.id });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -75,7 +75,7 @@ class BillController {
       await BillModel.deleteMany({ _id: { $in: ids } });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -85,7 +85,7 @@ class BillController {
       const data = await BillModel.findDeleted();
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -95,7 +95,7 @@ class BillController {
       const data = await BillModel.restore({ _id: req.params.id });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -105,7 +105,7 @@ class BillController {
       await BillModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 }

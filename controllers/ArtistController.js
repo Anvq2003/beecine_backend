@@ -10,7 +10,7 @@ class ArtistController {
       const data = await ArtistModel.find(query);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -24,7 +24,7 @@ class ArtistController {
       const data = await ArtistModel.findById(req.params.id);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -42,7 +42,7 @@ class ArtistController {
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -57,7 +57,7 @@ class ArtistController {
       const data = await ArtistModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -67,7 +67,7 @@ class ArtistController {
       await ArtistModel.delete({ _id: req.params.id });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -78,7 +78,7 @@ class ArtistController {
       await ArtistModel.deleteMany({ _id: { $in: ids } });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -88,7 +88,7 @@ class ArtistController {
       const data = await ArtistModel.findDeleted();
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -98,7 +98,7 @@ class ArtistController {
       const data = await ArtistModel.restore({ _id: req.params.id });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -108,7 +108,7 @@ class ArtistController {
       await ArtistModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 }

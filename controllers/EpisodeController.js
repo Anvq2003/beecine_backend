@@ -10,7 +10,7 @@ class EpisodeController {
       const data = await EpisodeModel.find(query);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -24,7 +24,7 @@ class EpisodeController {
       const data = await EpisodeModel.findById(req.params.id);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -42,8 +42,19 @@ class EpisodeController {
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
+  }
+
+  // [POST] api/episodes/store-single
+  async createSingle(req, res, next) {
+    // try {
+    const data = new EpisodeModel(req.body);
+    const savedCategory = await data.save();
+    res.status(200).json(savedCategory);
+    // } catch (error) {
+    //   res.status(500).json(error.message);
+    // }
   }
 
   // [PUT] api/episodes/update/:id
@@ -57,7 +68,7 @@ class EpisodeController {
       const data = await EpisodeModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -67,7 +78,7 @@ class EpisodeController {
       await EpisodeModel.delete({ _id: req.params.id });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -78,7 +89,7 @@ class EpisodeController {
       await EpisodeModel.deleteMany({ _id: { $in: ids } });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -88,7 +99,7 @@ class EpisodeController {
       const data = await EpisodeModel.findDeleted();
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -98,7 +109,7 @@ class EpisodeController {
       const data = await EpisodeModel.restore({ _id: req.params.id });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -108,7 +119,7 @@ class EpisodeController {
       await EpisodeModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 }

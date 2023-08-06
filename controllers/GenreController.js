@@ -9,7 +9,7 @@ class GenreController {
       const data = await GenreModel.find(query);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -23,7 +23,7 @@ class GenreController {
       const data = await GenreModel.findById(req.params.id);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -48,7 +48,7 @@ class GenreController {
       const data = await GenreModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -58,7 +58,7 @@ class GenreController {
       await GenreModel.delete({ _id: req.params.id });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -69,7 +69,7 @@ class GenreController {
       await GenreModel.deleteMany({ _id: { $in: ids } });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -79,7 +79,7 @@ class GenreController {
       const data = await GenreModel.findDeleted();
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -89,7 +89,7 @@ class GenreController {
       const data = await GenreModel.restore({ _id: req.params.id });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -99,7 +99,7 @@ class GenreController {
       await GenreModel.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 }

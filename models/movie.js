@@ -2,12 +2,21 @@ const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 var slug = require('mongoose-slug-updater');
 
+const infoSchema = new mongoose.Schema(
+  {
+    _id: { type: mongoose.Schema.Types.ObjectId },
+    name: { type: String },
+    slug: { type: String },
+  },
+  { _id: false },
+);
+
 const movieSchema = new mongoose.Schema(
   {
-    genres: [{ type: mongoose.Schema.Types.ObjectId }],
-    country: { type: mongoose.Schema.Types.ObjectId },
-    cast: [{ type: mongoose.Schema.Types.ObjectId }],
-    director: [{ type: mongoose.Schema.Types.ObjectId }],
+    genres: [infoSchema],
+    country: infoSchema,
+    cast: [infoSchema],
+    directors: [infoSchema],
     ageGroup: { type: String, default: 'all' },
     title: { type: String, required: true },
     slug: { type: String, slug: 'title', unique: true },
@@ -18,7 +27,6 @@ const movieSchema = new mongoose.Schema(
     rating: { type: Number },
     thumbnailUrl: { type: String },
     trailerUrl: { type: String },
-    videoUrl: { type: String },
     type: { type: String, default: 'free' },
     tags: { type: [String] },
     totalFavorites: { type: Number, default: 0 },

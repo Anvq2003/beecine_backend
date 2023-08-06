@@ -9,7 +9,7 @@ class CommentController {
       const data = await Comment.find(query);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -21,7 +21,7 @@ class CommentController {
       await Comment.findByIdAndUpdate(commentId, { $push: { replies: reply } });
       res.status(200).json('Reply successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -103,7 +103,7 @@ class CommentController {
     //   }
     // }
     // } catch (error) {
-    //   res.status(500).json(error);
+    //   res.status(500).json(error.message);;
     // }
   }
 
@@ -117,7 +117,7 @@ class CommentController {
       const data = await Comment.findById(req.params.id);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -128,7 +128,7 @@ class CommentController {
       const savedCategory = await data.save();
       res.status(200).json(savedCategory);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -138,7 +138,7 @@ class CommentController {
       const data = await Comment.insertMany(req.body);
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -148,7 +148,7 @@ class CommentController {
       const data = await Comment.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -158,7 +158,7 @@ class CommentController {
       await Comment.delete({ _id: req.params.id });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -169,7 +169,7 @@ class CommentController {
       await Comment.deleteMany({ _id: { $in: ids } });
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -179,7 +179,7 @@ class CommentController {
       const data = await Comment.findDeleted();
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -189,7 +189,7 @@ class CommentController {
       const data = await Comment.restore({ _id: req.params.id });
       res.status(200).json(data);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 
@@ -199,7 +199,7 @@ class CommentController {
       await Comment.findByIdAndDelete(req.params.id);
       res.status(200).json('Deleted successfully');
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     }
   }
 }
