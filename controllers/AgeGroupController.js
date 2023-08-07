@@ -82,7 +82,9 @@ class AgeGroupController {
   // [GET] api/age-groups/trash
   async getTrash(req, res, next) {
     try {
-      const data = await AgeGroupModel.findDeleted();
+      const data = await AgeGroupModel.findWithDeleted({
+        deleted: true,
+      });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

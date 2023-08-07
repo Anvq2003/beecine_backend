@@ -85,7 +85,7 @@ Content-Type: application/json
 ###
 
 # @name Delete
-DELETE {{baseUrl}}/delete/64ca077850513d08c92f7e15
+DELETE {{baseUrl}}/delete/64cfaf34bc85450470b08df8
 
 ###
 ###
@@ -109,4 +109,4 @@ PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
 
 ###
 # @name ForceDelete
-DELETE {{baseUrl}}/force/64cb7f5af921928736b32b83
+DELETE {{baseUrl}}/force/64cfaf34bc85450470b08df8

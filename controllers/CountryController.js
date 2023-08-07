@@ -82,7 +82,9 @@ class CountryController {
   // [GET] api/countries/trash
   async getTrash(req, res, next) {
     try {
-      const data = await CountryModel.findDeleted();
+      const data = await CountryModel.findWithDeleted({
+        deleted: true,
+      });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

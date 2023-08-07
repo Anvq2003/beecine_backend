@@ -44,6 +44,7 @@ class MovieController {
       const cast = JSON.parse(req.body.cast);
       const directors = JSON.parse(req.body.directors);
       const country = JSON.parse(req.body.country);
+      const tags = JSON.parse(req.body.tags);
 
       const movieData = {
         ...req.body,
@@ -51,6 +52,7 @@ class MovieController {
         cast,
         directors,
         country,
+        tags,
       };
 
       const data = new MovieModel(movieData);
@@ -70,7 +72,23 @@ class MovieController {
         const uploadedFile = await uploadImageSingle(file);
         req.body.thumbnailUrl = uploadedFile;
       }
-      const data = await MovieModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
+
+      const genres = JSON.parse(req.body.genres);
+      const cast = JSON.parse(req.body.cast);
+      const directors = JSON.parse(req.body.directors);
+      const country = JSON.parse(req.body.country);
+      const tags = JSON.parse(req.body.tags);
+
+      const movieData = {
+        ...req.body,
+        genres,
+        cast,
+        directors,
+        country,
+        tags,
+      };
+
+      const data = await MovieModel.findByIdAndUpdate(req.params.id, { $set: movieData }, { new: true });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -101,7 +119,9 @@ class MovieController {
   // [GET] api/movies/trash
   async getTrash(req, res, next) {
     try {
-      const data = await MovieModel.findDeleted();
+      const data = await MovieModel.findWithDeleted({
+        deleted: true,
+      });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -120,12 +140,12 @@ class MovieController {
 
   // [DELETE] api/movies/force/:id
   async forceDelete(req, res, next) {
-    try {
-      await MovieModel.findByIdAndDelete(req.params.id);
-      res.status(200).json('Deleted successfully');
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
+    // try {
+    await MovieModel.deleteOne({ _id: req.params.id });
+    res.status(200).json('Deleted successfully');
+    // } catch (error) {
+    //   res.status(500).json(error.message);
+    // }
   }
 }
 

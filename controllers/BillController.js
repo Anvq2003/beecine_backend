@@ -82,7 +82,9 @@ class BillController {
   // [GET] api/bills/trash
   async getTrash(req, res, next) {
     try {
-      const data = await BillModel.findDeleted();
+      const data = await BillModel.findWithDeleted({
+        deleted: true,
+      });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

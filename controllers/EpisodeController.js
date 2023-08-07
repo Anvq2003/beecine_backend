@@ -28,6 +28,19 @@ class EpisodeController {
     }
   }
 
+  // [GET] api/episodes/movie/:id
+  async getByMovie(req, res, next) {
+    try {
+      const { id } = req.params;
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid product ID' });
+      }
+      const data = await EpisodeModel.findOne({ movieId: id });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
   // [POST] api/episodes/store
   async create(req, res, next) {
     try {
@@ -96,7 +109,9 @@ class EpisodeController {
   // [GET] api/episodes/trash
   async getTrash(req, res, next) {
     try {
-      const data = await EpisodeModel.findDeleted();
+      const data = await EpisodeModel.findWithDeleted({
+        deleted: true,
+      });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

@@ -176,7 +176,9 @@ class CommentController {
   // [GET] api/comments/trash
   async getTrash(req, res, next) {
     try {
-      const data = await Comment.findDeleted();
+      const data = await Comment.findWithDeleted({
+        deleted: true,
+      });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

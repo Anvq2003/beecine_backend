@@ -85,7 +85,9 @@ class ArtistController {
   // [GET] api/artists/trash
   async getTrash(req, res, next) {
     try {
-      const data = await ArtistModel.findDeleted();
+      const data = await ArtistModel.findWithDeleted({
+        deleted: true,
+      });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

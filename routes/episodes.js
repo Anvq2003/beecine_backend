@@ -7,6 +7,7 @@ const EpisodeController = require('../controllers/EpisodeController');
 router.get('/', EpisodeController.getQuery);
 router.get('/trash', EpisodeController.getTrash);
 router.get('/:id', EpisodeController.getOne);
+router.get('/movie/:id', EpisodeController.getByMovie);
 router.post('/store', upload.single('image'), EpisodeController.create);
 router.post('/store-single', EpisodeController.createSingle);
 router.put('/update/:id', upload.single('image'), EpisodeController.update);
