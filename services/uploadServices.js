@@ -1,5 +1,20 @@
-const firebaseAdmin = require('firebase-admin');
 const fs = require('fs');
+const multer = require('multer');
+const { Storage } = require('@google-cloud/storage');
+const firebaseAdmin = require('firebase-admin');
+
+const credentials = require('../beecine-key.json');
+const bucketName = 'beecine_data';
+const projectId = 'beecine';
+
+const storage = new Storage({
+  projectId,
+  credentials,
+});
+
+const uploadVideo = multer({
+  storage: storage.bucket(bucketName),
+});
 
 const uploadImageSingle = async (file) => {
   try {
@@ -29,4 +44,17 @@ const uploadImageSingle = async (file) => {
   }
 };
 
-module.exports = { uploadImageSingle };
+const uploadVideoSingle = async (file) => {
+  try {
+    storage.bucket(bucketName).upload(file.path, {
+      name: file.filename,
+    });
+    const videoUrl = `https://storage.googleapis.com/${bucketName}/${file.filename}`;
+    return videoUrl;
+  } catch (error) {
+    console.error('Error uploading video:', error);
+    throw new Error('An error occurred while uploading the video.');
+  }
+};
+
+module.exports = { uploadImageSingle, uploadVideoSingle, uploadVideo };

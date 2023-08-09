@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { uploadImageSingle } = require('../services/uploadServices');
-const upload = require('../middlewares/multer');
+const { uploadImage } = require('../middlewares/multer');
 
-router.post('/upload', upload.single('image'), async (req, res) => {
+router.post('/upload', uploadImage.single('image'), async (req, res) => {
   try {
     const file = req.file;
     const uploadedFile = await uploadImageSingle(file);

@@ -11,6 +11,7 @@ const ageGroupsRouter = require('./ageGroups');
 const artistsRouter = require('./artists');
 const moviesRouter = require('./movies');
 const episodesRouter = require('./episodes');
+const uploadsRouter = require('./uploads');
 
 function routes(app) {
   app.use('/', siteRouter);
@@ -26,6 +27,7 @@ function routes(app) {
   app.use('/api/artists', artistsRouter);
   app.use('/api/movies', moviesRouter);
   app.use('/api/episodes', episodesRouter);
+  app.use('/api/uploads', uploadsRouter);
 }
 
 module.exports = routes;

@@ -2,6 +2,13 @@ const multer = require('multer');
 const path = require('path');
 const os = require('os');
 
-const upload = multer({ dest: path.join(os.tmpdir(), 'uploads') });
+const uploadImage = multer({ dest: path.join(os.tmpdir(), 'uploads') });
 
-module.exports = upload;
+const uploadVideo = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 50 * 1024 * 1024,
+  },
+});
+
+module.exports = { uploadImage, uploadVideo };
