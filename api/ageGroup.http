@@ -17,9 +17,8 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-"name": "demo",
-"description":  "demo",
-"minimum":  1
+    "name": "demo",
+    "minimum":  1
 }
 
 ###
@@ -63,4 +62,4 @@ PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
 
 ###
 # @name ForceDelete
-DELETE {{baseUrl}}/force/64cb7f5af921928736b32b83
+DELETE {{baseUrl}}/force/64da311c013f7e5e399e10d2

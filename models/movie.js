@@ -2,21 +2,17 @@ const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 var slug = require('mongoose-slug-updater');
 
-const infoSchema = new mongoose.Schema(
-  {
-    _id: { type: mongoose.Schema.Types.ObjectId },
-    name: { type: String },
-    slug: { type: String },
-  },
-  { _id: false },
-);
-
 const movieSchema = new mongoose.Schema(
   {
-    genres: [infoSchema],
-    country: infoSchema,
-    cast: [infoSchema],
-    directors: [infoSchema],
+    genres: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Genre',
+      },
+    ],
+    country: { type: mongoose.Schema.Types.ObjectId, ref: 'Country' },
+    cast: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Artist' }],
+    directors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Artist' }],
     minimumAge: { type: Number, default: 0 },
     title: { type: String, required: true },
     slug: { type: String, slug: 'title', unique: true },

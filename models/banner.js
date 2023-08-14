@@ -4,8 +4,8 @@ const mongooseDelete = require('mongoose-delete');
 const Banner = new mongoose.Schema(
   {
     imageUrl: { type: String, required: true },
-    order: { type: Number, required: true, default: 0 },
     link: { type: String, required: true },
+    order: { type: Number, required: true, default: 0 },
     status: { type: Boolean, default: true },
   },
   {

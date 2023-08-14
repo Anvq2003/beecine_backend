@@ -1,18 +1,38 @@
 const express = require('express');
 const router = express.Router();
-
-const { uploadImage } = require('../middlewares/multer');
 const EpisodeController = require('../controllers/EpisodeController');
 
-router.get('/', EpisodeController.getQuery);
-router.get('/trash', EpisodeController.getTrash);
-router.get('/:id', EpisodeController.getOne);
-router.get('/movie/:id', EpisodeController.getByMovie);
-router.post('/store', uploadImage.single('image'), EpisodeController.create);
-router.post('/store-single', EpisodeController.createSingle);
-router.put('/update/:id', uploadImage.single('image'), EpisodeController.update);
-router.delete('/delete/:id', EpisodeController.delete);
-router.patch('/restore/:id', EpisodeController.restore);
-router.delete('/force/:id', EpisodeController.forceDelete);
+const bindController = (method) => {
+  return EpisodeController[method].bind(EpisodeController);
+};
+const {
+  uploadMulter,
+  handleUploadOrUpdateFile,
+  handleDeleteFile,
+  handleDeleteMultipleFiles,
+} = require('../middlewares/uploadMiddleware');
+
+const upload = uploadMulter.single('thumbnailUrl');
+
+router.get('/', bindController('getQuery'));
+router.get('/all', bindController('getAll'));
+router.get('/trash', bindController('getTrash'));
+router.get('/:id', bindController('getOne'));
+router.post('/store', upload, handleUploadOrUpdateFile('thumbnailUrl'), bindController('create'));
+router.put(
+  '/update/:id',
+  upload,
+  handleUploadOrUpdateFile('thumbnailUrl', 'oldThumbnailUrl'),
+  bindController('update'),
+);
+router.delete('/delete/:id', bindController('delete'));
+router.delete('/delete-many', bindController('deleteMany'));
+router.patch('/restore/:id', bindController('restore'));
+router.delete('/force/:id', handleDeleteFile('oldThumbnailUrl'), bindController('forceDelete'));
+router.delete(
+  '/force-many',
+  handleDeleteMultipleFiles('oldThumbnailUrls'),
+  bindController('forceDeleteMany'),
+);
 
 module.exports = router;

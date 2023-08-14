@@ -30,8 +30,6 @@ const commentSchema = new mongoose.Schema(
 );
 
 commentSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
-replySchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
 
 const Comment = mongoose.model('Comment', commentSchema);
-const Reply = mongoose.model('Reply', replySchema);
-module.exports = { Comment, Reply };
+module.exports = Comment;
