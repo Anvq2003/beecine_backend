@@ -6,8 +6,9 @@ const artistSchema = new mongoose.Schema(
   {
     avatarUrl: { type: String, required: true },
     name: { type: String, required: true },
-    slug: { type: String, slug: 'name', unique: true },
-    role: { type: String, required: true },
+    stageName: { type: String, required: true },
+    slug: { type: String, slug: 'stageName', unique: true },
+    roles: [{ type: String, required: true }],
     bio: { type: String },
     country: { type: String, required: true },
     status: { type: Boolean, default: true },

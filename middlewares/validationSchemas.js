@@ -45,17 +45,15 @@ const billSchema = Joi.object({
 
 const countrySchema = Joi.object({
   name: Joi.string().required(),
-  slug: Joi.string().required(),
   code: Joi.string().required(),
   language: Joi.string(),
   currency: Joi.string(),
-  telephone: Joi.string(),
+  telephone: Joi.number(),
   status: Joi.boolean().default(true),
 });
 
 const genreSchema = Joi.object({
   name: Joi.string().required(),
-  slug: Joi.string().required(),
   isChildren: Joi.boolean().required().default(false),
   status: Joi.boolean().default(true),
 });
@@ -63,7 +61,6 @@ const genreSchema = Joi.object({
 const artistSchema = Joi.object({
   avatarUrl: Joi.string().required(),
   name: Joi.string().required(),
-  slug: Joi.string().required(),
   role: Joi.string().required(),
   bio: Joi.string(),
   country: Joi.string().required(),
@@ -83,7 +80,6 @@ const episodeSchema = Joi.object({
     .required(),
   thumbnailUrl: Joi.string(),
   title: Joi.string(),
-  slug: Joi.string().required(),
   description: Joi.string(),
   views: Joi.number().default(0),
   videoUrl: Joi.string().required(),
@@ -101,7 +97,6 @@ const movieSchema = Joi.object({
   directors: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   minimumAge: Joi.number().default(0),
   title: Joi.string().required(),
-  slug: Joi.string().required(),
   description: Joi.string(),
   releaseDate: Joi.date().iso().required(),
   isSeries: Joi.boolean().default(false),

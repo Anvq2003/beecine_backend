@@ -23,7 +23,7 @@ router.post('/store', upload, handleUploadOrUpdateFile('avatarUrl'), bindControl
 router.put(
   '/update/:id',
   upload,
-  handleUploadOrUpdateFile('oldAvatarUrl'),
+  handleUploadOrUpdateFile('avatarUrl', 'oldAvatarUrl'),
   bindController('update'),
 );
 router.delete('/delete/:id', bindController('delete'));

@@ -72,6 +72,64 @@ const handleUploadOrUpdateFile = (nameField, oldImageUrlField) => async (req, re
     next(error);
   }
 };
+// const handleUploadOrUpdateFile = (nameField, oldImageUrlField) => async (req, res, next) => {
+//   // try {
+//   console.log('body', req.body);
+//   console.log('dsfgh', req.body[nameField]);
+//   const isCreating = oldImageUrlField === undefined;
+//   const file = req.file || (req.files && req.files[nameField]);
+//   if (isCreating && !file) {
+//     return res.status(400).json({ error: 'No file uploaded' });
+//   }
+
+//   if (file) {
+//     const bucket = firebaseAdmin.storage().bucket();
+
+//     if (oldImageUrlField && req.body[oldImageUrlField]) {
+//       const oldImageUrl = req.body[oldImageUrlField];
+//       const oldImageUrlParts = oldImageUrl.split('?alt=media&token=');
+//       const oldImagePath = decodeURIComponent(
+//         oldImageUrlParts[0].replace(
+//           `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/`,
+//           '',
+//         ),
+//       );
+//       const oldFile = bucket.file(oldImagePath);
+//       const [exists] = await oldFile.exists();
+
+//       if (exists) {
+//         await oldFile.delete().catch((error) => {
+//           console.error('Error deleting old file:', error);
+//         });
+//       }
+//     }
+
+//     const isImage = file.mimetype.startsWith('image/');
+//     const folder = isImage ? 'images' : 'sounds';
+
+//     const filePath = `${folder}/${Date.now()}_${file.originalname}`;
+//     const uploadFile = bucket.file(filePath);
+
+//     await uploadFile.save(file.buffer, {
+//       metadata: {
+//         contentType: file.mimetype,
+//       },
+//     });
+
+//     const uniqueToken = uuidv4(); // Generate a unique UUID
+//     const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${
+//       bucket.name
+//     }/o/${encodeURIComponent(filePath)}?alt=media&token=${uniqueToken}`;
+
+//     req.body[nameField] = imageUrl;
+//   }
+
+//   next();
+//   // } catch (error) {
+//   //   console.error('Error handling file upload:', error);
+//   //   next(error);
+//   // }
+// };
 
 const handleDeleteFile = (oldImageUrlField) => async (req, res, next) => {
   try {

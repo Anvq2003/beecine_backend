@@ -38,13 +38,13 @@ class BaseController {
   }
 
   async create(req, res, next) {
-    try {
-      const data = new this.model(req.body);
-      const savedData = await data.save();
-      res.status(200).json(savedData);
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
+    // try {
+    const data = new this.model(req.body);
+    const savedData = await data.save();
+    res.status(200).json(savedData);
+    // } catch (error) {
+    //   res.status(500).json(error.message);
+    // }
   }
 
   async update(req, res, next) {
@@ -71,7 +71,7 @@ class BaseController {
   }
   async deleteMany(req, res, next) {
     try {
-      const ids = req.body.ids;
+      const { ids } = req.body;
       await this.model.delete({ _id: { $in: ids } });
       res.status(200).json('Deleted successfully');
     } catch (error) {
