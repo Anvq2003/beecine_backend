@@ -1,22 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const AgeGroupController = require('../controllers/AgeGroupController');
+const bindController = require('../helpers/controllerHelper');
 const { validateAgeGroupData } = require('../middlewares/validationMiddleware');
 
-const bindController = (method) => {
-  return AgeGroupController[method].bind(AgeGroupController);
-};
-
-router.get('/', bindController('getQuery'));
-router.get('/all', bindController('getAll'));
-router.get('/trash', bindController('getTrash'));
-router.get('/:id', bindController('getOne'));
-router.post('/store', validateAgeGroupData, bindController('create'));
-router.put('/update/:id', validateAgeGroupData, bindController('update'));
-router.delete('/delete/:id', bindController('delete'));
-router.delete('/delete-many', bindController('deleteMany'));
-router.patch('/restore/:id', bindController('restore'));
-router.delete('/force/:id', bindController('forceDelete'));
-router.delete('/force-many', bindController('forceDeleteMany'));
+// Routes
+router.get('/', bindController(AgeGroupController, 'getQuery'));
+router.get('/all', bindController(AgeGroupController, 'getAll'));
+router.get('/trash', bindController(AgeGroupController, 'getTrash'));
+router.get('/:id', bindController(AgeGroupController, 'getOne'));
+router.post('/store', validateAgeGroupData, bindController(AgeGroupController, 'create'));
+router.put('/update/:id', validateAgeGroupData, bindController(AgeGroupController, 'update'));
+router.delete('/delete/:id', bindController(AgeGroupController, 'delete'));
+router.delete('/delete-many', bindController(AgeGroupController, 'deleteMany'));
+router.patch('/restore/:id', bindController(AgeGroupController, 'restore'));
+router.delete('/force/:id', bindController(AgeGroupController, 'forceDelete'));
+router.delete('/force-many', bindController(AgeGroupController, 'forceDeleteMany'));
 
 module.exports = router;

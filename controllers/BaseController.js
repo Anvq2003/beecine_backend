@@ -39,6 +39,7 @@ class BaseController {
 
   async create(req, res, next) {
     // try {
+    console.log('req.body base', req.body);
     const data = new this.model(req.body);
     const savedData = await data.save();
     res.status(200).json(savedData);

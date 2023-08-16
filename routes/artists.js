@@ -1,39 +1,44 @@
 const express = require('express');
 const router = express.Router();
 const ArtistController = require('../controllers/ArtistController');
-
+const bindController = require('../helpers/controllerHelper');
+const { validationArtistData } = require('../middlewares/validationMiddleware');
 const {
   uploadMulter,
-  handleUploadOrUpdateFile,
-  handleDeleteFile,
-  handleDeleteMultipleFiles,
+  handleUploadOrUpdateImage,
+  handleDeleteImage,
+  handleDeleteMultipleImages,
 } = require('../middlewares/uploadMiddleware');
 
-const upload = uploadMulter.single('avatarUrl');
+const upload = uploadMulter.single('image');
 
-const bindController = (method) => {
-  return ArtistController[method].bind(ArtistController);
-};
-
-router.get('/', bindController('getQuery'));
-router.get('/all', bindController('getAll'));
-router.get('/trash', bindController('getTrash'));
-router.get('/:id', bindController('getOne'));
-router.post('/store', upload, handleUploadOrUpdateFile('avatarUrl'), bindController('create'));
+// Routes
+router.get('/', bindController(ArtistController, 'getQuery'));
+router.get('/all', bindController(ArtistController, 'getAll'));
+router.get('/trash', bindController(ArtistController, 'getTrash'));
+router.get('/:id', bindController(ArtistController, 'getOne'));
+router.post(
+  '/store',
+  upload,
+  validationArtistData,
+  handleUploadOrUpdateImage,
+  bindController(ArtistController, 'create'),
+);
 router.put(
   '/update/:id',
   upload,
-  handleUploadOrUpdateFile('avatarUrl', 'oldAvatarUrl'),
-  bindController('update'),
+  validationArtistData,
+  handleUploadOrUpdateImage,
+  bindController(ArtistController, 'update'),
 );
-router.delete('/delete/:id', bindController('delete'));
-router.delete('/delete-many', bindController('deleteMany'));
-router.patch('/restore/:id', bindController('restore'));
-router.delete('/force/:id', handleDeleteFile('oldAvatarUrl'), bindController('forceDelete'));
+router.delete('/delete/:id', bindController(ArtistController, 'delete'));
+router.delete('/delete-many', bindController(ArtistController, 'deleteMany'));
+router.patch('/restore/:id', bindController(ArtistController, 'restore'));
+router.delete('/force/:id', handleDeleteImage, bindController(ArtistController, 'forceDelete'));
 router.delete(
   '/force-many',
-  handleDeleteMultipleFiles('oldAvatarUrls'),
-  bindController('forceDeleteMany'),
+  handleDeleteMultipleImages,
+  bindController(ArtistController, 'forceDeleteMany'),
 );
 
 module.exports = router;

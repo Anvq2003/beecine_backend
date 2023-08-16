@@ -1,21 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const BillController = require('../controllers/BillController');
+const bindController = require('../helpers/controllerHelper');
 const { validateBillData } = require('../middlewares/validationMiddleware');
-const bindController = (method) => {
-  return BillController[method].bind(BillController);
-};
 
-router.get('/', bindController('getQuery'));
-router.get('/all', bindController('getAll'));
-router.get('/trash', bindController('getTrash'));
-router.get('/:id', bindController('getOne'));
-router.post('/store', validateBillData, bindController('create'));
-router.put('/update/:id', validateBillData, bindController('update'));
-router.delete('/delete/:id', bindController('delete'));
-router.delete('/delete-many', bindController('deleteMany'));
-router.patch('/restore/:id', bindController('restore'));
-router.delete('/force/:id', bindController('forceDelete'));
-router.delete('/force-many', bindController('forceDeleteMany'));
+// Routes
+router.get('/', bindController(BillController, 'getQuery'));
+router.get('/all', bindController(BillController, 'getAll'));
+router.get('/trash', bindController(BillController, 'getTrash'));
+router.get('/:id', bindController(BillController, 'getOne'));
+router.post('/store', validateBillData, bindController(BillController, 'create'));
+router.put('/update/:id', validateBillData, bindController(BillController, 'update'));
+router.delete('/delete/:id', bindController(BillController, 'delete'));
+router.delete('/delete-many', bindController(BillController, 'deleteMany'));
+router.patch('/restore/:id', bindController(BillController, 'restore'));
+router.delete('/force/:id', bindController(BillController, 'forceDelete'));
+router.delete('/force-many', bindController(BillController, 'forceDeleteMany'));
 
 module.exports = router;

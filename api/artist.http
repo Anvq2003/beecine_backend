@@ -17,9 +17,8 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "avatarUrl":"Demo",
     "name":"Demo 12",
-    "role":"Demo",
+    "roles":["Demo"],
     "bio":"Demo",
     "country":"Demo"
 }

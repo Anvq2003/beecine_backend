@@ -4,7 +4,7 @@ const mongooseDelete = require('mongoose-delete');
 const profileSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    avatarUrl: { type: String, required: true },
+    imageUrl: { type: String, required: true },
     password: { type: String },
     isChildren: { type: Boolean, required: true, default: false },
     watchedMovies: [

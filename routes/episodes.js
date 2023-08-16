@@ -1,38 +1,44 @@
 const express = require('express');
 const router = express.Router();
 const EpisodeController = require('../controllers/EpisodeController');
-
-const bindController = (method) => {
-  return EpisodeController[method].bind(EpisodeController);
-};
+const bindController = require('../helpers/controllerHelper');
+const { validationEpisodeData } = require('../middlewares/validationMiddleware');
 const {
   uploadMulter,
-  handleUploadOrUpdateFile,
-  handleDeleteFile,
-  handleDeleteMultipleFiles,
+  handleUploadOrUpdateImage,
+  handleDeleteImage,
+  handleDeleteMultipleImages,
 } = require('../middlewares/uploadMiddleware');
 
-const upload = uploadMulter.single('thumbnailUrl');
+const upload = uploadMulter.single('image');
 
-router.get('/', bindController('getQuery'));
-router.get('/all', bindController('getAll'));
-router.get('/trash', bindController('getTrash'));
-router.get('/:id', bindController('getOne'));
-router.post('/store', upload, handleUploadOrUpdateFile('thumbnailUrl'), bindController('create'));
+// Routes
+router.get('/', bindController(EpisodeController, 'getQuery'));
+router.get('/all', bindController(EpisodeController, 'getAll'));
+router.get('/trash', bindController(EpisodeController, 'getTrash'));
+router.get('/:id', bindController(EpisodeController, 'getOne'));
+router.post(
+  '/store',
+  upload,
+  validationEpisodeData,
+  handleUploadOrUpdateImage,
+  bindController(EpisodeController, 'create'),
+);
 router.put(
   '/update/:id',
   upload,
-  handleUploadOrUpdateFile('thumbnailUrl', 'oldThumbnailUrl'),
-  bindController('update'),
+  validationEpisodeData,
+  handleUploadOrUpdateImage,
+  bindController(EpisodeController, 'update'),
 );
-router.delete('/delete/:id', bindController('delete'));
-router.delete('/delete-many', bindController('deleteMany'));
-router.patch('/restore/:id', bindController('restore'));
-router.delete('/force/:id', handleDeleteFile('oldThumbnailUrl'), bindController('forceDelete'));
+router.delete('/delete/:id', bindController(EpisodeController, 'delete'));
+router.delete('/delete-many', bindController(EpisodeController, 'deleteMany'));
+router.patch('/restore/:id', bindController(EpisodeController, 'restore'));
+router.delete('/force/:id', handleDeleteImage, bindController(EpisodeController, 'forceDelete'));
 router.delete(
   '/force-many',
-  handleDeleteMultipleFiles('oldThumbnailUrls'),
-  bindController('forceDeleteMany'),
+  handleDeleteMultipleImages,
+  bindController(EpisodeController, 'forceDeleteMany'),
 );
 
 module.exports = router;

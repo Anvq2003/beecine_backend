@@ -4,7 +4,7 @@ var slug = require('mongoose-slug-updater');
 
 const artistSchema = new mongoose.Schema(
   {
-    avatarUrl: { type: String, required: true },
+    imageUrl: { type: String, required: true },
     name: { type: String, required: true },
     stageName: { type: String, required: true },
     slug: { type: String, slug: 'stageName', unique: true },

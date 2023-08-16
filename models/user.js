@@ -3,7 +3,7 @@ const mongooseDelete = require('mongoose-delete');
 
 const userSchema = new mongoose.Schema(
   {
-    avatarUrl: { type: String, required: true },
+    imageUrl: { type: String, required: true },
     fullName: { type: String, required: true },
     role: { type: String, required: true },
     email: { type: String, required: true, unique: true },

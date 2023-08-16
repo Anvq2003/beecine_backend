@@ -1,38 +1,43 @@
 const express = require('express');
 const router = express.Router();
 const MovieController = require('../controllers/MovieController');
-
-const bindController = (method) => {
-  return MovieController[method].bind(MovieController);
-};
+const bindController = require('../helpers/controllerHelper');
+const { validationMovieSchema } = require('../middlewares/validationMiddleware');
 const {
   uploadMulter,
-  handleUploadOrUpdateFile,
-  handleDeleteFile,
-  handleDeleteMultipleFiles,
+  handleUploadOrUpdateImage,
+  handleDeleteImage,
+  handleDeleteMultipleImages,
 } = require('../middlewares/uploadMiddleware');
 
-const upload = uploadMulter.single('thumbnailUrl');
+const upload = uploadMulter.single('image');
 
-router.get('/', bindController('getQuery'));
-router.get('/all', bindController('getAll'));
-router.get('/trash', bindController('getTrash'));
-router.get('/:id', bindController('getOne'));
-router.post('/store', upload, handleUploadOrUpdateFile('thumbnailUrl'), bindController('create'));
+router.get('/', bindController(MovieController, 'getQuery'));
+router.get('/all', bindController(MovieController, 'getAll'));
+router.get('/trash', bindController(MovieController, 'getTrash'));
+router.get('/:id', bindController(MovieController, 'getOne'));
+router.post(
+  '/store',
+  upload,
+  validationMovieSchema,
+  handleUploadOrUpdateImage,
+  bindController(MovieController, 'create'),
+);
 router.put(
   '/update/:id',
   upload,
-  handleUploadOrUpdateFile('thumbnailUrl', 'oldThumbnailUrl'),
-  bindController('update'),
+  validationMovieSchema,
+  handleUploadOrUpdateImage,
+  bindController(MovieController, 'update'),
 );
-router.delete('/delete/:id', bindController('delete'));
-router.delete('/delete-many', bindController('deleteMany'));
-router.patch('/restore/:id', bindController('restore'));
-router.delete('/force/:id', handleDeleteFile('oldThumbnailUrl'), bindController('forceDelete'));
+router.delete('/delete/:id', bindController(MovieController, 'delete'));
+router.delete('/delete-many', bindController(MovieController, 'deleteMany'));
+router.patch('/restore/:id', bindController(MovieController, 'restore'));
+router.delete('/force/:id', handleDeleteImage, bindController(MovieController, 'forceDelete'));
 router.delete(
   '/force-many',
-  handleDeleteMultipleFiles('oldThumbnailUrls'),
-  bindController('forceDeleteMany'),
+  handleDeleteMultipleImages,
+  bindController(MovieController, 'forceDeleteMany'),
 );
 
 module.exports = router;

@@ -5,7 +5,7 @@ var slug = require('mongoose-slug-updater');
 const episodeSchema = new mongoose.Schema(
   {
     movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
-    thumbnailUrl: { type: String },
+    imageUrl: { type: String },
     title: { type: String },
     slug: { type: String, slug: ['title', 'season', 'number'], unique: true },
     description: { type: String },

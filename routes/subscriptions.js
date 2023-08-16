@@ -1,21 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const SubscriptionController = require('../controllers/SubscriptionController');
+const bindController = require('../helpers/controllerHelper');
+const { validationSubscriptionSchema } = require('../middlewares/validationMiddleware');
 
-const bindController = (method) => {
-  return SubscriptionController[method].bind(SubscriptionController);
-};
-
-router.get('/', bindController('getQuery'));
-router.get('/all', bindController('getAll'));
-router.get('/trash', bindController('getTrash'));
-router.get('/:id', bindController('getOne'));
-router.post('/store', bindController('create'));
-router.put('/update/:id', bindController('update'));
-router.delete('/delete/:id', bindController('delete'));
-router.delete('/delete-many', bindController('deleteMany'));
-router.patch('/restore/:id', bindController('restore'));
-router.delete('/force/:id', bindController('forceDelete'));
-router.delete('/force-many', bindController('forceDeleteMany'));
+// Routes
+router.get('/', bindController(SubscriptionController, 'getQuery'));
+router.get('/all', bindController(SubscriptionController, 'getAll'));
+router.get('/trash', bindController(SubscriptionController, 'getTrash'));
+router.get('/:id', bindController(SubscriptionController, 'getOne'));
+router.post(
+  '/store',
+  validationSubscriptionSchema,
+  bindController(SubscriptionController, 'create'),
+);
+router.put(
+  '/update/:id',
+  validationSubscriptionSchema,
+  bindController(SubscriptionController, 'update'),
+);
+router.delete('/delete/:id', bindController(SubscriptionController, 'delete'));
+router.delete('/delete-many', bindController(SubscriptionController, 'deleteMany'));
+router.patch('/restore/:id', bindController(SubscriptionController, 'restore'));
+router.delete('/force/:id', bindController(SubscriptionController, 'forceDelete'));
+router.delete('/force-many', bindController(SubscriptionController, 'forceDeleteMany'));
 
 module.exports = router;

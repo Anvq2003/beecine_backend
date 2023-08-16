@@ -9,186 +9,90 @@ const uploadMulter = multer({
     fileSize: 50 * 1024 * 1024, // no larger than 50mb
   },
 });
-
-// Upload file
-const handleUploadOrUpdateFile = (nameField, oldImageUrlField) => async (req, res, next) => {
+// Base func
+const uploadFileToBucketAndGetPath = async (bucket, file) => {
   try {
-    const bucket = firebaseAdmin.storage().bucket();
-    let file = null;
+    const isImage = file.mimetype.startsWith('image/');
+    const folder = isImage ? 'images' : 'sounds';
 
-    // Kiểm tra req.file cho trường hợp single file upload
-    if (req.file) {
-      file = req.file;
-    }
-    // Kiểm tra req.files cho trường hợp multiple files upload
-    else if (req.files && req.files[nameField]) {
-      [file] = req.files[nameField]; // Lấy file đầu tiên trong mảng
-    }
+    const filePath = `${folder}/${Date.now()}_${file.originalname}`;
+    const uploadFile = bucket.file(filePath);
 
-    if (file) {
-      // Xử lý logic upload và xóa file cũ
-      if (req.body[oldImageUrlField]) {
-        const oldImageUrl = req.body[oldImageUrlField];
-        const oldImageUrlParts = oldImageUrl.split('?alt=media&token=');
-        const oldImagePath = decodeURIComponent(
-          oldImageUrlParts[0].replace(
-            `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/`,
-            '',
-          ),
-        );
-        const oldFile = bucket.file(oldImagePath);
-        const [exists] = await oldFile.exists();
-        if (exists) {
-          await oldFile.delete().catch((error) => {
-            console.error('Error deleting old file:', error);
-          });
-        }
-      }
+    await uploadFile.save(file.buffer, {
+      metadata: {
+        contentType: file.mimetype,
+      },
+    });
 
-      const isImage = file.mimetype.startsWith('image/');
-      const folder = isImage ? 'images' : 'sounds';
+    const uniqueToken = uuidv4(); // Generate a unique UUID
+    const pathUrl = `https://firebasestorage.googleapis.com/v0/b/${
+      bucket.name
+    }/o/${encodeURIComponent(filePath)}?alt=media&token=${uniqueToken}`;
+    return pathUrl;
+  } catch (error) {
+    throw error;
+  }
+};
 
-      const filePath = `${folder}/${Date.now()}_${file.originalname}`;
-      const uploadFile = bucket.file(filePath);
+const deleteFileFromBucket = async (bucket, image) => {
+  try {
+    if (!image) return;
 
-      // Upload file lên Firebase Storage
-      await uploadFile.save(file.buffer, {
-        metadata: {
-          contentType: file.mimetype,
-        },
+    const imageParts = image.split('?alt=media&token=');
+    const imagePath = decodeURIComponent(
+      imageParts[0].replace(`https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/`, ''),
+    );
+    const file = bucket.file(imagePath);
+    const [exists] = await file.exists();
+
+    if (exists) {
+      await file.delete().catch((error) => {
+        console.error('Error deleting file:', error);
       });
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 
-      const uniqueToken = uuidv4(); // Generate a unique UUID
-      const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${
-        bucket.name
-      }/o/${encodeURIComponent(filePath)}?alt=media&token=${uniqueToken}`;
-
-      req.body[nameField] = imageUrl;
+// Image
+const handleUploadOrUpdateImage = async (req, res, next) => {
+  try {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    const bucket = firebaseAdmin.storage().bucket();
+    const oldImage = req.body.oldImage;
+    await deleteFileFromBucket(bucket, oldImage);
+    req.body.image = await uploadFileToBucketAndGetPath(bucket, file);
     next();
   } catch (error) {
-    console.log(error);
+    console.error('Error handling file upload:', error);
     next(error);
   }
 };
-// const handleUploadOrUpdateFile = (nameField, oldImageUrlField) => async (req, res, next) => {
-//   // try {
-//   console.log('body', req.body);
-//   console.log('dsfgh', req.body[nameField]);
-//   const isCreating = oldImageUrlField === undefined;
-//   const file = req.file || (req.files && req.files[nameField]);
-//   if (isCreating && !file) {
-//     return res.status(400).json({ error: 'No file uploaded' });
-//   }
 
-//   if (file) {
-//     const bucket = firebaseAdmin.storage().bucket();
-
-//     if (oldImageUrlField && req.body[oldImageUrlField]) {
-//       const oldImageUrl = req.body[oldImageUrlField];
-//       const oldImageUrlParts = oldImageUrl.split('?alt=media&token=');
-//       const oldImagePath = decodeURIComponent(
-//         oldImageUrlParts[0].replace(
-//           `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/`,
-//           '',
-//         ),
-//       );
-//       const oldFile = bucket.file(oldImagePath);
-//       const [exists] = await oldFile.exists();
-
-//       if (exists) {
-//         await oldFile.delete().catch((error) => {
-//           console.error('Error deleting old file:', error);
-//         });
-//       }
-//     }
-
-//     const isImage = file.mimetype.startsWith('image/');
-//     const folder = isImage ? 'images' : 'sounds';
-
-//     const filePath = `${folder}/${Date.now()}_${file.originalname}`;
-//     const uploadFile = bucket.file(filePath);
-
-//     await uploadFile.save(file.buffer, {
-//       metadata: {
-//         contentType: file.mimetype,
-//       },
-//     });
-
-//     const uniqueToken = uuidv4(); // Generate a unique UUID
-//     const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${
-//       bucket.name
-//     }/o/${encodeURIComponent(filePath)}?alt=media&token=${uniqueToken}`;
-
-//     req.body[nameField] = imageUrl;
-//   }
-
-//   next();
-//   // } catch (error) {
-//   //   console.error('Error handling file upload:', error);
-//   //   next(error);
-//   // }
-// };
-
-const handleDeleteFile = (oldImageUrlField) => async (req, res, next) => {
+const handleDeleteImage = async (req, res, next) => {
   try {
-    if (req.body[oldImageUrlField]) {
+    const oldImage = req.body.oldImage;
+    if (oldImage) {
       const bucket = firebaseAdmin.storage().bucket();
-
-      const oldImageUrl = req.body[oldImageUrlField];
-      const oldImageUrlParts = oldImageUrl.split('?alt=media&token=');
-      const oldImagePath = decodeURIComponent(
-        oldImageUrlParts[0].replace(
-          `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/`,
-          '',
-        ),
-      );
-
-      const oldFile = bucket.file(oldImagePath);
-      const [exists] = await oldFile.exists();
-      if (exists) {
-        await oldFile.delete().catch((error) => {
-          console.error('Error deleting old file:', error);
-        });
-      }
+      await deleteFileFromBucket(bucket, oldImage);
+      next();
     }
-    next();
   } catch (error) {
     console.log(error);
   }
 };
 
-const handleDeleteMultipleFiles = (oldImageUrlsField) => async (req, res, next) => {
-  const bucket = firebaseAdmin.storage().bucket();
-
+const handleDeleteMultipleImages = async (req, res, next) => {
   try {
-    if (req.body[oldImageUrlsField] && Array.isArray(req.body[oldImageUrlsField])) {
-      const oldImageUrls = req.body[oldImageUrlsField];
-
-      const deletePromises = oldImageUrls.map(async (oldImageUrl) => {
-        const oldImageUrlParts = oldImageUrl.split('?alt=media&token=');
-        const oldImagePath = decodeURIComponent(
-          oldImageUrlParts[0].replace(
-            `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/`,
-            '',
-          ),
-        );
-
-        const oldFile = bucket.file(oldImagePath);
-        try {
-          const [exists] = await oldFile.exists();
-          if (exists) {
-            await oldFile.delete().catch((error) => {
-              console.error('Error deleting old file:', error);
-            });
-          }
-          await oldFile.delete();
-        } catch (error) {
-          console.error('Error deleting old file:', error);
-        }
-      });
-
+    const isArray = req.body.imageList && Array.isArray(req.body.imageList);
+    if (isArray) {
+      const bucket = firebaseAdmin.storage().bucket();
+      const deletePromises = req.body.imageList.map((item) => deleteFileFromBucket(bucket, item));
       await Promise.all(deletePromises);
     }
     next();
@@ -199,7 +103,7 @@ const handleDeleteMultipleFiles = (oldImageUrlsField) => async (req, res, next) 
 
 module.exports = {
   uploadMulter,
-  handleDeleteFile,
-  handleUploadOrUpdateFile,
-  handleDeleteMultipleFiles,
+  handleDeleteImage,
+  handleUploadOrUpdateImage,
+  handleDeleteMultipleImages,
 };

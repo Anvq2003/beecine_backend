@@ -25,7 +25,7 @@ const movieSchema = new mongoose.Schema(
     isSeries: { type: Boolean, default: false },
     duration: { type: Number },
     rating: { type: Number },
-    thumbnailUrl: { type: String },
+    imageUrl: { type: String },
     trailerUrl: { type: String },
     type: { type: String, default: 'free' },
     tags: { type: [String] },

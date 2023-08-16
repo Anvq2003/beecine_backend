@@ -1,39 +1,43 @@
 const express = require('express');
 const router = express.Router();
 const BannerController = require('../controllers/BannerController');
-
-const bindController = (method) => {
-  return BannerController[method].bind(BannerController);
-};
-
+const bindController = require('../helpers/controllerHelper');
+const { validationBannerData } = require('../middlewares/validationMiddleware');
 const {
   uploadMulter,
-  handleUploadOrUpdateFile,
-  handleDeleteFile,
-  handleDeleteMultipleFiles,
+  handleUploadOrUpdateImage,
+  handleDeleteImage,
+  handleDeleteMultipleImages,
 } = require('../middlewares/uploadMiddleware');
 
-const upload = uploadMulter.single('imageUrl');
+const upload = uploadMulter.single('image');
 
-router.get('/', bindController('getQuery'));
-router.get('/all', bindController('getAll'));
-router.get('/trash', bindController('getTrash'));
-router.get('/:id', bindController('getOne'));
-router.post('/store', upload, handleUploadOrUpdateFile('imageUrl'), bindController('create'));
+router.get('/', bindController(BannerController, 'getQuery'));
+router.get('/all', bindController(BannerController, 'getAll'));
+router.get('/trash', bindController(BannerController, 'getTrash'));
+router.get('/:id', bindController(BannerController, 'getOne'));
+router.post(
+  '/store',
+  upload,
+  validationBannerData,
+  handleUploadOrUpdateImage,
+  bindController(BannerController, 'create'),
+);
 router.put(
   '/update/:id',
   upload,
-  handleUploadOrUpdateFile('oldImageUrl'),
-  bindController('update'),
+  validationBannerData,
+  handleUploadOrUpdateImage,
+  bindController(BannerController, 'update'),
 );
-router.delete('/delete/:id', bindController('delete'));
-router.delete('/delete-many', bindController('deleteMany'));
-router.patch('/restore/:id', bindController('restore'));
-router.delete('/force/:id', handleDeleteFile('oldImageUrl'), bindController('forceDelete'));
+router.delete('/delete/:id', bindController(BannerController, 'delete'));
+router.delete('/delete-many', bindController(BannerController, 'deleteMany'));
+router.patch('/restore/:id', bindController(BannerController, 'restore'));
+router.delete('/force/:id', handleDeleteImage, bindController(BannerController, 'forceDelete'));
 router.delete(
   '/force-many',
-  handleDeleteMultipleFiles('oldImageUrls'),
-  bindController('forceDeleteMany'),
+  handleDeleteMultipleImages,
+  bindController(BannerController, 'forceDeleteMany'),
 );
 
 module.exports = router;
