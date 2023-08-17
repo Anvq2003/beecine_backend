@@ -38,14 +38,13 @@ class BaseController {
   }
 
   async create(req, res, next) {
-    // try {
-    console.log('req.body base', req.body);
-    const data = new this.model(req.body);
-    const savedData = await data.save();
-    res.status(200).json(savedData);
-    // } catch (error) {
-    //   res.status(500).json(error.message);
-    // }
+    try {
+      const data = new this.model(req.body);
+      const savedData = await data.save();
+      res.status(200).json(savedData);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
   }
 
   async update(req, res, next) {

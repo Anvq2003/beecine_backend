@@ -6,6 +6,7 @@ const {
   billSchema,
   countrySchema,
   episodeSchema,
+  episodeSingleSchema,
   genreSchema,
   commentSchema,
   movieSchema,
@@ -22,6 +23,7 @@ const validateGenreData = validateDataAgainstSchema(genreSchema);
 const validationArtistData = validateDataAgainstSchema(artistSchema);
 const validationBannerData = validateDataAgainstSchema(bannerSchema);
 const validationEpisodeData = validateDataAgainstSchema(episodeSchema);
+const validationEpisodeSingleData = validateDataAgainstSchema(episodeSingleSchema);
 const validationMovieSchema = validateDataAgainstSchema(movieSchema);
 const validationProfileSchema = validateDataAgainstSchema(profileSchema);
 const validationSubscriptionSchema = validateDataAgainstSchema(subscriptionSchema);
@@ -38,6 +40,7 @@ module.exports = {
   validationEpisodeData,
   validationMovieSchema,
   validationProfileSchema,
+  validationEpisodeSingleData,
   validationSubscriptionSchema,
   validationUserSchema,
 };

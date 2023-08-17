@@ -6,15 +6,15 @@ const episodeSchema = new mongoose.Schema(
   {
     movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
     imageUrl: { type: String },
+    videoUrl: { type: String, require: true },
     title: { type: String },
     slug: { type: String, slug: ['title', 'season', 'number'], unique: true },
     description: { type: String },
-    views: { type: Number, default: 0 },
-    videoUrl: { type: String, require: true },
     season: { type: Number },
     number: { type: Number },
     duration: { type: Number },
     airDate: { type: Date },
+    views: { type: Number, default: 0 },
     status: { type: Boolean, default: true },
   },
   {

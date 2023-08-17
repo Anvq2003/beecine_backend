@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const EpisodeController = require('../controllers/EpisodeController');
 const bindController = require('../helpers/controllerHelper');
-const { validationEpisodeData } = require('../middlewares/validationMiddleware');
+const {
+  validationEpisodeData,
+  validationEpisodeSingleData,
+} = require('../middlewares/validationMiddleware');
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
@@ -21,6 +24,13 @@ router.post(
   '/store',
   upload,
   validationEpisodeData,
+  handleUploadOrUpdateImage,
+  bindController(EpisodeController, 'create'),
+);
+router.post(
+  '/store-single',
+  upload,
+  validationEpisodeSingleData,
   handleUploadOrUpdateImage,
   bindController(EpisodeController, 'create'),
 );
