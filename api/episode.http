@@ -8,7 +8,7 @@ GET {{baseUrl}}
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/64c290ee173cda17c307a2fa
+GET {{baseUrl}}/movie/64dce4127533225155c57fef
 
 ###
 

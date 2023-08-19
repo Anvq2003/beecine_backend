@@ -8,7 +8,7 @@ const { validateGenreData } = require('../middlewares/validationMiddleware');
 router.get('/', bindController(GenreController, 'getQuery'));
 router.get('/all', bindController(GenreController, 'getAll'));
 router.get('/trash', bindController(GenreController, 'getTrash'));
-router.get('/:id', bindController(GenreController, 'getOne'));
+router.get('/:param', bindController(GenreController, 'getByParam'));
 router.post('/store', validateGenreData, bindController(GenreController, 'create'));
 router.put('/update/:id', validateGenreData, bindController(GenreController, 'update'));
 router.delete('/delete/:id', bindController(GenreController, 'delete'));

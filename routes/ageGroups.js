@@ -8,7 +8,7 @@ const { validateAgeGroupData } = require('../middlewares/validationMiddleware');
 router.get('/', bindController(AgeGroupController, 'getQuery'));
 router.get('/all', bindController(AgeGroupController, 'getAll'));
 router.get('/trash', bindController(AgeGroupController, 'getTrash'));
-router.get('/:id', bindController(AgeGroupController, 'getOne'));
+router.get('/:param', bindController(AgeGroupController, 'getByParam'));
 router.post('/store', validateAgeGroupData, bindController(AgeGroupController, 'create'));
 router.put('/update/:id', validateAgeGroupData, bindController(AgeGroupController, 'update'));
 router.delete('/delete/:id', bindController(AgeGroupController, 'delete'));

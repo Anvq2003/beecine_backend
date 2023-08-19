@@ -8,7 +8,7 @@ const { validateCommentData } = require('../middlewares/validationMiddleware');
 router.get('/', bindController(CommentController, 'getQuery'));
 router.get('/all', bindController(CommentController, 'getAll'));
 router.get('/trash', bindController(CommentController, 'getTrash'));
-router.get('/:id', bindController(CommentController, 'getOne'));
+router.get('/:param', bindController(CommentController, 'getByParam'));
 router.post('/store', validateCommentData, bindController(CommentController, 'create'));
 router.put('/update/:id', validateCommentData, bindController(CommentController, 'update'));
 router.delete('/delete/:id', bindController(CommentController, 'delete'));

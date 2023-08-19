@@ -8,7 +8,7 @@ const { validateBillData } = require('../middlewares/validationMiddleware');
 router.get('/', bindController(BillController, 'getQuery'));
 router.get('/all', bindController(BillController, 'getAll'));
 router.get('/trash', bindController(BillController, 'getTrash'));
-router.get('/:id', bindController(BillController, 'getOne'));
+router.get('/:param', bindController(BillController, 'getByParam'));
 router.post('/store', validateBillData, bindController(BillController, 'create'));
 router.put('/update/:id', validateBillData, bindController(BillController, 'update'));
 router.delete('/delete/:id', bindController(BillController, 'delete'));

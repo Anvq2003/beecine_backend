@@ -8,7 +8,7 @@ const { validateCountryData } = require('../middlewares/validationMiddleware');
 router.get('/', bindController(CountryController, 'getQuery'));
 router.get('/all', bindController(CountryController, 'getAll'));
 router.get('/trash', bindController(CountryController, 'getTrash'));
-router.get('/:id', bindController(CountryController, 'getOne'));
+router.get('/:param', bindController(CountryController, 'getByParam'));
 router.post('/store', validateCountryData, bindController(CountryController, 'create'));
 router.put('/update/:id', validateCountryData, bindController(CountryController, 'update'));
 router.delete('/delete/:id', bindController(CountryController, 'delete'));

@@ -8,7 +8,7 @@ const { validationSubscriptionSchema } = require('../middlewares/validationMiddl
 router.get('/', bindController(SubscriptionController, 'getQuery'));
 router.get('/all', bindController(SubscriptionController, 'getAll'));
 router.get('/trash', bindController(SubscriptionController, 'getTrash'));
-router.get('/:id', bindController(SubscriptionController, 'getOne'));
+router.get('/:param', bindController(SubscriptionController, 'getByParam'));
 router.post(
   '/store',
   validationSubscriptionSchema,

@@ -18,8 +18,9 @@ const upload = uploadMulter.single('image');
 // Routes
 router.get('/', bindController(EpisodeController, 'getQuery'));
 router.get('/all', bindController(EpisodeController, 'getAll'));
+router.get('/movie/:id', bindController(EpisodeController, 'getByMovieId'));
 router.get('/trash', bindController(EpisodeController, 'getTrash'));
-router.get('/:id', bindController(EpisodeController, 'getOne'));
+router.get('/:param', bindController(EpisodeController, 'getByParam'));
 router.post(
   '/store',
   upload,
@@ -38,6 +39,13 @@ router.put(
   '/update/:id',
   upload,
   validationEpisodeData,
+  handleUploadOrUpdateImage,
+  bindController(EpisodeController, 'update'),
+);
+router.put(
+  '/update-single/:id',
+  upload,
+  validationEpisodeSingleData,
   handleUploadOrUpdateImage,
   bindController(EpisodeController, 'update'),
 );

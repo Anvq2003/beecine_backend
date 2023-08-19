@@ -24,13 +24,21 @@ class BaseController {
     }
   }
 
-  async getOne(req, res, next) {
+  async getByParam(req, res, next) {
     try {
-      const { id } = req.params;
-      if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ error: 'Invalid product ID' });
+      const param = req.params.param;
+      let data;
+
+      if (mongoose.Types.ObjectId.isValid(param)) {
+        data = await this.model.findById(param);
+      } else {
+        data = await AlbumModel.findOne({ slug: param });
       }
-      const data = await this.model.findById(req.params.id);
+
+      if (!data) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

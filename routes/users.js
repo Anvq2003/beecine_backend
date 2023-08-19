@@ -16,7 +16,7 @@ const upload = uploadMulter.single('image');
 router.get('/', bindController(UserController, 'getQuery'));
 router.get('/all', bindController(UserController, 'getAll'));
 router.get('/trash', bindController(UserController, 'getTrash'));
-router.get('/:id', bindController(UserController, 'getOne'));
+router.get('/:param', bindController(UserController, 'getByParam'));
 router.post(
   '/store',
   upload,
