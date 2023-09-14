@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     UID: { type: String, required: true },
     points: { type: Number, default: 0 },
+
     subscriptionType: { type: String, default: 'free' },
     profiles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile' }],
     status: { type: Boolean, default: true },
