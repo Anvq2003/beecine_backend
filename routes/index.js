@@ -10,6 +10,7 @@ const ageGroupsRouter = require('./ageGroups');
 const artistsRouter = require('./artists');
 const moviesRouter = require('./movies');
 const episodesRouter = require('./episodes');
+const featureFilmRouter = require('./featureFilm');
 
 function routes(app) {
   app.use('/', siteRouter);
@@ -24,6 +25,7 @@ function routes(app) {
   app.use('/api/artists', artistsRouter);
   app.use('/api/movies', moviesRouter);
   app.use('/api/episodes', episodesRouter);
+  app.use('/api/feature-film', featureFilmRouter);
 }
 
 module.exports = routes;

@@ -135,9 +135,9 @@ const episodeSingleSchema = Joi.object({
 
 const movieSchema = Joi.object({
   genres: Joi.any(),
-  country: Joi.any(),
   cast: Joi.any(),
   directors: Joi.any(),
+  country: Joi.string(),
   tags: Joi.array().items(Joi.string()),
   minimumAge: Joi.number().default(0),
   title: Joi.string().required(),
@@ -161,6 +161,35 @@ const movieSchema = Joi.object({
   totalFavorites: Joi.number().default(0),
   totalComments: Joi.number().default(0),
   status: Joi.boolean().default(true),
+});
+
+const featureFilmSchema = Joi.object({
+  genres: Joi.any(),
+  cast: Joi.any(),
+  directors: Joi.any(),
+  country: Joi.string(),
+  tags: Joi.array().items(Joi.string()),
+  minimumAge: Joi.number().default(0),
+  title: Joi.string().required(),
+  description: Joi.string().required(),
+  releaseDate: Joi.date().required(),
+  isSeries: Joi.boolean().default(false),
+  duration: Joi.number(),
+  rating: Joi.number(),
+  image: Joi.alternatives().try(
+    Joi.object({
+      file: Joi.binary().required(),
+      filename: Joi.string().required(),
+      mimetype: Joi.string().required(),
+    }),
+    Joi.string().uri(),
+    Joi.any(),
+  ),
+  oldImage: Joi.string().uri().allow(''),
+  trailerUrl: Joi.string(),
+  type: Joi.string().default('free'),
+  status: Joi.boolean().default(true),
+  videoUrl: Joi.string().required(),
 });
 
 const profileSchema = Joi.object({
@@ -235,4 +264,5 @@ module.exports = {
   profileSchema,
   subscriptionSchema,
   userSchema,
+  featureFilmSchema,
 };

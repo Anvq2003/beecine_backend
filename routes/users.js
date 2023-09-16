@@ -17,6 +17,7 @@ router.get('/', bindController(UserController, 'getQuery'));
 router.get('/all', bindController(UserController, 'getAll'));
 router.get('/trash', bindController(UserController, 'getTrash'));
 router.get('/:param', bindController(UserController, 'getByParam'));
+router.get('/check-email/:id', bindController(UserController, 'checkEmail'));
 router.post(
   '/store',
   upload,

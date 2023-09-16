@@ -13,6 +13,7 @@ const {
   profileSchema,
   subscriptionSchema,
   userSchema,
+  featureFilmSchema,
 } = require('./validationSchemas');
 
 const validateAgeGroupData = validateDataAgainstSchema(ageGroupSchema);
@@ -28,6 +29,7 @@ const validationMovieSchema = validateDataAgainstSchema(movieSchema);
 const validationProfileSchema = validateDataAgainstSchema(profileSchema);
 const validationSubscriptionSchema = validateDataAgainstSchema(subscriptionSchema);
 const validationUserSchema = validateDataAgainstSchema(userSchema);
+const validationFeatureFilmSchemaSchema = validateDataAgainstSchema(featureFilmSchema);
 
 module.exports = {
   validateAgeGroupData,
@@ -43,4 +45,5 @@ module.exports = {
   validationEpisodeSingleData,
   validationSubscriptionSchema,
   validationUserSchema,
+  validationFeatureFilmSchemaSchema,
 };

@@ -11,6 +11,7 @@ class EpisodeController extends BaseController {
       const episode = await EpisodeModel.findOne({
         movieId: id,
       });
+      if (!episode) return res.status(404).json('Episode not found');
       res.status(200).json(episode);
     } catch (error) {
       res.status(500).json(error.message);

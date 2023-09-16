@@ -32,7 +32,7 @@ class BaseController {
       if (mongoose.Types.ObjectId.isValid(param)) {
         data = await this.model.findById(param);
       } else {
-        data = await AlbumModel.findOne({ slug: param });
+        data = await this.model.findOne({ slug: param });
       }
 
       if (!data) {
@@ -72,7 +72,7 @@ class BaseController {
   async delete(req, res, next) {
     try {
       await this.model.delete({ _id: req.params.id });
-      res.status(200).json('Deleted successfully');
+      res.status(200).json({ message: 'Deleted successfully' });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -81,7 +81,7 @@ class BaseController {
     try {
       const { ids } = req.body;
       await this.model.delete({ _id: { $in: ids } });
-      res.status(200).json('Deleted successfully');
+      res.status(200).json({ message: 'Deleted successfully' });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -110,7 +110,7 @@ class BaseController {
   async forceDelete(req, res, next) {
     try {
       await this.model.findByIdAndDelete(req.params.id);
-      res.status(200).json('Deleted successfully');
+      res.status(200).json({ message: 'Deleted successfully' });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -120,7 +120,7 @@ class BaseController {
     const { ids } = req.body;
     try {
       await this.model.deleteMany({ _id: { $in: ids } });
-      res.status(200).json('Deleted successfully');
+      res.status(200).json({ message: 'Deleted successfully' });
     } catch (error) {
       res.status(500).json(error.message);
     }
