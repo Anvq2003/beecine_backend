@@ -3,16 +3,16 @@ const mongooseDelete = require('mongoose-delete');
 
 const profileSchema = new mongoose.Schema(
   {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true },
     imageUrl: { type: String, required: true },
     password: { type: String },
     isChildren: { type: Boolean, required: true, default: false },
     watchedMovies: [
       {
-        movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
         episodeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Episode' },
-        minutesWatched: { type: Number, default: 0 },
-        lastWatchedAt: { type: Date, default: Date.now },
+        minutes: { type: Number, default: 0 },
+        date: { type: Date, default: Date.now },
       },
     ],
     favoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Episode' }],

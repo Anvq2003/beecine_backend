@@ -1,4 +1,4 @@
-const siteRouter = require('./site');
+const commonRouter = require('./common');
 const bannerRouter = require('./banners');
 const genresRouter = require('./genres');
 const subscriptionsRouter = require('./subscriptions');
@@ -13,7 +13,7 @@ const episodesRouter = require('./episodes');
 const featureFilmRouter = require('./featureFilm');
 
 function routes(app) {
-  app.use('/', siteRouter);
+  app.use('/', commonRouter);
   app.use('/api/banners', bannerRouter);
   app.use('/api/genres', genresRouter);
   app.use('/api/subscriptions', subscriptionsRouter);

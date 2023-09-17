@@ -7,6 +7,7 @@ const { validateBillData } = require('../middlewares/validationMiddleware');
 // Routes
 router.get('/', bindController(BillController, 'getQuery'));
 router.get('/all', bindController(BillController, 'getAll'));
+router.get('/top', bindController(BillController, 'getTop'));
 router.get('/trash', bindController(BillController, 'getTrash'));
 router.get('/:param', bindController(BillController, 'getByParam'));
 router.post('/store', validateBillData, bindController(BillController, 'create'));

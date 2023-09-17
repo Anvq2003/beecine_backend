@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}} 
+GET {{baseUrl}}/top
 
 
 ###

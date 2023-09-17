@@ -17,8 +17,8 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Phim ca nhạc",
-    "avatarUrl": "https://example.com/avatars/avatar1.jpg"
+    "name": "Võ Quốc An 1",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/beecine-afb84.appspot.com/o/images%2F1694771101896_daodien2.jpg?alt=media&token=544f67c8-4d28-47d8-ba98-0dcddb45905e",
 }
 
 ###
