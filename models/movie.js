@@ -16,7 +16,7 @@ const movieSchema = new mongoose.Schema(
     genres: [infoSchema],
     cast: [infoSchema],
     directors: [infoSchema],
-    country: { type: String, require: true },
+    country: infoSchema,
     minimumAge: { type: Number, default: 0 },
     title: { type: String, required: true },
     slug: { type: String, slug: 'title', unique: true },

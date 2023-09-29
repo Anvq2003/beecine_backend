@@ -45,15 +45,13 @@ const billSchema = Joi.object({
 
 const countrySchema = Joi.object({
   name: Joi.string().required(),
-  code: Joi.string().required(),
-  language: Joi.string(),
-  currency: Joi.string(),
-  telephone: Joi.number(),
+  order: Joi.number().default(0),
   status: Joi.boolean().default(true),
 });
 
 const genreSchema = Joi.object({
   name: Joi.string().required(),
+  order: Joi.number().default(0),
   isChildren: Joi.boolean().required().default(false),
   status: Joi.boolean().default(true),
 });
@@ -137,7 +135,7 @@ const movieSchema = Joi.object({
   genres: Joi.any(),
   cast: Joi.any(),
   directors: Joi.any(),
-  country: Joi.string(),
+  country: Joi.any(),
   tags: Joi.array().items(Joi.string()),
   minimumAge: Joi.number().default(0),
   title: Joi.string().required(),
@@ -167,7 +165,7 @@ const featureFilmSchema = Joi.object({
   genres: Joi.any(),
   cast: Joi.any(),
   directors: Joi.any(),
-  country: Joi.string(),
+  country: Joi.any(),
   tags: Joi.array().items(Joi.string()),
   minimumAge: Joi.number().default(0),
   title: Joi.string().required(),

@@ -3,4 +3,4 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/search
+GET {{baseUrl}}/get-top-movie

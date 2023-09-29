@@ -33,12 +33,14 @@ class MovieController extends BaseController {
       const genres = JSON.parse(req.body.genres);
       const cast = JSON.parse(req.body.cast);
       const directors = JSON.parse(req.body.directors);
+      const country = JSON.parse(req.body.country);
 
       const movieData = {
         ...req.body,
         genres,
         cast,
         directors,
+        country,
       };
 
       const data = new MovieModel(movieData);
@@ -54,12 +56,14 @@ class MovieController extends BaseController {
       const genres = JSON.parse(req.body.genres);
       const cast = JSON.parse(req.body.cast);
       const directors = JSON.parse(req.body.directors);
+      const country = JSON.parse(req.body.country);
 
       const movieData = {
         ...req.body,
         genres,
         cast,
         directors,
+        country,
       };
 
       const data = await MovieModel.findByIdAndUpdate(

@@ -5,6 +5,7 @@ var slug = require('mongoose-slug-updater');
 const genre = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    order: { type: Number, required: true, default: 0 },
     slug: { type: String, slug: 'name', unique: true },
     isChildren: { type: Boolean, required: true, default: false },
     status: { type: Boolean, default: true },

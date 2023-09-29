@@ -17,7 +17,7 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Phim ca nhạc"
+    "name": "Viet nam"
 }
 
 ###
