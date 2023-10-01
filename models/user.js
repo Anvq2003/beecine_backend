@@ -10,7 +10,13 @@ const userSchema = new mongoose.Schema(
     UID: { type: String, required: true },
     points: { type: Number, default: 0 },
 
-    subscriptionType: { type: String, default: 'free' },
+    subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' },
+    permissions: [
+      {
+        type: String,
+        enum: ['READ', 'ADD', 'UPDATE', 'DELETE', 'RESTORE', 'FORCE_DELETE'],
+      },
+    ],
     status: { type: Boolean, default: true },
   },
   {

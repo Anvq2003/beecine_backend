@@ -6,8 +6,6 @@ const subscriptionsRouter = require('./subscriptions');
 const billsRouter = require('./bills');
 const usersRouter = require('./users');
 const commentsRouter = require('./comments');
-const profilesRouter = require('./profiles');
-const ageGroupsRouter = require('./ageGroups');
 const artistsRouter = require('./artists');
 const moviesRouter = require('./movies');
 const episodesRouter = require('./episodes');
@@ -22,8 +20,6 @@ function routes(app) {
   app.use('/api/bills', billsRouter);
   app.use('/api/users', usersRouter);
   app.use('/api/comments', commentsRouter);
-  app.use('/api/profiles', profilesRouter);
-  app.use('/api/age-groups', ageGroupsRouter);
   app.use('/api/artists', artistsRouter);
   app.use('/api/movies', moviesRouter);
   app.use('/api/episodes', episodesRouter);

@@ -7,6 +7,15 @@ class MovieController extends BaseController {
     super(MovieModel);
   }
 
+  async getAll(req, res, next) {
+    try {
+      const data = await MovieModel.findWithDeleted().populate('type');
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async getByParam(req, res, next) {
     try {
       const param = req.params.param;

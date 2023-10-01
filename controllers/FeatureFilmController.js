@@ -35,19 +35,18 @@ class FeatureFilmController {
       const movieDataToUpdate = req.body;
 
       const updatedMovie = await MovieModel.findByIdAndUpdate(
-        episodeId,
+        movieId,
         { $set: movieDataToUpdate },
         { new: true },
       );
 
       const episodeData = {
-        movieId,
         title: movieDataToUpdate.title,
         videoUrl: movieDataToUpdate.videoUrl,
       };
 
       const updatedEpisode = await EpisodeModel.findByIdAndUpdate(
-        episodeIdToUpdate._id,
+        updatedMovie._id,
         { $set: episodeData },
         { new: true },
       );

@@ -3,7 +3,7 @@ const mongooseDelete = require('mongoose-delete');
 
 const replySchema = new mongoose.Schema(
   {
-    profileId: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     comment: { type: String, required: true },
     likes: { type: Array, default: [] },
     dislikes: { type: Array, default: [] },
@@ -16,7 +16,7 @@ const replySchema = new mongoose.Schema(
 
 const commentSchema = new mongoose.Schema(
   {
-    profileId: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
     comment: { type: String },
     likes: { type: Array, default: [] },

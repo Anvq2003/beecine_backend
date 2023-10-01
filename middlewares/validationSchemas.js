@@ -1,14 +1,7 @@
 const Joi = require('joi');
 
-const ageGroupSchema = Joi.object({
-  name: Joi.string().required(),
-  description: Joi.string(),
-  minimum: Joi.number().required(),
-  status: Joi.boolean().default(true),
-});
-
 const replySchema = Joi.object({
-  profileId: Joi.string()
+  userId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
   comment: Joi.string().required(),
@@ -18,7 +11,7 @@ const replySchema = Joi.object({
 });
 
 const commentSchema = Joi.object({
-  profileId: Joi.string()
+  userId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
   movieId: Joi.string()
@@ -67,10 +60,9 @@ const artistSchema = Joi.object({
     Joi.any(),
   ),
   name: Joi.string().required(),
-  stageName: Joi.string().required(),
   oldImage: Joi.string().uri().allow(''),
   roles: Joi.array().items(Joi.string()),
-  bio: Joi.string(),
+  bio: Joi.string().allow(''),
   country: Joi.string().required(),
   status: Joi.boolean().default(true),
 });
@@ -116,21 +108,6 @@ const episodeSchema = Joi.object({
   status: Joi.boolean().default(true),
 });
 
-const episodeSingleSchema = Joi.object({
-  movieId: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .required(),
-  title: Joi.string().required(),
-  videoUrl: Joi.string().required(),
-  description: Joi.string().optional(),
-  views: Joi.number().default(0),
-  season: Joi.number().optional(),
-  number: Joi.number().optional(),
-  duration: Joi.number().optional(),
-  airDate: Joi.date().iso().optional(),
-  status: Joi.boolean().default(true),
-});
-
 const movieSchema = Joi.object({
   genres: Joi.any(),
   cast: Joi.any(),
@@ -139,7 +116,7 @@ const movieSchema = Joi.object({
   tags: Joi.array().items(Joi.string()),
   minimumAge: Joi.number().default(0),
   title: Joi.string().required(),
-  description: Joi.string().required(),
+  description: Joi.string().allow(''),
   releaseDate: Joi.date().required(),
   isSeries: Joi.boolean().default(false),
   duration: Joi.number(),
@@ -155,7 +132,7 @@ const movieSchema = Joi.object({
   ),
   oldImage: Joi.string().uri().allow(''),
   trailerUrl: Joi.string(),
-  type: Joi.string().default('free'),
+  type: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   totalFavorites: Joi.number().default(0),
   totalComments: Joi.number().default(0),
   status: Joi.boolean().default(true),
@@ -169,7 +146,7 @@ const featureFilmSchema = Joi.object({
   tags: Joi.array().items(Joi.string()),
   minimumAge: Joi.number().default(0),
   title: Joi.string().required(),
-  description: Joi.string().required(),
+  description: Joi.string().allow(''),
   releaseDate: Joi.date().required(),
   isSeries: Joi.boolean().default(false),
   duration: Joi.number(),
@@ -185,37 +162,9 @@ const featureFilmSchema = Joi.object({
   ),
   oldImage: Joi.string().uri().allow(''),
   trailerUrl: Joi.string(),
-  type: Joi.string().default('free'),
+  type: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   status: Joi.boolean().default(true),
   videoUrl: Joi.string().required(),
-});
-
-const profileSchema = Joi.object({
-  name: Joi.string().required(),
-  image: Joi.alternatives().try(
-    Joi.object({
-      file: Joi.binary().required(),
-      filename: Joi.string().required(),
-      mimetype: Joi.string().required(),
-    }),
-    Joi.string().uri(),
-    Joi.any(),
-  ),
-  oldImage: Joi.string().uri().allow(''),
-  password: Joi.string(),
-  isChildren: Joi.boolean().required().default(false),
-  watchedMovies: Joi.array().items(
-    Joi.object({
-      movieId: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$/)
-        .required(),
-      episodeId: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
-      minutesWatched: Joi.number().default(0),
-      lastWatchedAt: Joi.date().iso().default(Date.now),
-    }),
-  ),
-  favoriteMovies: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
-  status: Joi.boolean().default(true),
 });
 
 const subscriptionSchema = Joi.object({
@@ -243,23 +192,19 @@ const userSchema = Joi.object({
   email: Joi.string().email().required(),
   UID: Joi.string().required(),
   points: Joi.number().default(0),
-  subscriptionType: Joi.string().default('free'),
-  profiles: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  permissions: Joi.array().default(null),
   status: Joi.boolean().default(true),
 });
 
 module.exports = {
-  ageGroupSchema,
   artistSchema,
   bannerSchema,
   billSchema,
   countrySchema,
   episodeSchema,
-  episodeSingleSchema,
   genreSchema,
   commentSchema,
   movieSchema,
-  profileSchema,
   subscriptionSchema,
   userSchema,
   featureFilmSchema,

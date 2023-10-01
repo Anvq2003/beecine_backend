@@ -6,8 +6,7 @@ const artistSchema = new mongoose.Schema(
   {
     imageUrl: { type: String, required: true },
     name: { type: String, required: true },
-    stageName: { type: String, required: true },
-    slug: { type: String, slug: 'stageName', unique: true },
+    slug: { type: String, slug: 'name', unique: true },
     roles: [{ type: String, required: true }],
     bio: { type: String },
     country: { type: String, required: true },
