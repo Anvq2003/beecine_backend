@@ -5,16 +5,17 @@ const {
   billSchema,
   countrySchema,
   episodeSchema,
-  episodeSingleSchema,
   genreSchema,
   commentSchema,
   movieSchema,
   subscriptionSchema,
   userSchema,
   featureFilmSchema,
+  replySchema,
 } = require('./validationSchemas');
 
 const validateCommentData = validateDataAgainstSchema(commentSchema);
+const validateReplyData = validateDataAgainstSchema(replySchema);
 const validateBillData = validateDataAgainstSchema(billSchema);
 const validateCountryData = validateDataAgainstSchema(countrySchema);
 const validateGenreData = validateDataAgainstSchema(genreSchema);
@@ -27,6 +28,7 @@ const validationUserSchema = validateDataAgainstSchema(userSchema);
 const validationFeatureFilmSchemaSchema = validateDataAgainstSchema(featureFilmSchema);
 
 module.exports = {
+  validateReplyData,
   validateCommentData,
   validateBillData,
   validateCountryData,

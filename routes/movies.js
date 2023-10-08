@@ -16,6 +16,9 @@ router.get('/', bindController(MovieController, 'getQuery'));
 router.get('/all', bindController(MovieController, 'getAll'));
 router.get('/trash', bindController(MovieController, 'getTrash'));
 router.get('/:param', bindController(MovieController, 'getByParam'));
+router.get('/artist/:slug', bindController(MovieController, 'getByArtistSlug'));
+router.get('/country/:slug', bindController(MovieController, 'getByCountrySlug'));
+router.get('/genre/:slug', bindController(MovieController, 'getByGenreSlug'));
 router.post(
   '/store',
   upload,

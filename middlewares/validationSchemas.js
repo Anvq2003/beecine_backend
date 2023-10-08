@@ -1,10 +1,15 @@
 const Joi = require('joi');
 
 const replySchema = Joi.object({
+  replyId: Joi.string().allow(''),
+  commentId: Joi.string().required(),
+  movieId: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
   userId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
-  comment: Joi.string().required(),
+  content: Joi.string().required(),
   likes: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   dislikes: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   status: Joi.boolean().default(true),
@@ -17,11 +22,11 @@ const commentSchema = Joi.object({
   movieId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
-  comment: Joi.string(),
+  content: Joi.string().required(),
   likes: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   dislikes: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   status: Joi.boolean().default(true),
-  replies: Joi.array().items(replySchema),
+  replies: Joi.array().items(replySchema).default([]),
 });
 
 const billSchema = Joi.object({
@@ -203,6 +208,7 @@ const userSchema = Joi.object({
 });
 
 module.exports = {
+  replySchema,
   artistSchema,
   bannerSchema,
   billSchema,

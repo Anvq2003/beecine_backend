@@ -8,7 +8,7 @@ GET {{baseUrl}}
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/64cb7b72da3e0702f7273acf
+GET {{baseUrl}}/hanh-dong
 
 ###
 

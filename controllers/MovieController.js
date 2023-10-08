@@ -37,6 +37,56 @@ class MovieController extends BaseController {
     }
   }
 
+  async getByArtistSlug(req, res, next) {
+    try {
+      const slug = req.params.slug;
+      const data = await MovieModel.find({
+        $or: [
+          { cast: { $elemMatch: { slug: slug } } },
+          { directors: { $elemMatch: { slug: slug } } },
+        ],
+      });
+
+      if (!data) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async getByCountrySlug(req, res, next) {
+    try {
+      const slug = req.params.slug;
+      const data = await MovieModel.find({ 'country.slug': slug });
+
+      if (!data) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async getByGenreSlug(req, res, next) {
+    try {
+      const slug = req.params.slug;
+      const data = await MovieModel.find({ genres: { $elemMatch: { slug: slug } } });
+
+      if (!data) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async create(req, res, next) {
     try {
       const genres = JSON.parse(req.body.genres);

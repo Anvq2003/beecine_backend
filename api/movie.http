@@ -8,7 +8,17 @@ GET {{baseUrl}}
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/64c290ee173cda17c307a2fa
+GET {{baseUrl}}/artist/tran-thanh
+
+###
+###
+# @name GetbyId
+GET {{baseUrl}}/genre/phim-han
+
+###
+###
+# @name GetbyId
+GET {{baseUrl}}/country/anh
 
 ###
 

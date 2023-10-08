@@ -4,7 +4,7 @@ const mongooseDelete = require('mongoose-delete');
 const replySchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    comment: { type: String, required: true },
+    content: { type: String, required: true },
     likes: { type: Array, default: [] },
     dislikes: { type: Array, default: [] },
     status: { type: Boolean, default: true },
@@ -18,7 +18,7 @@ const commentSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
-    comment: { type: String },
+    content: { type: String },
     likes: { type: Array, default: [] },
     dislikes: { type: Array, default: [] },
     status: { type: Boolean, default: true },

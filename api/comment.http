@@ -11,87 +11,54 @@ GET {{baseUrl}}
 GET {{baseUrl}}/64c4c69b8f02e1f31bdc33af
 
 ###
+# @name ToggleLike
+GET {{baseUrl}}/like-comment
+
+###
 
 # @name Create
 POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-  "profileId": "64c290ee173cda17c307a2fa",
+  "userId": "64c290ee173cda17c307a2fa",
   "movieId": "64c290ee173cda17c307a2fa",
-  "comment": "demo"
+  "content": "demo"
 }
 
 ###
-
-# @name Create
-POST {{baseUrl}}/reply
+# @name CreateReply
+POST {{baseUrl}}/store-reply
 Content-Type: application/json
 
 {
-  "commentId":"64c9f4add9d2246b5d568107",
-  "profileId": "64c290ee173cda17c307a2fa",
-  "comment": "demo"
+  "commentId": "6522accd37fe2aaaa93bc362",
+  "userId": "64c290ee173cda17c307a2fa",
+  "movieId": "64c290ee173cda17c307a2fa",
+  "content": "demo reply 123"
 }
 
 ###
-
-# @name ToggleLike
-POST {{baseUrl}}/like-dislike
-Content-Type: application/json
-
-{
-  "commentId":"64c9f4add9d2246b5d568107",
-  "profileId": "64c290ee173cda17c307a2fa",
-  "action": "dislike"
-}
-
-###
-
-# @name ToggleReplyLike
-POST {{baseUrl}}/replies/like-dislike
-Content-Type: application/json
-
-{
-  "commentId":"64c9f4add9d2246b5d568107",
-  "profileId": "64c290ee173cda17c307a2fa",
-  "replyId":"64c9f512fe36fb77e3c4226c",
-  "action": "like"
-}
-
-###
-# @name CreateMany
-POST {{baseUrl}}/store-many
-Content-Type: application/json
-
-[
-  {
-  "imageUrl": "https://example.com/banners/banner1.jpg",
-  "order": 1,
-  "link": "https://example.com/page1"
-},
-
-{
-  "imageUrl": "https://example.com/banners/banner2.jpg",
-  "order": 2,
-  "link": "https://example.com/page2"  
-},
-
-{
-  "imageUrl": "https://example.com/banners/banner3.jpg",
-  "order": 3,
-  "link": "https://example.com/page3"
-}
-]
-
-###
-
 # @name Update
-PUT {{baseUrl}}/update/64c290ee173cda17c307a2fa
+PUT {{baseUrl}}/update/6522accd37fe2aaaa93bc362
 Content-Type: application/json
 
 {
-   "name": "demo mới"
+  "userId": "64c290ee173cda17c307a2fa",
+  "movieId": "64c290ee173cda17c307a2fa",
+  "content": "demo 12"
+}
+###
+# @name UpdateReply
+PUT {{baseUrl}}/update-reply
+Content-Type: application/json
+
+{
+  "replyId": "6522aefa5283b93724ff2840",
+  "commentId": "6522accd37fe2aaaa93bc362",
+  "userId": "64c290ee173cda17c307a2fa",
+  "movieId": "64c290ee173cda17c307a2fa",
+  "content": "test 0987654"
 }
 
 ###

@@ -8,7 +8,11 @@ GET {{baseUrl}}
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/movie/64dce4127533225155c57fef
+GET {{baseUrl}}/6520152dc58e982ae637764e
+
+###
+# @name GetbyMovieId
+GET {{baseUrl}}/movie/6520152cc58e982ae637764b
 
 ###
 
