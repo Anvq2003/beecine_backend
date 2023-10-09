@@ -1,6 +1,9 @@
-@baseUrl =  http://localhost:3000/api/
+@baseUrl =  http://localhost:3000/api
 
 # User API
 
 # @name Getall
 GET {{baseUrl}}/get-top-movie
+###
+# @name Getall
+GET {{baseUrl}}/update-data

@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/top
+GET {{baseUrl}}
 
 
 ###
@@ -17,10 +17,10 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-  "_id": "64c290ee173cda17c307a2fa",
-  "avatarUrl": "https://example.com/avatars/avatar1.jpg",
-  "fullName": "demo",
-  "email": "quocan$"
+  "imageUrl": "https://example.com/banners/banner1.jpg",
+  "name": "demo12334567",
+  "email": "demo00092345673@gmail.com",
+  "uid": "110werty"
 }
 
 ###
@@ -29,33 +29,20 @@ POST {{baseUrl}}/store-many
 Content-Type: application/json
 
 [
-  {
-  "imageUrl": "https://example.com/banners/banner1.jpg",
-  "order": 1,
-  "link": "https://example.com/page1"
-},
-
-{
-  "imageUrl": "https://example.com/banners/banner2.jpg",
-  "order": 2,
-  "link": "https://example.com/page2"  
-},
-
-{
-  "imageUrl": "https://example.com/banners/banner3.jpg",
-  "order": 3,
-  "link": "https://example.com/page3"
-}
 ]
 
 ###
 
 # @name Update
-PUT {{baseUrl}}/update/64c290ee173cda17c307a2fa
+PUT {{baseUrl}}/update/6523c4ddc715d289a5532bf2
 Content-Type: application/json
 
 {
-   "fullName": "demo mới"
+  "imageUrl": "https://example.com/banners/banner1.jpg",
+  "name": "quoc an",
+  "email": "demo00092345673@gmail.com",
+  "uid": "110werty",
+  "permissions": ["ADD", "EDIT", "DELETE"]
 }
 
 ###
@@ -85,4 +72,4 @@ PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
 
 ###
 # @name ForceDelete
-DELETE {{baseUrl}}/force/64cb7f5af921928736b32b83
+DELETE {{baseUrl}}/force/6523c41a399c2fa80289a023

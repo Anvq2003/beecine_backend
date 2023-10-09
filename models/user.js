@@ -3,18 +3,18 @@ const mongooseDelete = require('mongoose-delete');
 
 const userSchema = new mongoose.Schema(
   {
-    imageUrl: { type: String, required: true },
-    fullName: { type: String, required: true },
-    role: { type: String, required: true },
+    imageUrl: { type: String, default: null },
+    name: { type: String, required: true },
+    role: { type: String, required: true, enum: ['ADMIN', 'USER'], default: 'USER' },
     email: { type: String, required: true, unique: true },
-    UID: { type: String, required: true },
+    uid: { type: String, required: true, unique: true },
     points: { type: Number, default: 0 },
-
-    subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' },
+    subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription', default: null },
     permissions: [
       {
         type: String,
         enum: ['READ', 'ADD', 'UPDATE', 'DELETE', 'RESTORE', 'FORCE_DELETE'],
+        default: null,
       },
     ],
     status: { type: Boolean, default: true },

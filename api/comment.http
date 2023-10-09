@@ -8,11 +8,16 @@ GET {{baseUrl}}
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/64c4c69b8f02e1f31bdc33af
+GET {{baseUrl}}/6522accd37fe2aaaa93bc362
 
 ###
-# @name ToggleLike
-GET {{baseUrl}}/like-comment
+# @name ToggleLike commentId, userId, action
+GET {{baseUrl}}/like-comment?action=dislike&commentId=6522accd37fe2aaaa93bc362&userId=64c290ee173cda17c307a2fa
+
+###
+###
+# @name ToggleLike commentId, replyId, userId, action
+GET {{baseUrl}}/like-reply?action=dislike&replyId=6522aef25283b93724ff283c&commentId=6522accd37fe2aaaa93bc362&userId=64c290ee173cda17c307a2fa
 
 ###
 

@@ -59,9 +59,8 @@ const deleteFileFromBucket = async (bucket, image) => {
 const handleUploadOrUpdateImage = async (req, res, next) => {
   try {
     const file = req.file;
-
+    if (req.body.imageUrl) return next();
     if (!file) {
-      // No new file uploaded, use the existing image URL
       req.body.imageUrl = req.body.oldImage;
       return next();
     }
@@ -84,12 +83,11 @@ const handleUploadOrUpdateImage = async (req, res, next) => {
 
 const handleDeleteImage = async (req, res, next) => {
   try {
-    if (req.body.image) {
-      const oldImage = req.body.image;
-      const bucket = firebaseAdmin.storage().bucket();
-      await deleteFileFromBucket(bucket, oldImage);
-      next();
-    }
+    if (!req.body.image) return next();
+    const oldImage = req.body.image;
+    const bucket = firebaseAdmin.storage().bucket();
+    await deleteFileFromBucket(bucket, oldImage);
+    next();
   } catch (error) {
     console.log(error);
   }
@@ -97,12 +95,11 @@ const handleDeleteImage = async (req, res, next) => {
 
 const handleDeleteMultipleImages = async (req, res, next) => {
   try {
+    if (!req.body.imageList) return next();
     const isArray = req.body.imageList && Array.isArray(req.body.imageList);
-    if (isArray) {
-      const bucket = firebaseAdmin.storage().bucket();
-      const deletePromises = req.body.imageList.map((item) => deleteFileFromBucket(bucket, item));
-      await Promise.all(deletePromises);
-    }
+    const bucket = firebaseAdmin.storage().bucket();
+    const deletePromises = req.body.imageList.map((item) => deleteFileFromBucket(bucket, item));
+    await Promise.all(deletePromises);
     next();
   } catch (error) {
     console.log(error);

@@ -43,34 +43,33 @@ class CommentController extends BaseController {
   async likeComment(req, res) {
     try {
       const { commentId, userId, action } = req.query;
-      res.json({ commentId, userId, action });
-      // const comment = await CommentModel.findById(commentId);
+      const comment = await CommentModel.findById(commentId);
 
-      // if (!comment) {
-      //   return res.status(404).json({ message: 'Comment not found' });
-      // }
+      if (!comment) {
+        return res.status(404).json({ message: 'Comment not found' });
+      }
 
-      // const { likes, dislikes } = comment;
+      const { likes, dislikes } = comment;
 
-      // if (action === 'like') {
-      //   if (likes.includes(userId)) {
-      //     comment.likes.pull(userId);
-      //   } else {
-      //     comment.likes.push(userId);
-      //     comment.dislikes.pull(userId);
-      //   }
-      // } else if (action === 'dislike') {
-      //   if (dislikes.includes(userId)) {
-      //     comment.dislikes.pull(userId);
-      //   } else {
-      //     comment.dislikes.push(userId);
-      //     comment.likes.pull(userId);
-      //   }
-      // }
+      if (action === 'like') {
+        if (likes.includes(userId)) {
+          comment.likes.pull(userId);
+        } else {
+          comment.likes.push(userId);
+          comment.dislikes.pull(userId);
+        }
+      } else if (action === 'dislike') {
+        if (dislikes.includes(userId)) {
+          comment.dislikes.pull(userId);
+        } else {
+          comment.dislikes.push(userId);
+          comment.likes.pull(userId);
+        }
+      }
 
-      // await comment.save();
+      await comment.save();
 
-      // res.json(comment);
+      res.json(comment);
     } catch (error) {
       res.status(500).json(error.message);
     }

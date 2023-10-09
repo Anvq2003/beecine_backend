@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
-var slug = require('mongoose-slug-updater');
+const slug = require('mongoose-slug-updater');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const infoSchema = new mongoose.Schema(
   {
@@ -13,22 +14,22 @@ const infoSchema = new mongoose.Schema(
 
 const movieSchema = new mongoose.Schema(
   {
-    genres: [infoSchema],
-    cast: [infoSchema],
-    directors: [infoSchema],
+    genres: { type: [infoSchema], required: true },
+    cast: { type: [infoSchema], default: null },
+    directors: { type: [infoSchema], default: null },
     country: infoSchema,
     minimumAge: { type: Number, default: 0 },
     title: { type: String, required: true },
     slug: { type: String, slug: 'title', unique: true },
-    description: { type: String },
+    description: { type: String, default: null },
     releaseDate: { type: Date, required: true },
     isSeries: { type: Boolean, default: false },
     duration: { type: Number },
     rating: { type: Number },
     imageUrl: { type: String },
     trailerUrl: { type: String },
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' }],
-    tags: { type: [String] },
+    types: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' }], default: null },
+    tags: { type: [String], default: null },
     totalFavorites: { type: Number, default: 0 },
     totalComments: { type: Number, default: 0 },
     status: { type: Boolean, default: true },
@@ -40,6 +41,7 @@ const movieSchema = new mongoose.Schema(
 
 mongoose.plugin(slug);
 movieSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+movieSchema.plugin(mongoosePaginate);
 const Movie = mongoose.model('Movie', movieSchema);
 
 module.exports = Movie;

@@ -8,9 +8,9 @@ const { validateCommentData, validateReplyData } = require('../middlewares/valid
 router.get('/', bindController(CommentController, 'getQuery'));
 router.get('/all', bindController(CommentController, 'getAll'));
 router.get('/trash', bindController(CommentController, 'getTrash'));
-router.get('/:param', bindController(CommentController, 'getByParam'));
 router.get('/like-comment', bindController(CommentController, 'likeComment'));
 router.get('/like-reply', bindController(CommentController, 'likeReply'));
+router.get('/:param', bindController(CommentController, 'getByParam'));
 router.post('/store', validateCommentData, bindController(CommentController, 'create'));
 router.post('/store-reply', validateReplyData, bindController(CommentController, 'createReply'));
 router.put('/update/:id', validateCommentData, bindController(CommentController, 'update'));

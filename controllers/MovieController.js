@@ -7,6 +7,16 @@ class MovieController extends BaseController {
     super(MovieModel);
   }
 
+  async getQuery(req, res, next) {
+    try {
+      const documents = await MovieModel.find({ type: { $exists: true } });
+
+      res.status(200).json(documents);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async getAll(req, res, next) {
     try {
       const data = await MovieModel.findWithDeleted().populate('type');
@@ -40,12 +50,15 @@ class MovieController extends BaseController {
   async getByArtistSlug(req, res, next) {
     try {
       const slug = req.params.slug;
-      const data = await MovieModel.find({
+      const options = req.paginateOptions;
+
+      const query = {
         $or: [
           { cast: { $elemMatch: { slug: slug } } },
           { directors: { $elemMatch: { slug: slug } } },
         ],
-      });
+      };
+      const data = await MovieModel.paginate(query, options);
 
       if (!data) {
         return res.status(404).json({ message: 'Not found' });
@@ -60,7 +73,10 @@ class MovieController extends BaseController {
   async getByCountrySlug(req, res, next) {
     try {
       const slug = req.params.slug;
-      const data = await MovieModel.find({ 'country.slug': slug });
+      const options = req.paginateOptions;
+
+      const query = { 'country.slug': slug };
+      const data = await MovieModel.paginate(query, options);
 
       if (!data) {
         return res.status(404).json({ message: 'Not found' });
@@ -75,8 +91,9 @@ class MovieController extends BaseController {
   async getByGenreSlug(req, res, next) {
     try {
       const slug = req.params.slug;
-      const data = await MovieModel.find({ genres: { $elemMatch: { slug: slug } } });
-
+      const options = req.paginateOptions;
+      const query = { genres: { $elemMatch: { slug: slug } } };
+      const data = await MovieModel.paginate(query, options);
       if (!data) {
         return res.status(404).json({ message: 'Not found' });
       }

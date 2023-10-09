@@ -3,6 +3,7 @@ const router = express.Router();
 const MovieController = require('../controllers/MovieController');
 const bindController = require('../helpers/controllerHelper');
 const { validationMovieSchema } = require('../middlewares/validationMiddleware');
+const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
@@ -12,13 +13,21 @@ const {
 
 const upload = uploadMulter.single('image');
 
-router.get('/', bindController(MovieController, 'getQuery'));
+router.get('/', paginationMiddleware, bindController(MovieController, 'getQuery'));
 router.get('/all', bindController(MovieController, 'getAll'));
 router.get('/trash', bindController(MovieController, 'getTrash'));
 router.get('/:param', bindController(MovieController, 'getByParam'));
-router.get('/artist/:slug', bindController(MovieController, 'getByArtistSlug'));
-router.get('/country/:slug', bindController(MovieController, 'getByCountrySlug'));
-router.get('/genre/:slug', bindController(MovieController, 'getByGenreSlug'));
+router.get(
+  '/artist/:slug',
+  paginationMiddleware,
+  bindController(MovieController, 'getByArtistSlug'),
+);
+router.get(
+  '/country/:slug',
+  paginationMiddleware,
+  bindController(MovieController, 'getByCountrySlug'),
+);
+router.get('/genre/:slug', paginationMiddleware, bindController(MovieController, 'getByGenreSlug'));
 router.post(
   '/store',
   upload,

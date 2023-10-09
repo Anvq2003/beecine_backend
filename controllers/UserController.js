@@ -6,6 +6,22 @@ class UserController extends BaseController {
     super(UserModel);
   }
 
+  async create(req, res, next) {
+    try {
+      // check email and uid
+      const { email, uid } = req.body;
+      const exist = await UserModel.findOne({ or: [{ email: email }, { uid: uid }] });
+      if (exist) {
+        return res.status(400).json({ message: 'Email or uid already exists' });
+      }
+      const data = new UserModel(req.body);
+      const savedData = await data.save();
+      res.status(200).json(savedData);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async getTop(req, res) {
     try {
       const limit = parseInt(req.query.limit) || 10;

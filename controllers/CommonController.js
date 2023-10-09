@@ -23,7 +23,6 @@ class CommonController {
     //   res.status(500).json({ error: error.message });
     // }
   }
-
   async getTopMovie(req, res) {
     try {
       const movies = await MovieModel.find();
@@ -61,6 +60,7 @@ class CommonController {
       res.status(500).json({ error: error.message });
     }
   }
+  async update(req, res) {}
 }
 
 module.exports = new CommonController();

@@ -6,5 +6,6 @@ const CommonController = require('../controllers/CommonController');
 router.get('stats', CommonController.stats);
 router.get('search', CommonController.search);
 router.get('get-top-movie', CommonController.getTopMovie);
+router.get('update-data', CommonController.update);
 
 module.exports = router;
