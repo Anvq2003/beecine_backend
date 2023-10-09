@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const replySchema = new mongoose.Schema(
   {
@@ -30,6 +31,7 @@ const commentSchema = new mongoose.Schema(
 );
 
 commentSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+commentSchema.plugin(mongoosePaginate);
 
 const Comment = mongoose.model('Comment', commentSchema);
 module.exports = Comment;

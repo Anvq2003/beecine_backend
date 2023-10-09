@@ -3,9 +3,10 @@ const router = express.Router();
 const GenreController = require('../controllers/GenreController');
 const bindController = require('../helpers/controllerHelper');
 const { validateGenreData } = require('../middlewares/validationMiddleware');
+const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 
 // Routes
-router.get('/', bindController(GenreController, 'getQuery'));
+router.get('/', paginationMiddleware, bindController(GenreController, 'getQuery'));
 router.get('/all', bindController(GenreController, 'getAll'));
 router.get('/trash', bindController(GenreController, 'getTrash'));
 router.get('/:param', bindController(GenreController, 'getByParam'));

@@ -3,9 +3,10 @@ const router = express.Router();
 const BillController = require('../controllers/BillController');
 const bindController = require('../helpers/controllerHelper');
 const { validateBillData } = require('../middlewares/validationMiddleware');
+const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 
 // Routes
-router.get('/', bindController(BillController, 'getQuery'));
+router.get('/', paginationMiddleware, bindController(BillController, 'getQuery'));
 router.get('/all', bindController(BillController, 'getAll'));
 router.get('/top', bindController(BillController, 'getTop'));
 router.get('/trash', bindController(BillController, 'getTrash'));

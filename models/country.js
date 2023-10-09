@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const countrySchema = new mongoose.Schema(
   {
@@ -14,6 +15,7 @@ const countrySchema = new mongoose.Schema(
 );
 
 countrySchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+countrySchema.plugin(mongoosePaginate);
 
 const Country = mongoose.model('Country', countrySchema);
 

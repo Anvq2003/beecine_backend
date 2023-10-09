@@ -3,6 +3,7 @@ const router = express.Router();
 const ArtistController = require('../controllers/ArtistController');
 const bindController = require('../helpers/controllerHelper');
 const { validationArtistData } = require('../middlewares/validationMiddleware');
+const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
@@ -13,7 +14,7 @@ const {
 const upload = uploadMulter.single('image');
 
 // Routes
-router.get('/', bindController(ArtistController, 'getQuery'));
+router.get('/', paginationMiddleware, bindController(ArtistController, 'getQuery'));
 router.get('/all', bindController(ArtistController, 'getAll'));
 router.get('/trash', bindController(ArtistController, 'getTrash'));
 router.get('/:param', bindController(ArtistController, 'getByParam'));

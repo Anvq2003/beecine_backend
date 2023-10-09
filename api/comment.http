@@ -51,7 +51,7 @@ Content-Type: application/json
 {
   "userId": "64c290ee173cda17c307a2fa",
   "movieId": "64c290ee173cda17c307a2fa",
-  "content": "demo 12"
+  "content": "demo 12345"
 }
 ###
 # @name UpdateReply
@@ -70,6 +70,10 @@ Content-Type: application/json
 
 # @name Delete
 DELETE {{baseUrl}}/delete/64c4c69b8f02e1f31bdc33af
+###
+
+# @name Delete Reply
+DELETE {{baseUrl}}/delete-reply?commentId=6522accd37fe2aaaa93bc362&replyId=6522b14f5c0e132b7eaf57b2
 
 ###
 ###

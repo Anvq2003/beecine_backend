@@ -3,6 +3,7 @@ const router = express.Router();
 const EpisodeController = require('../controllers/EpisodeController');
 const bindController = require('../helpers/controllerHelper');
 const { validationEpisodeData } = require('../middlewares/validationMiddleware');
+const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
@@ -13,7 +14,7 @@ const {
 const upload = uploadMulter.single('image');
 
 // Routes
-router.get('/', bindController(EpisodeController, 'getQuery'));
+router.get('/', paginationMiddleware, bindController(EpisodeController, 'getQuery'));
 router.get('/all', bindController(EpisodeController, 'getAll'));
 router.get('/movie/:id', bindController(EpisodeController, 'getByMovieId'));
 router.get('/trash', bindController(EpisodeController, 'getTrash'));

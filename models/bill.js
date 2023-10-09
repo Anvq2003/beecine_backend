@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const billSchema = new mongoose.Schema(
   {
@@ -21,6 +22,7 @@ const billSchema = new mongoose.Schema(
 );
 
 billSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+billSchema.plugin(mongoosePaginate);
 
 const Bill = mongoose.model('Bill', billSchema);
 

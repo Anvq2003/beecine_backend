@@ -16,8 +16,8 @@ class BaseController {
 
   async getQuery(req, res, next) {
     try {
-      const query = Object.assign({}, req.query);
-      const data = await this.model.find(query);
+      const options = req.paginateOptions;
+      const data = await this.model.paginate({}, options);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

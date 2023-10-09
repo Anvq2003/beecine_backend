@@ -3,9 +3,10 @@ const router = express.Router();
 const CountryController = require('../controllers/CountryController');
 const bindController = require('../helpers/controllerHelper');
 const { validateCountryData } = require('../middlewares/validationMiddleware');
+const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 
 // Routes
-router.get('/', bindController(CountryController, 'getQuery'));
+router.get('/', paginationMiddleware, bindController(CountryController, 'getQuery'));
 router.get('/all', bindController(CountryController, 'getAll'));
 router.get('/trash', bindController(CountryController, 'getTrash'));
 router.get('/:param', bindController(CountryController, 'getByParam'));

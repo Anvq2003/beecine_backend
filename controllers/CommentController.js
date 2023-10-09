@@ -5,6 +5,16 @@ class CommentController extends BaseController {
     super(CommentModel);
   }
 
+  async getQuery(req, res, next) {
+    try {
+      const options = req.paginateOptions;
+      const data = await CommentModel.paginate({ status: true }, options);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async createReply(req, res) {
     try {
       const { commentId } = req.body;
@@ -51,14 +61,14 @@ class CommentController extends BaseController {
 
       const { likes, dislikes } = comment;
 
-      if (action === 'like') {
+      if (action === 'LIKE') {
         if (likes.includes(userId)) {
           comment.likes.pull(userId);
         } else {
           comment.likes.push(userId);
           comment.dislikes.pull(userId);
         }
-      } else if (action === 'dislike') {
+      } else if (action === 'DISLIKE') {
         if (dislikes.includes(userId)) {
           comment.dislikes.pull(userId);
         } else {
@@ -112,6 +122,27 @@ class CommentController extends BaseController {
       comment.replies = [...replies.slice(0, index), reply, ...replies.slice(index + 1)];
       await comment.save();
       res.json(comment);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async deleteReply(req, res) {
+    try {
+      const { commentId, replyId } = req.query;
+
+      const data = await CommentModel.updateOne(
+        {
+          _id: commentId,
+          'replies._id': replyId,
+        },
+        {
+          $set: {
+            'replies.$.status': false,
+          },
+        },
+      );
+      res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
     }

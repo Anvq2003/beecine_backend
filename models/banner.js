@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const Banner = new mongoose.Schema(
   {
@@ -20,5 +21,6 @@ const Banner = new mongoose.Schema(
 );
 
 Banner.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+Banner.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Banner', Banner);

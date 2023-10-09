@@ -9,9 +9,9 @@ class MovieController extends BaseController {
 
   async getQuery(req, res, next) {
     try {
-      const documents = await MovieModel.find({ type: { $exists: true } });
-
-      res.status(200).json(documents);
+      const options = req.paginateOptions;
+      const data = await MovieModel.paginate({}, options);
+      res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
     }

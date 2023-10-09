@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 var slug = require('mongoose-slug-updater');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const artistSchema = new mongoose.Schema(
   {
@@ -19,6 +20,7 @@ const artistSchema = new mongoose.Schema(
 
 mongoose.plugin(slug);
 artistSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+artistSchema.plugin(mongoosePaginate);
 
 const Artist = mongoose.model('Artist', artistSchema);
 

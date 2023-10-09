@@ -3,9 +3,10 @@ const router = express.Router();
 const SubscriptionController = require('../controllers/SubscriptionController');
 const bindController = require('../helpers/controllerHelper');
 const { validationSubscriptionSchema } = require('../middlewares/validationMiddleware');
+const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 
 // Routes
-router.get('/', bindController(SubscriptionController, 'getQuery'));
+router.get('/', paginationMiddleware, bindController(SubscriptionController, 'getQuery'));
 router.get('/all', bindController(SubscriptionController, 'getAll'));
 router.get('/trash', bindController(SubscriptionController, 'getTrash'));
 router.get('/:param', bindController(SubscriptionController, 'getByParam'));

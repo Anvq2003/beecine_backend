@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 var slug = require('mongoose-slug-updater');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const episodeSchema = new mongoose.Schema(
   {
@@ -24,6 +25,8 @@ const episodeSchema = new mongoose.Schema(
 
 mongoose.plugin(slug);
 episodeSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+episodeSchema.plugin(mongoosePaginate);
+
 const Episode = mongoose.model('Episode', episodeSchema);
 
 module.exports = Episode;

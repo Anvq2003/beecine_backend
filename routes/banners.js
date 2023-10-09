@@ -3,6 +3,7 @@ const router = express.Router();
 const BannerController = require('../controllers/BannerController');
 const bindController = require('../helpers/controllerHelper');
 const { validationBannerData } = require('../middlewares/validationMiddleware');
+const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
@@ -12,7 +13,7 @@ const {
 
 const upload = uploadMulter.single('image');
 
-router.get('/', bindController(BannerController, 'getQuery'));
+router.get('/', paginationMiddleware, bindController(BannerController, 'getQuery'));
 router.get('/all', bindController(BannerController, 'getAll'));
 router.get('/trash', bindController(BannerController, 'getTrash'));
 router.get('/:param', bindController(BannerController, 'getByParam'));
