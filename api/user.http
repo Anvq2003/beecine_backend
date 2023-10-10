@@ -7,6 +7,11 @@ GET {{baseUrl}}
 
 
 ###
+# @name Getall Uid
+GET {{baseUrl}}/uid/LU3SFZETKzPKq2WizNzL8d7tv713
+
+
+###
 # @name GetbyId
 GET {{baseUrl}}/64c290ee173cda17c307a2fa
 
@@ -17,10 +22,20 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-  "imageUrl": "https://example.com/banners/banner1.jpg",
   "name": "demo12334567",
-  "email": "demo00092345673@gmail.com",
-  "uid": "110werty"
+  "email": "voquocan99@gmail.com",
+  "uid": "LU3SFZETKzPKq2WizNzL8d7tv713"
+}
+###
+
+# @name Create gg
+POST {{baseUrl}}/store-with-google
+Content-Type: application/json
+
+{
+  "name": "Qan ưeret",
+  "email": "voquocan99@gmail.com",
+  "uid": "LU3SFZETKzPKq2WizNzL8d7tv713"
 }
 
 ###
@@ -41,7 +56,7 @@ Content-Type: application/json
   "imageUrl": "https://example.com/banners/banner1.jpg",
   "name": "quoc an",
   "email": "demo00092345673@gmail.com",
-  "uid": "110werty",
+  "uid": "1234",
   "permissions": ["ADD", "EDIT", "DELETE"]
 }
 
@@ -72,4 +87,4 @@ PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
 
 ###
 # @name ForceDelete
-DELETE {{baseUrl}}/force/6523c41a399c2fa80289a023
+DELETE {{baseUrl}}/force/65252d9dbc23bb7dad9e3cb6

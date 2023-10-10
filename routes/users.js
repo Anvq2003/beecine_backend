@@ -19,14 +19,22 @@ router.get('/all', bindController(UserController, 'getAll'));
 router.get('/top', bindController(UserController, 'getTop'));
 router.get('/all', bindController(UserController, 'getAll'));
 router.get('/trash', bindController(UserController, 'getTrash'));
-router.get('/:param', bindController(UserController, 'getByParam'));
 router.get('/check-email/:id', bindController(UserController, 'checkEmail'));
+router.get('/uid/:id', bindController(UserController, 'getByUid'));
+router.get('/:param', bindController(UserController, 'getByParam'));
 router.post(
   '/store',
   upload,
   validationUserSchema,
   handleUploadOrUpdateImage,
   bindController(UserController, 'create'),
+);
+router.post(
+  '/store-with-google',
+  upload,
+  validationUserSchema,
+  handleUploadOrUpdateImage,
+  bindController(UserController, 'createWithGoogle'),
 );
 router.put(
   '/update/:id',
