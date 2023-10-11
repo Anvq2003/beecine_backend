@@ -3,7 +3,18 @@ const MovieModel = require('../models/movie');
 const EpisodeModel = require('../models/episode');
 
 class CommonController {
-  async search(req, res) {}
+  async search(req, res) {
+    const { q } = req.query;
+    const options = req.paginateOptions;
+
+    try {
+      const query = { title: { $regex: new RegExp(q, 'i') } };
+      const movies = await MovieModel.paginate(query, options);
+      res.status(200).json(movies);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
   async stats(req, res) {
     // try {
     //   // Sử dụng Mongoose để truy vấn cơ sở dữ liệu và đếm số lượng bản ghi

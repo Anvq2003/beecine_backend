@@ -7,6 +7,7 @@ const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 
 // Routes
 router.get('/', paginationMiddleware, bindController(CommentController, 'getQuery'));
+router.get('/movie/:id', paginationMiddleware, bindController(CommentController, 'getByMovieId'));
 router.get('/all', bindController(CommentController, 'getAll'));
 router.get('/trash', bindController(CommentController, 'getTrash'));
 router.get('/like-comment', bindController(CommentController, 'likeComment'));

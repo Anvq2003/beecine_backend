@@ -173,7 +173,7 @@ const featureFilmSchema = Joi.object({
   ),
   oldImage: Joi.string().uri().allow(''),
   trailerUrl: Joi.string(),
-  type: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  types: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   status: Joi.boolean().default(true),
   videoUrl: Joi.string().required(),
 });

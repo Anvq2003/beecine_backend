@@ -5,6 +5,10 @@
 # @name Getall
 GET {{baseUrl}} 
 
+###
+# @name Getall by id
+GET {{baseUrl}}/movie/64c290ee173cda17c307a2fa
+
 
 ###
 # @name GetbyId

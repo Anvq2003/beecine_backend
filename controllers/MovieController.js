@@ -19,7 +19,7 @@ class MovieController extends BaseController {
 
   async getAll(req, res, next) {
     try {
-      const data = await MovieModel.findWithDeleted().populate('type');
+      const data = await MovieModel.findWithDeleted().populate('types');
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

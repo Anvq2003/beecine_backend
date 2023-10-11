@@ -12,7 +12,7 @@ const episodesRouter = require('./episodes');
 const featureFilmRouter = require('./featureFilm');
 
 function routes(app) {
-  app.use('/', commonRouter);
+  app.use('/api', commonRouter);
   app.use('/api/banners', bannerRouter);
   app.use('/api/genres', genresRouter);
   app.use('/api/countries', countriesRouter);

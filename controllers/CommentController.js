@@ -5,10 +5,22 @@ class CommentController extends BaseController {
     super(CommentModel);
   }
 
-  async getQuery(req, res, next) {
+  async getQuery(req, res) {
     try {
       const options = req.paginateOptions;
       const data = await CommentModel.paginate({ status: true }, options);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async getByMovieId(req, res) {
+    const { id } = req.params;
+    const options = req.paginateOptions;
+    try {
+      const query = { movieId: id, status: true };
+      const data = await CommentModel.paginate(query, options);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
