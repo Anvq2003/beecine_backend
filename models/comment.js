@@ -31,6 +31,7 @@ const commentSchema = new mongoose.Schema(
 );
 
 commentSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
+replySchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
 commentSchema.plugin(mongoosePaginate);
 
 const Comment = mongoose.model('Comment', commentSchema);

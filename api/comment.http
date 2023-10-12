@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}} 
+GET {{baseUrl}}/all
 
 ###
 # @name Getall by id
@@ -77,7 +77,7 @@ DELETE {{baseUrl}}/delete/64c4c69b8f02e1f31bdc33af
 ###
 
 # @name Delete Reply
-DELETE {{baseUrl}}/delete-reply?commentId=6522accd37fe2aaaa93bc362&replyId=6522b14f5c0e132b7eaf57b2
+DELETE {{baseUrl}}/delete-reply?commentId=6522accd37fe2aaaa93bc362&replyId=6522aef25283b93724ff283c
 
 ###
 ###
@@ -97,7 +97,7 @@ GET {{baseUrl}}/trash
 
 ###
 # @name Restore
-PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
+PATCH {{baseUrl}}/restore/6522accd37fe2aaaa93bc362
 
 ###
 # @name ForceDelete

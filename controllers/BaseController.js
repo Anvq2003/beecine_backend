@@ -77,6 +77,7 @@ class BaseController {
       res.status(500).json(error.message);
     }
   }
+
   async deleteMany(req, res, next) {
     try {
       const { ids } = req.body;

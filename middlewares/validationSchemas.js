@@ -187,6 +187,17 @@ const subscriptionSchema = Joi.object({
   status: Joi.boolean().default(true),
 });
 
+const historySchema = Joi.object({
+  movieId: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  episodeId: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .default(null),
+  minutes: Joi.number().required(),
+  watchedAt: Joi.date().default(Date.now),
+});
+
 const userSchema = Joi.object({
   image: Joi.alternatives().try(
     Joi.object({
@@ -206,6 +217,10 @@ const userSchema = Joi.object({
   points: Joi.number().default(0),
   subscription: Joi.string().default(null),
   permissions: Joi.array().default(null),
+  favoriteMovies: Joi.array()
+    .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
+    .default([]),
+  watchedList: Joi.array().items(historySchema).default([]),
   status: Joi.boolean().default(true),
 });
 

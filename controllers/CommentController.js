@@ -19,7 +19,8 @@ class CommentController extends BaseController {
     const { id } = req.params;
     const options = req.paginateOptions;
     try {
-      const query = { movieId: id, status: true };
+      // const query = { movieId: id, replies: { $elemMatch: { status: true } } };
+      const query = { $and: [{ movieId: id }, { status: true }] };
       const data = await CommentModel.paginate(query, options);
       res.status(200).json(data);
     } catch (error) {
@@ -143,18 +144,17 @@ class CommentController extends BaseController {
     try {
       const { commentId, replyId } = req.query;
 
-      const data = await CommentModel.updateOne(
+      const result = await CommentModel.updateOne(
+        { _id: commentId },
         {
-          _id: commentId,
-          'replies._id': replyId,
-        },
-        {
-          $set: {
-            'replies.$.status': false,
+          $pull: {
+            replies: {
+              _id: replyId,
+            },
           },
         },
       );
-      res.status(200).json(data);
+      res.status(200).json(result);
     } catch (error) {
       res.status(500).json(error.message);
     }

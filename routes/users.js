@@ -20,8 +20,11 @@ router.get('/top', bindController(UserController, 'getTop'));
 router.get('/all', bindController(UserController, 'getAll'));
 router.get('/trash', bindController(UserController, 'getTrash'));
 router.get('/check-email/:id', bindController(UserController, 'checkEmail'));
+router.get('/me', bindController(UserController, 'getMe'));
 router.get('/uid/:id', bindController(UserController, 'getByUid'));
 router.get('/:param', bindController(UserController, 'getByParam'));
+router.post('/favorite', bindController(UserController, 'createFavorite'));
+router.post('/watched', bindController(UserController, 'createWatched'));
 router.post(
   '/store',
   upload,

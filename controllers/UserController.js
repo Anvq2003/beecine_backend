@@ -1,5 +1,6 @@
 const BaseController = require('./BaseController');
 const UserModel = require('../models/user');
+const admin = require('firebase-admin');
 
 class UserController extends BaseController {
   constructor() {
@@ -28,6 +29,19 @@ class UserController extends BaseController {
     }
   }
 
+  async getMe(req, res) {
+    try {
+      const token = req.headers.authorization.split(' ')[1];
+      const decodedToken = await admin.auth().verifyIdToken(token);
+      const uid = decodedToken.uid;
+
+      const user = await UserModel.findOne({ uid: uid });
+      return res.status(200).json(user);
+    } catch (error) {
+      return res.status(401).send('Unauthorized');
+    }
+  }
+
   async create(req, res) {
     try {
       // check email and uid
@@ -41,6 +55,57 @@ class UserController extends BaseController {
       const data = new UserModel(req.body);
       const savedData = await data.save();
       res.status(200).json(savedData);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async createFavorite(req, res) {
+    const { movieId, userId } = req.body;
+    try {
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      const exist = user.favoriteMovies.find((item) => item.movieId == movieId);
+      if (exist) {
+        user.favoriteMovies = user.favoriteMovies.filter((item) => item.movieId != movieId);
+      } else {
+        user.favoriteMovies.push({
+          movieId: movieId,
+          createdAt: Date.now(),
+        });
+      }
+      const savedData = await user.save();
+      res.status(200).json(savedData.favoriteMovies);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async createWatched(req, res) {
+    const { movieId, episodeId, userId, minutes } = req.body;
+    try {
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const index = user.watchedList.findIndex((item) => item.movieId == movieId);
+      if (index !== -1) {
+        user.watchedList[index].episodeId = episodeId;
+        user.watchedList[index].minutes = minutes;
+        user.watchedList[index].watchedAt = Date.now();
+      } else {
+        user.watchedList.push({
+          movieId: movieId,
+          episodeId: episodeId,
+          minutes: minutes,
+          watchedAt: Date.now(),
+        });
+      }
+      const savedData = await user.save();
+      res.status(200).json(savedData.watchedList);
     } catch (error) {
       res.status(500).json(error.message);
     }
