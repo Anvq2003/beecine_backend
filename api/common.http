@@ -3,8 +3,12 @@
 # User API
 
 # @name Search
-GET {{baseUrl}}/search?q=nhà
+GET {{baseUrl}}/search
 
 ###
 # @name Getall
 GET {{baseUrl}}/update-data
+
+###
+# @name Getall
+GET {{baseUrl}}/top-movie

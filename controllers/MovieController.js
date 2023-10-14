@@ -26,6 +26,18 @@ class MovieController extends BaseController {
     }
   }
 
+  async getByKeyword(req, res) {
+    const { q, type } = req.query;
+
+    try {
+      const query = { title: { $regex: new RegExp(q, 'i') } };
+      const movies = await MovieModel.find(query);
+      res.status(200).json(movies);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   async getByParam(req, res, next) {
     try {
       const param = req.params.param;

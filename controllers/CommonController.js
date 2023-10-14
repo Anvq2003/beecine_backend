@@ -15,14 +15,12 @@ class CommonController {
       res.status(500).json({ error: error.message });
     }
   }
+
   async stats(req, res) {
     // try {
     //   // Sử dụng Mongoose để truy vấn cơ sở dữ liệu và đếm số lượng bản ghi
-    //   const totalSongs = await SongModel.countDocuments();
-    //   const totalArtists = await ArtistModel.countDocuments();
-    //   const totalAlbums = await AlbumModel.countDocuments();
-    //   const totalUsers = await UserModel.countDocuments();
-    //   // Trả về thông tin thống kê dưới dạng JSON
+    //  const totalMovies = await MovieModel.countDocuments();
+    //
     //   res.json({
     //     totalSongs,
     //     totalArtists,
@@ -34,6 +32,7 @@ class CommonController {
     //   res.status(500).json({ error: error.message });
     // }
   }
+
   async getTopMovie(req, res) {
     try {
       const movies = await MovieModel.find();
@@ -61,16 +60,14 @@ class CommonController {
       });
 
       const results = await Promise.all(promises);
-      results.forEach((result) => {
-        console.log(`${result.movie.name} - ${result.totalViews} views`);
-      });
-
+      res.status(200).json(results);
       mongoose.connection.close();
     } catch (error) {
       mongoose.connection.close();
       res.status(500).json({ error: error.message });
     }
   }
+
   async update(req, res) {}
 }
 

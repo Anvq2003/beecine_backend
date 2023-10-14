@@ -16,7 +16,7 @@ const upload = uploadMulter.single('image');
 router.get('/', paginationMiddleware, bindController(MovieController, 'getQuery'));
 router.get('/all', bindController(MovieController, 'getAll'));
 router.get('/trash', bindController(MovieController, 'getTrash'));
-router.get('/:param', bindController(MovieController, 'getByParam'));
+router.get('/search', bindController(MovieController, 'getByKeyword'));
 router.get(
   '/artist/:slug',
   paginationMiddleware,
@@ -28,6 +28,7 @@ router.get(
   bindController(MovieController, 'getByCountrySlug'),
 );
 router.get('/genre/:slug', paginationMiddleware, bindController(MovieController, 'getByGenreSlug'));
+router.get('/:param', bindController(MovieController, 'getByParam'));
 router.post(
   '/store',
   upload,

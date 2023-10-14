@@ -33,11 +33,13 @@ const billSchema = Joi.object({
   userId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
-  subscriptionId: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
-  startDate: Joi.date().required(),
-  endDate: Joi.date().required(),
+  subscriptionId: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  startDate: Joi.date().default(Date.now),
+  endDate: Joi.date(),
   status: Joi.string().valid('active', 'expired', 'cancelled').default('active'),
-  total: Joi.number().required(),
+  total: Joi.number(),
   paymentMethod: Joi.string(),
 });
 

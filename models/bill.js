@@ -7,14 +7,14 @@ const billSchema = new mongoose.Schema(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     subscriptionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' },
     startDate: { type: Date, default: Date.now },
-    endDate: { type: Date },
+    endDate: { type: Date, required: true },
     status: {
       type: String,
       enum: ['active', 'expired', 'cancelled'],
       default: 'active',
     },
-    total: { type: Number },
-    paymentMethod: { type: String },
+    total: { type: Number, required: true },
+    paymentMethod: { type: String, default: null },
   },
   {
     timestamps: true,

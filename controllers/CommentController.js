@@ -1,5 +1,7 @@
 const CommentModel = require('../models/comment');
 const BaseController = require('./BaseController');
+const _ = require('lodash');
+
 class CommentController extends BaseController {
   constructor() {
     super(CommentModel);
@@ -10,6 +12,19 @@ class CommentController extends BaseController {
       const options = req.paginateOptions;
       const data = await CommentModel.paginate({ status: true }, options);
       res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async getGroupByMovie(req, res) {
+    try {
+      const comments = await CommentModel.find().populate({
+        path: 'movieId',
+        select: 'title',
+      });
+      const movies = _.groupBy(comments, 'movieId.title');
+      res.status(200).json(movies);
     } catch (error) {
       res.status(500).json(error.message);
     }
