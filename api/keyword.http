@@ -1,0 +1,41 @@
+@baseUrl =  http://localhost:3000/api/keywords
+
+# User API
+
+# @name Getall
+GET {{baseUrl}}
+###
+
+# @name Search
+GET {{baseUrl}}/search?q=phim
+
+
+###
+
+# @name Create
+POST {{baseUrl}}/store
+Content-Type: application/json
+
+{
+    "keyword":"Lật mặt"
+}
+
+###
+
+# @name Create Many
+POST {{baseUrl}}/store-many
+Content-Type: application/json
+
+{
+    "keywords": [
+        { "keyword": "Phim kinh dị" },
+        { "keyword": "Phim chiến tranh" },
+        { "keyword": "Phim hoạt hình" },
+        { "keyword": "Phim tâm lý" },
+        { "keyword": "Phim học đường" },
+        { "keyword": "Phim cổ trang" },
+        { "keyword": "Phim thần thoại" },
+        { "keyword": "Phim võ thuật" },
+        { "keyword": "Phim lịch sử" }
+    ]
+}

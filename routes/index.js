@@ -10,9 +10,11 @@ const artistsRouter = require('./artists');
 const moviesRouter = require('./movies');
 const episodesRouter = require('./episodes');
 const featureFilmRouter = require('./featureFilm');
+const keywordRouter = require('./keywords');
 
 function routes(app) {
   app.use('/api', commonRouter);
+  app.use('/api/keywords', keywordRouter);
   app.use('/api/banners', bannerRouter);
   app.use('/api/genres', genresRouter);
   app.use('/api/countries', countriesRouter);

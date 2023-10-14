@@ -4,7 +4,10 @@
 
 # @name Getall
 GET {{baseUrl}}
+###
 
+# @name Search
+GET {{baseUrl}}/search?q=a
 
 ###
 # @name GetbyId

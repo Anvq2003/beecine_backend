@@ -1,6 +1,7 @@
 const MovieModel = require('../models/movie');
 const BaseController = require('./BaseController');
 const mongoose = require('mongoose');
+const removeAccents = require('remove-accents');
 
 class MovieController extends BaseController {
   constructor() {
@@ -27,12 +28,34 @@ class MovieController extends BaseController {
   }
 
   async getByKeyword(req, res) {
-    const { q, type } = req.query;
+    const { q, type = 'less', limit = 6 } = req.query;
+    const options = req.paginateOptions;
 
     try {
-      const query = { title: { $regex: new RegExp(q, 'i') } };
-      const movies = await MovieModel.find(query);
-      res.status(200).json(movies);
+      const query = {
+        $or: [
+          { title: { $regex: q, $options: 'iu' } },
+          { slug: { $regex: removeAccents(q), $options: 'iu' } },
+          { tags: { $regex: q, $options: 'iu' } },
+          { 'genres.name': { $regex: q, $options: 'iu' } },
+          { 'cast.name': { $regex: q, $options: 'iu' } },
+          { 'directors.name': { $regex: q, $options: 'iu' } },
+          { 'country.name': { $regex: q, $options: 'iu' } },
+        ],
+      };
+
+      if (type === 'less') {
+        const movies = await MovieModel.find(query);
+        return res.status(200).json({
+          data: movies.slice(0, limit),
+          info: {
+            totalResults: movies.length,
+          },
+        });
+      } else if (type === 'more') {
+        const movies = await MovieModel.paginate(query, options);
+        return res.status(200).json(movies);
+      }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

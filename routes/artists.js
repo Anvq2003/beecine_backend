@@ -17,6 +17,7 @@ const upload = uploadMulter.single('image');
 router.get('/', paginationMiddleware, bindController(ArtistController, 'getQuery'));
 router.get('/all', bindController(ArtistController, 'getAll'));
 router.get('/trash', bindController(ArtistController, 'getTrash'));
+router.get('/search', paginationMiddleware, bindController(ArtistController, 'getByKeyword'));
 router.get('/:param', bindController(ArtistController, 'getByParam'));
 router.post(
   '/store',

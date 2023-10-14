@@ -16,7 +16,7 @@ const upload = uploadMulter.single('image');
 router.get('/', paginationMiddleware, bindController(MovieController, 'getQuery'));
 router.get('/all', bindController(MovieController, 'getAll'));
 router.get('/trash', bindController(MovieController, 'getTrash'));
-router.get('/search', bindController(MovieController, 'getByKeyword'));
+router.get('/search', paginationMiddleware, bindController(MovieController, 'getByKeyword'));
 router.get(
   '/artist/:slug',
   paginationMiddleware,
