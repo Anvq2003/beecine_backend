@@ -13,7 +13,7 @@ router.get(
   bindController(CommentController, 'getGroupByMovie'),
 );
 router.get('/movie/:id', paginationMiddleware, bindController(CommentController, 'getByMovieId'));
-router.get('/all', bindController(CommentController, 'getAll'));
+router.get('/admin', bindController(CommentController, 'getAdmin'));
 router.get('/trash', bindController(CommentController, 'getTrash'));
 router.get('/like-comment', bindController(CommentController, 'likeComment'));
 router.get('/like-reply', bindController(CommentController, 'likeReply'));

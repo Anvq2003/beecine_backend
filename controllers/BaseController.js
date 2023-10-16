@@ -5,10 +5,10 @@ class BaseController {
     this.model = model;
   }
 
-  async getAll(req, res, next) {
+  async getAdmin(req, res, next) {
     try {
       const data = await this.model.findWithDeleted();
-      res.status(200).json(data);
+      return res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
     }

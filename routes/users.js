@@ -15,9 +15,9 @@ const upload = uploadMulter.single('image');
 
 // Routes
 router.get('/', paginationMiddleware, bindController(UserController, 'getQuery'));
-router.get('/all', bindController(UserController, 'getAll'));
+router.get('/admin', bindController(UserController, 'getAdmin'));
 router.get('/top', bindController(UserController, 'getTop'));
-router.get('/all', bindController(UserController, 'getAll'));
+router.get('/admin', bindController(UserController, 'getAdmin'));
 router.get('/trash', bindController(UserController, 'getTrash'));
 router.get('/check-email/:id', bindController(UserController, 'checkEmail'));
 router.get('/me', bindController(UserController, 'getMe'));

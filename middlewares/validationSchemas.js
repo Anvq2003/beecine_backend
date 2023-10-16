@@ -145,7 +145,7 @@ const movieSchema = Joi.object({
   ),
   oldImage: Joi.string().uri().allow(''),
   trailerUrl: Joi.string(),
-  type: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  types: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   totalFavorites: Joi.number().default(0),
   totalComments: Joi.number().default(0),
   status: Joi.boolean().default(true),

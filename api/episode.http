@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}} 
+GET {{baseUrl}}?page=2
 
 
 ###
@@ -12,7 +12,7 @@ GET {{baseUrl}}/6520152dc58e982ae637764e
 
 ###
 # @name GetbyMovieId
-GET {{baseUrl}}/movie/6520152cc58e982ae637764b
+GET {{baseUrl}}/movie/652cb9de21d691c2871d3e70?season=2
 
 ###
 

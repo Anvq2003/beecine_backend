@@ -5,12 +5,13 @@ class EpisodeController extends BaseController {
     super(EpisodeModel);
   }
 
-  async getByMovieId(req, res, next) {
+  async getByMovieId(req, res) {
     try {
       const { id } = req.params;
-      const episode = await EpisodeModel.findOne({
-        movieId: id,
-      });
+      const { season = 1 } = req.query;
+      if (!id) return res.status(400).json('Movie id is required');
+
+      const episode = await EpisodeModel.find({ movieId: id, season });
       if (!episode) return res.status(404).json('Episode not found');
       res.status(200).json(episode);
     } catch (error) {

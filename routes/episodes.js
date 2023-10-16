@@ -15,7 +15,7 @@ const upload = uploadMulter.single('image');
 
 // Routes
 router.get('/', paginationMiddleware, bindController(EpisodeController, 'getQuery'));
-router.get('/all', bindController(EpisodeController, 'getAll'));
+router.get('/admin', bindController(EpisodeController, 'getAdmin'));
 router.get('/movie/:id', bindController(EpisodeController, 'getByMovieId'));
 router.get('/trash', bindController(EpisodeController, 'getTrash'));
 router.get('/:param', bindController(EpisodeController, 'getByParam'));

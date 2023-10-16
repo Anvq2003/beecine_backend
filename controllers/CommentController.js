@@ -32,11 +32,16 @@ class CommentController extends BaseController {
 
   async getByMovieId(req, res) {
     const { id } = req.params;
-    const options = req.paginateOptions;
+    if (!id) return res.status(400).json({ message: 'Movie id is required' });
+
     try {
-      // const query = { movieId: id, replies: { $elemMatch: { status: true } } };
-      const query = { $and: [{ movieId: id }, { status: true }] };
-      const data = await CommentModel.paginate(query, options);
+      const options = req.paginateOptions;
+      options.populate = {
+        path: 'userId',
+        select: 'name imageUrl',
+      };
+
+      const data = await CommentModel.paginate({ movieId: id }, options);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

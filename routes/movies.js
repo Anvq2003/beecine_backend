@@ -14,7 +14,7 @@ const {
 const upload = uploadMulter.single('image');
 
 router.get('/', paginationMiddleware, bindController(MovieController, 'getQuery'));
-router.get('/all', bindController(MovieController, 'getAll'));
+router.get('/admin', bindController(MovieController, 'getAdmin'));
 router.get('/trash', bindController(MovieController, 'getTrash'));
 router.get('/search', paginationMiddleware, bindController(MovieController, 'getByKeyword'));
 router.get(

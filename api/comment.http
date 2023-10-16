@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/all
+GET {{baseUrl}}
 
 ###
 
@@ -12,7 +12,7 @@ GET {{baseUrl}}/group-by-movie
 
 ###
 # @name Getall by id
-GET {{baseUrl}}/movie/64c290ee173cda17c307a2fa
+GET {{baseUrl}}/movie/6523b0776f1b32eb3c244bc9
 
 
 ###
