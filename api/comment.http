@@ -47,8 +47,6 @@ Content-Type: application/json
 
 {
   "commentId": "6522accd37fe2aaaa93bc362",
-  "userId": "64c290ee173cda17c307a2fa",
-  "movieId": "64c290ee173cda17c307a2fa",
   "content": "demo reply 123"
 }
 
@@ -58,9 +56,7 @@ PUT {{baseUrl}}/update/6522accd37fe2aaaa93bc362
 Content-Type: application/json
 
 {
-  "userId": "64c290ee173cda17c307a2fa",
-  "movieId": "64c290ee173cda17c307a2fa",
-  "content": "demo 12345"
+  "content": "mới "
 }
 ###
 # @name UpdateReply
@@ -78,7 +74,7 @@ Content-Type: application/json
 ###
 
 # @name Delete
-DELETE {{baseUrl}}/delete/64c4c69b8f02e1f31bdc33af
+DELETE {{baseUrl}}/delete/652cdd17deabd95512105faa
 ###
 
 # @name Delete Reply
@@ -106,4 +102,4 @@ PATCH {{baseUrl}}/restore/6522accd37fe2aaaa93bc362
 
 ###
 # @name ForceDelete
-DELETE {{baseUrl}}/force/64cb7f5af921928736b32b83
+DELETE {{baseUrl}}/force/652cde68d9e18f8581d076c8
