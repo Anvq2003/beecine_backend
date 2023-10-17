@@ -8,7 +8,9 @@ class MovieController extends BaseController {
     super(MovieModel);
   }
 
-  async getQuery(req, res, next) {
+  async getQuery(req, res) {
+    const {} = req.query;
+
     try {
       const options = req.paginateOptions;
       const data = await MovieModel.paginate({}, options);
@@ -18,7 +20,7 @@ class MovieController extends BaseController {
     }
   }
 
-  async getAll(req, res, next) {
+  async getAll(req, res) {
     try {
       const data = await MovieModel.findWithDeleted().populate('types');
       res.status(200).json(data);
@@ -28,7 +30,17 @@ class MovieController extends BaseController {
   }
 
   async getByKeyword(req, res) {
-    const { q, type = 'less', limit = 6 } = req.query;
+    const {
+      q,
+      type = 'less',
+      limit = 6,
+      years,
+      genres,
+      countries,
+      artists,
+      isSeries,
+      isFree,
+    } = req.query;
     const options = req.paginateOptions;
 
     try {
@@ -43,6 +55,17 @@ class MovieController extends BaseController {
           { 'country.name': { $regex: q, $options: 'iu' } },
         ],
       };
+
+      if (years)
+        query.releaseDate = { $gte: new Date(`${years}-01-01`), $lte: new Date(`${years}-12-31`) };
+      if (genres) query['genres.slug'] = { $in: genres.split(',') };
+      if (countries) query['country.slug'] = { $in: countries.split(',') };
+      if (artists) {
+        query['cast.slug'] = { $in: artists.split(',') };
+        query['directors.slug'] = { $in: artists.split(',') };
+      }
+      if (isSeries) query.isSeries = isSeries;
+      if (isFree) query.isFree = isFree;
 
       if (type === 'less') {
         const movies = await MovieModel.find(query);
@@ -61,7 +84,42 @@ class MovieController extends BaseController {
     }
   }
 
-  async getByParam(req, res, next) {
+  async getRelated(req, res) {
+    try {
+      const movieId = req.params.id;
+      if (!mongoose.Types.ObjectId.isValid(movieId)) {
+        return res.status(400).json({ message: 'Invalid movie id' });
+      }
+      const movie = await MovieModel.findById(movieId);
+      if (!movie) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+
+      // remove current movie from related movies
+
+      const query = {
+        $or: [
+          { genres: { $elemMatch: { slug: { $in: movie.genres.map((genre) => genre.slug) } } } },
+          { cast: { $elemMatch: { slug: { $in: movie.cast.map((artist) => artist.slug) } } } },
+          {
+            directors: {
+              $elemMatch: { slug: { $in: movie.directors.map((artist) => artist.slug) } },
+            },
+          },
+          { 'country.slug': movie.country.slug },
+        ],
+        _id: { $ne: movieId },
+      };
+
+      const options = req.paginateOptions;
+      const data = await MovieModel.paginate(query, options);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  async getByParam(req, res) {
     try {
       const param = req.params.param;
       let data;
@@ -82,7 +140,7 @@ class MovieController extends BaseController {
     }
   }
 
-  async getByArtistSlug(req, res, next) {
+  async getByArtistSlug(req, res) {
     try {
       const slug = req.params.slug;
       const options = req.paginateOptions;
@@ -105,7 +163,7 @@ class MovieController extends BaseController {
     }
   }
 
-  async getByCountrySlug(req, res, next) {
+  async getByCountrySlug(req, res) {
     try {
       const slug = req.params.slug;
       const options = req.paginateOptions;
@@ -123,7 +181,7 @@ class MovieController extends BaseController {
     }
   }
 
-  async getByGenreSlug(req, res, next) {
+  async getByGenreSlug(req, res) {
     try {
       const slug = req.params.slug;
       const options = req.paginateOptions;
@@ -139,7 +197,7 @@ class MovieController extends BaseController {
     }
   }
 
-  async create(req, res, next) {
+  async create(req, res) {
     // try {
     const genres = JSON.parse(req.body.genres);
     const cast = JSON.parse(req.body.cast);
@@ -162,7 +220,7 @@ class MovieController extends BaseController {
     // }
   }
 
-  async update(req, res, next) {
+  async update(req, res) {
     try {
       const genres = JSON.parse(req.body.genres);
       const cast = JSON.parse(req.body.cast);

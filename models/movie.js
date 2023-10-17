@@ -28,6 +28,7 @@ const movieSchema = new mongoose.Schema(
     rating: { type: Number },
     imageUrl: { type: String },
     trailerUrl: { type: String },
+    isFree: { type: Boolean, default: true },
     types: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' }], default: null },
     tags: { type: [String], default: null },
     totalFavorites: { type: Number, default: 0 },

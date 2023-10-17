@@ -17,9 +17,13 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Gói Cơ bản",
-    "price": 100000,
-    "duration": 30
+    "name": "Gói cao cấp",
+    "price": 300000,
+    "duration": 30,
+    "benefits": [
+        "Xem phim không giới hạn",
+        "Không quảng cáo"
+    ]
 }
 
 ###

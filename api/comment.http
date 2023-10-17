@@ -52,11 +52,11 @@ Content-Type: application/json
 
 ###
 # @name Update
-PUT {{baseUrl}}/update/6522accd37fe2aaaa93bc362
+PATCH {{baseUrl}}/update/6522accd37fe2aaaa93bc362
 Content-Type: application/json
 
 {
-  "content": "mới "
+  "content": "mới sfdggdfh"
 }
 ###
 # @name UpdateReply

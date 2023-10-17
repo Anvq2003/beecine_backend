@@ -20,7 +20,7 @@ router.get('/like-reply', bindController(CommentController, 'likeReply'));
 router.get('/:param', bindController(CommentController, 'getByParam'));
 router.post('/store', validateCommentData, bindController(CommentController, 'create'));
 router.post('/store-reply', validateReplyData, bindController(CommentController, 'createReply'));
-router.put('/update/:id', bindController(CommentController, 'update'));
+router.patch('/update/:id', bindController(CommentController, 'update'));
 router.put('/update-reply', bindController(CommentController, 'updateReply'));
 router.delete('/delete/:id', bindController(CommentController, 'delete'));
 router.delete('/delete-reply', bindController(CommentController, 'deleteReply'));

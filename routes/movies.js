@@ -17,6 +17,7 @@ router.get('/', paginationMiddleware, bindController(MovieController, 'getQuery'
 router.get('/admin', bindController(MovieController, 'getAdmin'));
 router.get('/trash', bindController(MovieController, 'getTrash'));
 router.get('/search', paginationMiddleware, bindController(MovieController, 'getByKeyword'));
+router.get('/related/:id', paginationMiddleware, bindController(MovieController, 'getRelated'));
 router.get(
   '/artist/:slug',
   paginationMiddleware,

@@ -1,38 +1,36 @@
-const admin = require('firebase-admin');
+require('dotenv').config();
+const { JWT_ACCESS_KEY, JWT_REFRESH_KEY } = process.env;
+const jwt = require('jsonwebtoken');
 
 const verifyToken = async (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization;
     if (!token) {
       return res.status(401).send({ message: 'Token not found' });
     }
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    const accessToken = token.split(' ')[1];
+    const decodedToken = await jwt.verify(accessToken, JWT_ACCESS_KEY);
     if (!decodedToken) {
-      return res.status(401).send({ message: 'Token is invalid' });
+      return res.status(401).send({ message: 'Token invalid' });
     }
     req.user = decodedToken;
     next();
   } catch (error) {
-    res.status(401).send({ message: 'Authentication failed' });
+    res.status(401).send({ message: 'You are not authenticated' });
   }
 };
 
 const verifyAdmin = async (req, res, next) => {
   try {
     verifyToken(req, res, async () => {
-      const uid = req.user.uid;
-      const user = await admin.auth().getUser(uid);
-      if (!user) {
-        return res.status(401).send({ message: 'User not found' });
-      }
-      const isAdmin = user.customClaims?.admin;
-      if (!isAdmin) {
-        return res.status(401).send({ message: 'Access denied' });
+      const { role } = req.user;
+      if (role !== 'ADMIN') {
+        return res.status(401).send({ message: 'You are not authorized' });
       }
       next();
     });
   } catch (error) {
-    res.status(401).send({ message: 'Authentication failed' });
+    res.status(401).send({ message: 'You are not authenticated' });
   }
 };
 

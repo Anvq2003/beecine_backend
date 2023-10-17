@@ -1,5 +1,6 @@
 const BaseController = require('./BaseController');
 const UserModel = require('../models/user');
+const MovieModel = require('../models/movie');
 const admin = require('firebase-admin');
 
 class UserController extends BaseController {
@@ -63,10 +64,20 @@ class UserController extends BaseController {
   async createFavorite(req, res) {
     const { movieId, userId } = req.body;
     try {
+      if (!movieId || !userId) {
+        return res.status(400).json({ message: 'MovieId or userId is required' });
+      }
+
       const user = await UserModel.findById(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
+
+      const movie = MovieModel.findById(movieId);
+      if (!movie) {
+        return res.status(404).json({ message: 'Movie not found' });
+      }
+
       const exist = user.favoriteMovies.find((item) => item.movieId == movieId);
       if (exist) {
         user.favoriteMovies = user.favoriteMovies.filter((item) => item.movieId != movieId);
@@ -86,6 +97,10 @@ class UserController extends BaseController {
   async createWatched(req, res) {
     const { movieId, episodeId, userId, minutes } = req.body;
     try {
+      if (!movieId || !userId || !episodeId || !minutes) {
+        return res.status(400).json({ message: 'MovieId, episodeId, userId, minutes is required' });
+      }
+
       const user = await UserModel.findById(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
