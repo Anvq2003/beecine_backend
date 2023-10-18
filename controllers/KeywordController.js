@@ -2,7 +2,7 @@ const BaseController = require('./BaseController');
 const KeywordModel = require('../models/keyword');
 const removeAccents = require('remove-accents');
 const slugify = require('slugify');
-const { handleConvertStringToSlug } = require('../utils/formatString');
+const { handleConvertStringToSlug } = require('../utils/format');
 
 class KeywordController extends BaseController {
   constructor() {
@@ -20,6 +20,7 @@ class KeywordController extends BaseController {
 
   async getByKeyword(req, res) {
     const { q, limit = 6 } = req.query;
+    if (!q) return res.status(400).json({ message: 'q(query) is required' });
 
     try {
       const query = {

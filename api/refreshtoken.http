@@ -1,0 +1,20 @@
+@baseUrl =  http://localhost:3000/api/refresh-tokens
+
+# @name Getall
+GET {{baseUrl}}
+
+###
+# @name Create Refresh Token
+POST {{baseUrl}}/store
+Content-Type: application/json
+
+{
+    "token": "test",
+    "userId": "test",
+    "expiresAt": "2021-08-01T00:00:00.000Z"
+}
+
+###
+# @name Delete Refresh Token
+DELETE {{baseUrl}}/delete/652f604b1ad6e300b3952d79
+

@@ -226,6 +226,15 @@ const userSchema = Joi.object({
   status: Joi.boolean().default(true),
 });
 
+const refreshTokenSchema = Joi.object({
+  token: Joi.string().required(),
+  userId: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+  issuedAt: Joi.number().required(),
+  expiresAt: Joi.number().required(),
+});
+
 module.exports = {
   replySchema,
   artistSchema,
@@ -239,4 +248,5 @@ module.exports = {
   subscriptionSchema,
   userSchema,
   featureFilmSchema,
+  refreshTokenSchema,
 };

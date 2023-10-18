@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { JWT_ACCESS_KEY, JWT_REFRESH_KEY } = process.env;
+const { JWT_ACCESS_KEY } = process.env;
 const jwt = require('jsonwebtoken');
 
 const verifyToken = async (req, res, next) => {
@@ -9,7 +9,7 @@ const verifyToken = async (req, res, next) => {
       return res.status(401).send({ message: 'Token not found' });
     }
     const accessToken = token.split(' ')[1];
-    const decodedToken = await jwt.verify(accessToken, JWT_ACCESS_KEY);
+    const decodedToken = jwt.verify(accessToken, JWT_ACCESS_KEY);
     if (!decodedToken) {
       return res.status(401).send({ message: 'Token invalid' });
     }

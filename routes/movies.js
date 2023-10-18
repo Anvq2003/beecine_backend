@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const MovieController = require('../controllers/MovieController');
 const bindController = require('../helpers/controllerHelper');
-const { validationMovieSchema } = require('../middlewares/validationMiddleware');
+const { validationMovie } = require('../middlewares/validationMiddleware');
 const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 const {
   uploadMulter,
@@ -33,14 +33,14 @@ router.get('/:param', bindController(MovieController, 'getByParam'));
 router.post(
   '/store',
   upload,
-  validationMovieSchema,
+  validationMovie,
   handleUploadOrUpdateImage,
   bindController(MovieController, 'create'),
 );
 router.put(
   '/update/:id',
   upload,
-  validationMovieSchema,
+  validationMovie,
   handleUploadOrUpdateImage,
   bindController(MovieController, 'update'),
 );

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const SubscriptionController = require('../controllers/SubscriptionController');
 const bindController = require('../helpers/controllerHelper');
-const { validationSubscriptionSchema } = require('../middlewares/validationMiddleware');
+const { validationSubscription } = require('../middlewares/validationMiddleware');
 const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 
 // Routes
@@ -10,16 +10,8 @@ router.get('/', paginationMiddleware, bindController(SubscriptionController, 'ge
 router.get('/admin', bindController(SubscriptionController, 'getAdmin'));
 router.get('/trash', bindController(SubscriptionController, 'getTrash'));
 router.get('/:param', bindController(SubscriptionController, 'getByParam'));
-router.post(
-  '/store',
-  validationSubscriptionSchema,
-  bindController(SubscriptionController, 'create'),
-);
-router.put(
-  '/update/:id',
-  validationSubscriptionSchema,
-  bindController(SubscriptionController, 'update'),
-);
+router.post('/store', validationSubscription, bindController(SubscriptionController, 'create'));
+router.put('/update/:id', validationSubscription, bindController(SubscriptionController, 'update'));
 router.delete('/delete/:id', bindController(SubscriptionController, 'delete'));
 router.delete('/delete-many', bindController(SubscriptionController, 'deleteMany'));
 router.patch('/restore/:id', bindController(SubscriptionController, 'restore'));

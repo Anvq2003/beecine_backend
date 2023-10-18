@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/UserController');
 const bindController = require('../helpers/controllerHelper');
-const { validationUserSchema } = require('../middlewares/validationMiddleware');
+const { validationUser } = require('../middlewares/validationMiddleware');
 const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 const {
   uploadMulter,
@@ -28,21 +28,21 @@ router.post('/watched', bindController(UserController, 'createWatched'));
 router.post(
   '/store',
   upload,
-  validationUserSchema,
+  validationUser,
   handleUploadOrUpdateImage,
   bindController(UserController, 'create'),
 );
 router.post(
   '/store-with-google',
   upload,
-  validationUserSchema,
+  validationUser,
   handleUploadOrUpdateImage,
   bindController(UserController, 'createWithGoogle'),
 );
 router.put(
   '/update/:id',
   upload,
-  validationUserSchema,
+  validationUser,
   handleUploadOrUpdateImage,
   bindController(UserController, 'update'),
 );

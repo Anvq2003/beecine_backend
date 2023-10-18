@@ -12,6 +12,7 @@ const {
   userSchema,
   featureFilmSchema,
   replySchema,
+  refreshTokenSchema,
 } = require('./validationSchemas');
 
 const validateCommentData = validateDataAgainstSchema(commentSchema);
@@ -22,10 +23,12 @@ const validateGenreData = validateDataAgainstSchema(genreSchema);
 const validationArtistData = validateDataAgainstSchema(artistSchema);
 const validationBannerData = validateDataAgainstSchema(bannerSchema);
 const validationEpisodeData = validateDataAgainstSchema(episodeSchema);
-const validationMovieSchema = validateDataAgainstSchema(movieSchema);
-const validationSubscriptionSchema = validateDataAgainstSchema(subscriptionSchema);
-const validationUserSchema = validateDataAgainstSchema(userSchema);
-const validationFeatureFilmSchemaSchema = validateDataAgainstSchema(featureFilmSchema);
+
+const validationMovie = validateDataAgainstSchema(movieSchema);
+const validationSubscription = validateDataAgainstSchema(subscriptionSchema);
+const validationUser = validateDataAgainstSchema(userSchema);
+const validationFeatureFilm = validateDataAgainstSchema(featureFilmSchema);
+const validationRefreshToken = validateDataAgainstSchema(refreshTokenSchema);
 
 module.exports = {
   validateReplyData,
@@ -36,8 +39,9 @@ module.exports = {
   validationArtistData,
   validationBannerData,
   validationEpisodeData,
-  validationMovieSchema,
-  validationSubscriptionSchema,
-  validationUserSchema,
-  validationFeatureFilmSchemaSchema,
+  validationMovie,
+  validationSubscription,
+  validationUser,
+  validationFeatureFilm,
+  validationRefreshToken,
 };

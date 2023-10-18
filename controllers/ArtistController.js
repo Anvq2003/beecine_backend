@@ -1,6 +1,6 @@
 const ArtistModel = require('../models/artist');
 const BaseController = require('./BaseController');
-const { handleConvertStringToSlug } = require('../utils/formatString');
+const { handleConvertStringToSlug } = require('../utils/format');
 
 class ArtistController extends BaseController {
   constructor() {
@@ -10,6 +10,7 @@ class ArtistController extends BaseController {
   async getByKeyword(req, res) {
     const { q, type = 'less', limit = 6 } = req.query;
     const options = req.paginateOptions;
+    if (!q) return res.status(400).json({ message: 'q(query) is required' });
 
     try {
       const query = {

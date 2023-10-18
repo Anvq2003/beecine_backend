@@ -12,6 +12,7 @@ const episodesRouter = require('./episodes');
 const featureFilmRouter = require('./featureFilm');
 const keywordRouter = require('./keywords');
 const authRouter = require('./auth');
+const refreshTokenRouter = require('./refreshTokens');
 
 function routes(app) {
   app.use('/api', commonRouter);
@@ -28,6 +29,7 @@ function routes(app) {
   app.use('/api/movies', moviesRouter);
   app.use('/api/episodes', episodesRouter);
   app.use('/api/feature-film', featureFilmRouter);
+  app.use('/api/refresh-tokens', refreshTokenRouter);
 }
 
 module.exports = routes;

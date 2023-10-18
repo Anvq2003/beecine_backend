@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const FeatureFilmController = require('../controllers/FeatureFilmController');
 const bindController = require('../helpers/controllerHelper');
-const { validationFeatureFilmSchemaSchema } = require('../middlewares/validationMiddleware');
+const { validationFeatureFilm } = require('../middlewares/validationMiddleware');
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
@@ -16,14 +16,14 @@ const upload = uploadMulter.single('image');
 router.post(
   '/store',
   upload,
-  validationFeatureFilmSchemaSchema,
+  validationFeatureFilm,
   handleUploadOrUpdateImage,
   bindController(FeatureFilmController, 'create'),
 );
 router.put(
   '/update/:id',
   upload,
-  validationFeatureFilmSchemaSchema,
+  validationFeatureFilm,
   handleUploadOrUpdateImage,
   bindController(FeatureFilmController, 'update'),
 );
