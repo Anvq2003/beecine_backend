@@ -2,6 +2,7 @@ const BaseController = require('./BaseController');
 const KeywordModel = require('../models/keyword');
 const removeAccents = require('remove-accents');
 const slugify = require('slugify');
+const { handleConvertStringToSlug } = require('../utils/formatString');
 
 class KeywordController extends BaseController {
   constructor() {
@@ -24,7 +25,7 @@ class KeywordController extends BaseController {
       const query = {
         $or: [
           { keyword: { $regex: q, $options: 'iu' } },
-          { slug: { $regex: removeAccents(q), $options: 'iu' } },
+          { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
         ],
       };
 

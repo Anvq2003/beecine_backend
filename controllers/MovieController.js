@@ -1,7 +1,7 @@
 const MovieModel = require('../models/movie');
 const BaseController = require('./BaseController');
 const mongoose = require('mongoose');
-const removeAccents = require('remove-accents');
+const { handleConvertStringToSlug } = require('../utils/formatString');
 
 class MovieController extends BaseController {
   constructor() {
@@ -9,8 +9,6 @@ class MovieController extends BaseController {
   }
 
   async getQuery(req, res) {
-    const {} = req.query;
-
     try {
       const options = req.paginateOptions;
       const data = await MovieModel.paginate({}, options);
@@ -47,12 +45,16 @@ class MovieController extends BaseController {
       const query = {
         $or: [
           { title: { $regex: q, $options: 'iu' } },
-          { slug: { $regex: removeAccents(q), $options: 'iu' } },
+          { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
           { tags: { $regex: q, $options: 'iu' } },
           { 'genres.name': { $regex: q, $options: 'iu' } },
+          { 'genres.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
           { 'cast.name': { $regex: q, $options: 'iu' } },
+          { 'cast.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
           { 'directors.name': { $regex: q, $options: 'iu' } },
+          { 'directors.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
           { 'country.name': { $regex: q, $options: 'iu' } },
+          { 'country.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
         ],
       };
 

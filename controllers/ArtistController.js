@@ -1,6 +1,6 @@
 const ArtistModel = require('../models/artist');
 const BaseController = require('./BaseController');
-const removeAccents = require('remove-accents');
+const { handleConvertStringToSlug } = require('../utils/formatString');
 
 class ArtistController extends BaseController {
   constructor() {
@@ -15,7 +15,7 @@ class ArtistController extends BaseController {
       const query = {
         $or: [
           { title: { $regex: q, $options: 'iu' } },
-          { slug: { $regex: removeAccents(q), $options: 'iu' } },
+          { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
         ],
       };
 
