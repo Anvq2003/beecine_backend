@@ -41,24 +41,25 @@ class MovieController extends BaseController {
     } = req.query;
     const options = req.paginateOptions;
 
-    if (!q) return res.status(400).json({ message: 'q(query) is required' });
-
     try {
-      const query = {
-        $or: [
-          { title: { $regex: q, $options: 'iu' } },
-          { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-          { tags: { $regex: q, $options: 'iu' } },
-          { 'genres.name': { $regex: q, $options: 'iu' } },
-          { 'genres.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-          { 'cast.name': { $regex: q, $options: 'iu' } },
-          { 'cast.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-          { 'directors.name': { $regex: q, $options: 'iu' } },
-          { 'directors.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-          { 'country.name': { $regex: q, $options: 'iu' } },
-          { 'country.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-        ],
-      };
+      let query = {};
+      if (q) {
+        query = {
+          $or: [
+            { title: { $regex: q, $options: 'iu' } },
+            { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
+            { tags: { $regex: q, $options: 'iu' } },
+            { 'genres.name': { $regex: q, $options: 'iu' } },
+            { 'genres.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
+            { 'cast.name': { $regex: q, $options: 'iu' } },
+            { 'cast.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
+            { 'directors.name': { $regex: q, $options: 'iu' } },
+            { 'directors.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
+            { 'country.name': { $regex: q, $options: 'iu' } },
+            { 'country.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
+          ],
+        };
+      }
 
       if (years)
         query.releaseDate = { $gte: new Date(`${years}-01-01`), $lte: new Date(`${years}-12-31`) };

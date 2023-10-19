@@ -8,7 +8,6 @@ router.get('/me', verifyToken, bindController(AuthController, 'getProfile'));
 router.post('/sign-in', bindController(AuthController, 'signIn'));
 router.post('/sign-up', bindController(AuthController, 'signUp'));
 router.post('/sign-in-with-google', bindController(AuthController, 'signInWithGoogle'));
-router.post('/sign-out', bindController(AuthController, 'signOut'));
-router.post('/refresh-token', verifyToken, bindController(AuthController, 'refreshToken'));
+router.post('/refresh-token', bindController(AuthController, 'refreshToken'));
 
 module.exports = router;

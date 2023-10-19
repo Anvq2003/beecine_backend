@@ -1,16 +1,11 @@
 require('dotenv').config();
-const {
-  JWT_ACCESS_KEY,
-  JWT_REFRESH_KEY,
-  ACCESS_TOKEN_EXPIRATION = '30s',
-  REFRESH_TOKEN_EXPIRATION = '365d',
-} = process.env;
+const { JWT_ACCESS_KEY, JWT_REFRESH_KEY, ACCESS_TOKEN_EXPIRATION, REFRESH_TOKEN_EXPIRATION } =
+  process.env;
 const admin = require('firebase-admin');
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
 const RefreshTokenModel = require('../models/refreshToken');
 const { getMillisecondsInDuration } = require('../utils/format');
-const ms = require('ms');
 
 class AuthController {
   async signUp(req, res) {
@@ -40,14 +35,13 @@ class AuthController {
 
       const { accessToken, refreshToken } = this.createTokens(user);
 
-      this.setRefreshTokenCookie(res, refreshToken);
       const exitsRefreshToken = await RefreshTokenModel.findOne({ userId: user._id });
       if (exitsRefreshToken) {
         await RefreshTokenModel.deleteOne({ userId: user._id });
       }
       this.createNewRefreshToken(refreshToken, user._id);
 
-      res.status(200).json({ token: accessToken });
+      res.status(200).json({ token: { accessToken, refreshToken } });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -59,7 +53,7 @@ class AuthController {
       const decodedToken = await this.verifyTokenFirebase(token);
       if (!decodedToken) return res.status(404).json({ message: 'User not found' });
 
-      let user = await UserModel.findOne({ uid: decodedToken.uid });
+      let user = await UserModel.findOne({ email: decodedToken.email });
       if (!user) {
         const dataFirebase = {
           ...decodedToken,
@@ -69,38 +63,26 @@ class AuthController {
       }
 
       const { accessToken, refreshToken } = this.createTokens(user);
-      this.setRefreshTokenCookie(res, refreshToken);
       const exitsRefreshToken = await RefreshTokenModel.findOne({ userId: user._id });
       if (exitsRefreshToken) {
         await RefreshTokenModel.deleteOne({ userId: user._id });
       }
       this.createNewRefreshToken(refreshToken, user._id);
 
-      res.status(200).json({ token: accessToken });
+      res.status(200).json({ token: { accessToken, refreshToken } });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   }
 
-  async signOut(req, res) {
-    try {
-      const refreshToken = req.cookies.refreshToken;
-      if (!refreshToken) return res.status(404).json({ message: 'Refresh token not found' });
-      await RefreshTokenModel.deleteOne({ token: refreshToken });
-      res.clearCookie('refreshToken');
-      res.status(200).json({ message: 'Logout successfully' });
-    } catch (error) {
-      res.status(500).json({ message: 'Logout failed' });
-    }
-  }
-
   async refreshToken(req, res) {
     try {
-      const refreshToken = req.cookies.refreshToken;
-      if (!refreshToken) return res.status(404).json({ message: 'Refresh token not found' });
+      const { refreshToken } = req.body;
+      if (!refreshToken) return res.status(404).json({ message: 'Refresh token is required' });
 
       const storedRefreshToken = await RefreshTokenModel.findOne({ token: refreshToken });
-      if (!storedRefreshToken) return res.status(404).json({ message: 'Refresh token not found' });
+      if (!storedRefreshToken)
+        return res.status(404).json({ message: 'Refresh  1223 token not found' });
 
       const currentTimestamp = Date.now();
 
@@ -109,15 +91,16 @@ class AuthController {
       }
 
       const decodedToken = jwt.verify(refreshToken, JWT_REFRESH_KEY);
-      if (!decodedToken) return res.status(404).json({ message: 'Refresh token not found' });
+      if (!decodedToken) return res.status(404).json({ message: 'Refresh token is invalid' });
 
       const newTokens = this.createTokens(decodedToken);
       this.createNewRefreshToken(newTokens.refreshToken, decodedToken._id);
-      this.setRefreshTokenCookie(res, newTokens.refreshToken);
 
       await RefreshTokenModel.deleteOne({ token: refreshToken });
 
-      res.status(200).json({ token: newTokens.accessToken });
+      res.status(200).json({
+        token: { accessToken: newTokens.accessToken, refreshToken: newTokens.refreshToken },
+      });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -178,16 +161,6 @@ class AuthController {
     });
 
     return { accessToken, refreshToken };
-  }
-
-  setRefreshTokenCookie(res, refreshToken) {
-    const maxAge = ms(REFRESH_TOKEN_EXPIRATION);
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'strict',
-      maxAge: maxAge,
-    });
   }
 }
 

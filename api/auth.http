@@ -23,6 +23,16 @@ Content-Type: application/json
 }
 
 ###
+
+# @name SignInWithGoogle
+POST {{baseUrl}}/sign-in-with-google
+Content-Type: application/json
+
+{
+  "email" : "voquocan99@gmail.com"
+}
+
+###
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTE5NmFjNDk5NDg4ZWU5NjNjNWRjMDkiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE2OTc2MjI3NDAsImV4cCI6MTY5NzYyMjc3MH0.zQcM2sCRMnj04Fw_kn8lfX7ssWmYzNKFMO1Y-agzCfM
 
 # @name GetProfile
@@ -31,10 +41,13 @@ Authorization: Bearer {{token}}
 
 ###
 
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTE5NmFjNDk5NDg4ZWU5NjNjNWRjMDkiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE2OTc2MjI2ODcsImV4cCI6MTcyOTE1ODY4N30.HXTFHteNnTPsWEamQs3iqSp_C2DqEKrQJlrj3tAwffo
 # @name RefreshToken
 POST {{baseUrl}}/refresh-token
-Cookie: {{cookie}}
+Content-Type: application/json
+
+{
+  "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTJmZWY3Mzc2ZWVhMGI3OGNlYTQzYTgiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5NzY5OTk5MSwiZXhwIjoxNzI5MjM1OTkxfQ.7l9N_NEWWH4gRoLjpwIynriOC8XFNNvDliuI-CD9fAY"
+}
 ###
 
 # @name SignInWithGoogle
