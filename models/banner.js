@@ -4,15 +4,8 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const Banner = new mongoose.Schema(
   {
-    imageUrl: { type: String, required: true },
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    genres: { type: Array, required: true },
-    cast: { type: Array, required: true },
-    directors: { type: Array, required: true },
-    link: { type: String, required: true },
-    releaseDate: { type: Date, required: true },
-    order: { type: Number, required: true, default: 0 },
+    movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
+    order: { type: Number, required: true, default: 0, min: 0, max: 1000 },
     status: { type: Boolean, default: true },
   },
   {

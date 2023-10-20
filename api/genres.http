@@ -17,17 +17,23 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Phim Lẻ"
+    "name": {
+        "vi": "Cổ trang",
+        "en": "Historical"
+    }
 }
 
 ###
 
 # @name Update
-PUT {{baseUrl}}/update/64cb7b176f9c18a1ac68e7ab
+PUT {{baseUrl}}/update/6532823550e098e22b5ed7dc
 Content-Type: application/json
 
 {
-   "name": "Phim hài hước"
+    "name": {
+        "vi": "Phim tình cảm 1",
+        "en": "Romantic movie 1"
+    }
 }
 
 ###
@@ -57,4 +63,4 @@ PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
 
 ###
 # @name ForceDelete
-DELETE {{baseUrl}}/force/64cb7f5af921928736b32b83
+DELETE {{baseUrl}}/force/653281d76d75071e6963f7cc

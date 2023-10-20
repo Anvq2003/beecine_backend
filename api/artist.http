@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin?deleted=false
+GET {{baseUrl}}
 ###
 
 # @name Search
@@ -20,10 +20,20 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name":"Demo 12",
-    "roles":["Demo"],
-    "bio":"Demo",
-    "country":"Demo"
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/beecine-afb84.appspot.com/o/images%2F1694868829450_daodien2.jpg?alt=media&token=0a0e6920-c9a7-4769-8016-4d7f472e640d",
+    "name":{
+        "vi": "Lan Ngọc",
+        "en": "Lan Ngoc"
+    },
+    "roles": {
+        "vi": ["Đạo diễn" ],
+        "en": ["Director" ]
+    },
+    "bio": {
+        "vi": "Mô tả đạo diễn",
+        "en": "Director bio"
+    },
+    "country":"65329673197a79f48d54f502"
 }
 
 ###

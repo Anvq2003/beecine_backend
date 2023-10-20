@@ -44,15 +44,23 @@ const billSchema = Joi.object({
 });
 
 const countrySchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
+  languages: Joi.array().items(Joi.string()),
   order: Joi.number().default(0),
   status: Joi.boolean().default(true),
 });
 
 const genreSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
+  languages: Joi.array().items(Joi.string()),
   order: Joi.number().default(0),
-  isChildren: Joi.boolean().required().default(false),
+  isChildren: Joi.boolean().default(false),
   status: Joi.boolean().default(true),
 });
 
@@ -66,33 +74,28 @@ const artistSchema = Joi.object({
     Joi.string().uri(),
     Joi.any(),
   ),
-  name: Joi.string().required(),
+  name: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
+  languages: Joi.array().items(Joi.string()),
   oldImage: Joi.string().uri().allow(''),
-  roles: Joi.array().items(Joi.string()),
-  bio: Joi.string().allow(''),
+  imageUrl: Joi.string().uri(),
+  roles: Joi.object({
+    en: Joi.array().items(Joi.string()),
+    vi: Joi.array().items(Joi.string()),
+  }),
+  bio: Joi.object({
+    en: Joi.string().allow(''),
+    vi: Joi.string().allow(''),
+  }),
   country: Joi.string().required(),
   status: Joi.boolean().default(true),
 });
 
 const bannerSchema = Joi.object({
-  image: Joi.alternatives().try(
-    Joi.object({
-      file: Joi.binary().required(),
-      filename: Joi.string().required(),
-      mimetype: Joi.string().required(),
-    }),
-    Joi.string().uri(),
-    Joi.any(),
-  ),
-  oldImage: Joi.string().uri().allow(null),
-  title: Joi.string().required(),
-  description: Joi.string().required(),
-  genres: Joi.any(),
-  cast: Joi.any(),
-  directors: Joi.any(),
-  releaseDate: Joi.date().required(),
-  link: Joi.string().required(),
-  order: Joi.number().required().default(0),
+  movieId: Joi.string().required(),
+  order: Joi.number().default(0),
   status: Joi.boolean().default(true),
 });
 
@@ -102,35 +105,60 @@ const episodeSchema = Joi.object({
     .required(),
   image: Joi.alternatives().try(
     Joi.object({
-      file: Joi.binary().required(),
-      filename: Joi.string().required(),
-      mimetype: Joi.string().required(),
+      file: Joi.binary(),
+      filename: Joi.string(),
+      mimetype: Joi.string(),
     }),
     Joi.string().uri(),
     Joi.any(),
   ),
   oldImage: Joi.string().uri().allow(''),
-  title: Joi.string().required(),
-  description: Joi.string(),
+  imageUrl: Joi.object({
+    en: Joi.string(),
+    vi: Joi.string(),
+  }),
+  title: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
+  description: Joi.object({
+    en: Joi.string().allow(''),
+    vi: Joi.string().allow(''),
+  }),
   views: Joi.number().default(0),
   videoUrl: Joi.string().required(),
   season: Joi.number().default(0),
-  number: Joi.number().required(),
-  duration: Joi.number().required(),
-  airDate: Joi.date().required(),
+  number: Joi.number(),
+  duration: Joi.number(),
+  airDate: Joi.date(),
   status: Joi.boolean().default(true),
 });
 
 const movieSchema = Joi.object({
-  genres: Joi.any(),
-  cast: Joi.any(),
-  directors: Joi.any(),
-  country: Joi.any(),
-  tags: Joi.array().items(Joi.string()),
+  imageUrl: Joi.object({
+    en: Joi.string(),
+    vi: Joi.string(),
+  }),
+  genres: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  cast: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  directors: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  requiredSubscriptions: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  country: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+  tags: Joi.object({
+    en: Joi.array().items(Joi.string()),
+    vi: Joi.array().items(Joi.string()),
+  }),
+  isFree: Joi.boolean().default(true),
   minimumAge: Joi.number().default(0),
-  title: Joi.string().required(),
-  description: Joi.string().allow(''),
-  releaseDate: Joi.date().required(),
+  title: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
+  description: Joi.object({
+    en: Joi.string().allow(''),
+    vi: Joi.string().allow(''),
+  }),
+  releaseDate: Joi.date(),
   isSeries: Joi.boolean().default(false),
   duration: Joi.number(),
   rating: Joi.number(),
@@ -145,21 +173,35 @@ const movieSchema = Joi.object({
   ),
   oldImage: Joi.string().uri().allow(''),
   trailerUrl: Joi.string(),
-  types: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   totalFavorites: Joi.number().default(0),
   totalComments: Joi.number().default(0),
   status: Joi.boolean().default(true),
 });
 
 const featureFilmSchema = Joi.object({
-  genres: Joi.any(),
-  cast: Joi.any(),
-  directors: Joi.any(),
-  country: Joi.any(),
-  tags: Joi.array().items(Joi.string()),
+  imageUrl: Joi.object({
+    en: Joi.string(),
+    vi: Joi.string(),
+  }),
+  isFree: Joi.boolean().default(true),
+  genres: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  cast: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  directors: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  requiredSubscriptions: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  country: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+  tags: Joi.object({
+    en: Joi.array().items(Joi.string()),
+    vi: Joi.array().items(Joi.string()),
+  }),
   minimumAge: Joi.number().default(0),
-  title: Joi.string().required(),
-  description: Joi.string().allow(''),
+  title: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
+  description: Joi.object({
+    en: Joi.string().allow(''),
+    vi: Joi.string().allow(''),
+  }),
   releaseDate: Joi.date().required(),
   isSeries: Joi.boolean().default(false),
   duration: Joi.number(),
@@ -175,16 +217,23 @@ const featureFilmSchema = Joi.object({
   ),
   oldImage: Joi.string().uri().allow(''),
   trailerUrl: Joi.string(),
-  types: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  totalFavorites: Joi.number().default(0),
+  totalComments: Joi.number().default(0),
   status: Joi.boolean().default(true),
   videoUrl: Joi.string().required(),
 });
 
 const subscriptionSchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
   price: Joi.number().required(),
   duration: Joi.number().required(),
-  benefits: Joi.array().items(Joi.string()),
+  benefits: Joi.object({
+    en: Joi.array().items(Joi.string()),
+    vi: Joi.array().items(Joi.string()),
+  }),
   isFeatured: Joi.boolean().default(false),
   status: Joi.boolean().default(true),
 });
@@ -210,7 +259,7 @@ const userSchema = Joi.object({
     Joi.string().uri(),
     Joi.any(),
   ),
-  imageUrl: Joi.string().allow(''),
+  imageUrl: Joi.string().uri(),
   oldImage: Joi.string().uri().allow(''),
   name: Joi.string().required(),
   role: Joi.string().valid('ADMIN', 'USER').default('USER'),

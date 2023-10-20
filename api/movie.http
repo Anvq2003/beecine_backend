@@ -29,59 +29,51 @@ GET {{baseUrl}}/genre/phim-han
 GET {{baseUrl}}/country/anh
 
 ###
+# 6532975da608544e51e11117 - quang dũng
+# 6532977ca608544e51e1111d - trấn thành
+# 65329797a608544e51e11123 - trường giang
+# 653297bca608544e51e1112a- lan ngọc
+
+# 653294e56f4dee8b53be372e - tình cảm
+# 653295046f4dee8b53be3733 - hành động
+# 653295126f4dee8b53be3738 - khoa học
+# 6532951f6f4dee8b53be373d - hoạt hình
+# 653295736f4dee8b53be3742 - truyền hình
+# 653295a76f4dee8b53be3747 - cổ trang
+####
 
 # @name Create
 POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-  "genres": [
-    {
-      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
-      "slug": "action",
-      "name": "Action"
-    },
-    {
-      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
-      "slug": "action",
-      "name": "Action"
-    }
-  ],
-  "country": {
-      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
-      "name": "Action",
-      "slug": "action"
-    },
-  "cast": [
-    {
-      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
-      "slug": "action",
-      "name": "Action"
-    },
-    {
-      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
-      "slug": "action",
-      "name": "Action"
-    }
-  ],
-  "director": [
-    {
-      "_id": "5f9e1b9b9d9b3c1b1c1b1c1b",
-      "slug": "action",
-      "name": "Action"
-    }
-  ],
-  "title": "demo",
-  "description" : "demo",
+  "genres": ["653294e56f4dee8b53be372e"],
+  "cast": ["6532975da608544e51e11117","6532977ca608544e51e1111d","65329797a608544e51e11123","653297bca608544e51e1112a"],
+  "directors": ["6532975da608544e51e11117","6532977ca608544e51e1111d","65329797a608544e51e11123","653297bca608544e51e1112a"],
+  "country": "65329673197a79f48d54f502",
+  "isFree": true,
+   "title": {
+    "vi": "Về nhà đi con",
+    "en": "Come back home"
+  },
+  "description" : {
+    "vi": "Mô tả về phim bộ",
+    "en": "Description about movie"
+  },
+  "tags": {
+    "vi": ["Phim tình cảm", "Phim hài", "Phim việt nam"],
+    "en": ["Vietnamese movie", "Comedy", "Romantic"]
+  },
+  "minimumAge": 18,
   "releaseDate": "2020-11-01",
-  "isSeries": false,
+  "isSeries": true,
   "duration": 120,
-  "Rating": 5,
-  "thumbnailUrl": "https://www.youtube.com/watch?v=1roy4o4tqQM",
-  "trailerUrl": "https://www.youtube.com/watch?v=1roy4o4tqQM",
-  "tags": [
-    "demo"
-  ]
+  "rating": 5,
+  "trailerUrl": "IkaP0KJWTsQ",
+  "imageUrl": {
+    "vi": "https://firebasestorage.googleapis.com/v0/b/beecine-afb84.appspot.com/o/images%2F1696601493098_phim-bo-gia-tran-thanh-viet-nam.jpg?alt=media&token=9d2fb741-4285-4a68-a93c-d7f149f16f55&_gl=1*f5rqej*_ga*NjQ1NzkxNjY2LjE2ODg2NTQ2Nzk.*_ga_CW55HF8NVT*MTY5NzgxMzQzMC43MC4xLjE2OTc4MTUyODMuNDMuMC4w",
+    "en": "https://firebasestorage.googleapis.com/v0/b/beecine-afb84.appspot.com/o/images%2F1696601493098_phim-bo-gia-tran-thanh-viet-nam.jpg?alt=media&token=9d2fb741-4285-4a68-a93c-d7f149f16f55&_gl=1*f5rqej*_ga*NjQ1NzkxNjY2LjE2ODg2NTQ2Nzk.*_ga_CW55HF8NVT*MTY5NzgxMzQzMC43MC4xLjE2OTc4MTUyODMuNDMuMC4w"
+  }
 }
 
 ###

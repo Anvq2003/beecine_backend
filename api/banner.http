@@ -12,12 +12,17 @@ GET {{baseUrl}}/64c290ee173cda17c307a2fa
 
 ###
 
+# 65329d4fd207a51351bc1cea
+# 65329db7d207a51351bc1ced
+# 65329df3d207a51351bc1cf0
+# 65329e2cd207a51351bc1cf3
+
 # @name Create
 POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Phim ca nhạc"
+  "movieId": "65329e2cd207a51351bc1cf3"
 }
 
 ###

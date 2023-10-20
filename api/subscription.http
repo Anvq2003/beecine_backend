@@ -17,13 +17,16 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-    "name": "Gói cao cấp",
-    "price": 300000,
+    "name": {
+        "vi": "Gói Cao Cấp",
+        "en": "Vip"
+    },
+    "price": 200000,
     "duration": 30,
-    "benefits": [
-        "Xem phim không giới hạn",
-        "Không quảng cáo"
-    ]
+    "benefits": {
+        "vi": ["Không quảng cáo", "Xem phim bất cứ lúc nào", "Xem phim không giới hạn", "Xem phim bản quyền", "Ưu tiên xem phim mới"],
+        "en": ["No ads", "Watch movies anytime", "Unlimited movies", "Watch movies with copy right", "Priority to watch new movies"]
+    }
 }
 
 ###

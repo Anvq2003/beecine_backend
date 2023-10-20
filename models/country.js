@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 const mongoosePaginate = require('mongoose-paginate-v2');
+const { languageSchema, languageArraySchema } = require('./language');
 
 const countrySchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    slug: { type: String, slug: 'name', unique: true },
-    order: { type: Number, required: true, default: 0 },
+    name: { type: languageSchema, required: true },
+    slug: { type: String, slug: 'name.en', unique: true },
+    order: { type: Number, default: 0, min: 0, max: 1000 },
+    languages: { type: [String], default: ['en', 'vi'] },
     status: { type: Boolean, default: true },
   },
   {

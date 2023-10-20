@@ -95,16 +95,17 @@ class UserController extends BaseController {
   }
 
   async createWatched(req, res) {
-    const { movieId, episodeId, userId, minutes } = req.body;
+    const { movieId, episodeId = null, userId, minutes } = req.body;
     try {
       if (!movieId || !userId || !episodeId || !minutes) {
         return res.status(400).json({ message: 'MovieId, episodeId, userId, minutes is required' });
       }
 
       const user = await UserModel.findById(userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
+      if (!user) return res.status(404).json({ message: 'User not found' });
+
+      const movie = MovieModel.findById(movieId);
+      if (!movie) return res.status(404).json({ message: 'Movie not found' });
 
       const index = user.watchedList.findIndex((item) => item.movieId == movieId);
       if (index !== -1) {

@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}?page=2
+GET {{baseUrl}}
 
 
 ###
@@ -22,11 +22,22 @@ Content-Type: application/json
 
 {
   "movieId": "64c290ee173cda17c307a2fa",
-  "thumbnailUrl": "https://www.youtube.com/watch?v=1roy4o4tqQM",
-  "title": "demo 1",
-  "description" : "demo",
-  "airDate": "2020-11-01",
-  "duration": 120
+   "title": {
+    "vi": "về nhà đi con",
+    "en": "Come Home Love: Lo and Behold"
+  },
+  "description" : {
+    "vi": "Mô tả",
+    "en": "Description"
+  },
+  "season": 1,
+  "number": 2,
+  "duration": 50,
+  "imageUrl": {
+    "vi": "https://firebasestorage.googleapis.com/v0/b/beecine-afb84.appspot.com/o/images%2F1696601493098_phim-bo-gia-tran-thanh-viet-nam.jpg?alt=media&token=9d2fb741-4285-4a68-a93c-d7f149f16f55&_gl=1*f5rqej*_ga*NjQ1NzkxNjY2LjE2ODg2NTQ2Nzk.*_ga_CW55HF8NVT*MTY5NzgxMzQzMC43MC4xLjE2OTc4MTUyODMuNDMuMC4w",
+    "en": "https://firebasestorage.googleapis.com/v0/b/beecine-afb84.appspot.com/o/images%2F1696601493098_phim-bo-gia-tran-thanh-viet-nam.jpg?alt=media&token=9d2fb741-4285-4a68-a93c-d7f149f16f55&_gl=1*f5rqej*_ga*NjQ1NzkxNjY2LjE2ODg2NTQ2Nzk.*_ga_CW55HF8NVT*MTY5NzgxMzQzMC43MC4xLjE2OTc4MTUyODMuNDMuMC4w"
+  },
+  "videoUrl": "IkaP0KJWTsQ"
 }
 ###
 

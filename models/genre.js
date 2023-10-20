@@ -2,14 +2,15 @@ const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 var slug = require('mongoose-slug-updater');
 const mongoosePaginate = require('mongoose-paginate-v2');
-const { genreSchema } = require('../middlewares/validationSchemas');
+const { languageSchema } = require('./language');
 
 const genre = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    order: { type: Number, required: true, default: 0 },
-    slug: { type: String, slug: 'name', unique: true },
+    name: { type: languageSchema, required: true },
+    order: { type: Number, required: true, default: 0, min: 0, max: 1000 },
+    slug: { type: String, slug: 'name.en', unique: true },
     isChildren: { type: Boolean, required: true, default: false },
+    languages: { type: [String], default: ['en', 'vi'] },
     status: { type: Boolean, default: true },
   },
   {

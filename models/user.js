@@ -12,10 +12,10 @@ const historySchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema(
   {
     imageUrl: { type: String, default: null },
-    name: { type: String, required: true },
-    role: { type: String, required: true, enum: ['ADMIN', 'USER'], default: 'USER' },
-    email: { type: String, required: true, unique: true },
-    uid: { type: String, required: true, unique: true },
+    name: { type: String, required: true, trim: true, minLength: 3, maxLength: 255 },
+    role: { type: String, required: true, enum: ['ADMIN', 'USER'], default: 'USER', trim: true },
+    email: { type: String, required: true, unique: true, trim: true, minLength: 3, maxLength: 255 },
+    uid: { type: String, required: true, unique: true, trim: true, minLength: 3, maxLength: 255 },
     points: { type: Number, default: 0 },
     subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription', default: null },
     permissions: [

@@ -6,8 +6,8 @@ const billSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     subscriptionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' },
-    startDate: { type: Date, default: Date.now },
-    endDate: { type: Date, required: true },
+    startDate: { type: Date, default: Date.now, required: true },
+    endDate: { type: Date, required: true, default: null },
     status: {
       type: String,
       enum: ['active', 'expired', 'cancelled'],
