@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const languageSchema = new mongoose.Schema(
   {
-    en: { type: String, required: true, trim: true, minLength: 2, maxLength: 255 },
-    vi: { type: String, required: true, trim: true, minLength: 2, maxLength: 255 },
+    en: { type: String, required: true, trim: true, minLength: 2, maxLength: 1000 },
+    vi: { type: String, required: true, trim: true, minLength: 2, maxLength: 1000 },
   },
   { _id: false },
 );

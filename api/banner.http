@@ -22,7 +22,17 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-  "movieId": "65329e2cd207a51351bc1cf3"
+  "title":{
+    "vi": "Phần phim mới nhất của lý tiểu long",
+    "en": "The latest movie of Bruce Lee"
+  },
+  "description":{
+    "vi": "Đây là một bộ phim siêu anh hùng của Marvel cực kỳ hấp dẫn bạn không thể bỏ qua hãy nhấn vào xem ngay",
+    "en": "This is a super hero movie of Marvel extremely attractive you can not ignore click to watch now"
+  },
+  "logoUrl":"https://cdn.marvel.com/content/1x/mulogo_lob_log_eye_01_1.png",
+  "imageUrl":"https://cdn.marvel.com/content/1x/msm_0608_com_mas_dsk_01.jpg",
+  "link":"#"
 }
 
 ###
@@ -73,7 +83,10 @@ Content-Type: application/json
 
 {
     "ids": [
-        "64cb784edbeafd46df22e8b1",
+        "6532a1d42a33272e0c8d48d8",
+        "6532a1da2a33272e0c8d48da",
+        "6532a1dd2a33272e0c8d48dc",
+        "6532a1e02a33272e0c8d48de"
         ]
 }
 
@@ -87,4 +100,8 @@ PATCH {{baseUrl}}/restore/64cb7f54f921928736b32b80
 
 ###
 # @name ForceDelete
-DELETE {{baseUrl}}/force/64cb7f5af921928736b32b83
+DELETE {{baseUrl}}/force/6532a1e02a33272e0c8d48de
+#  "6532a1d42a33272e0c8d48d8",
+#         "6532a1da2a33272e0c8d48da",
+#         "6532a1dd2a33272e0c8d48dc",
+#         "6532a1e02a33272e0c8d48de"

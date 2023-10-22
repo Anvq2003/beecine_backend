@@ -11,22 +11,22 @@ const {
   handleDeleteMultipleImages,
 } = require('../middlewares/uploadMiddleware');
 
-const upload = uploadMulter.single('image');
-
 router.get('/', paginationMiddleware, bindController(BannerController, 'getQuery'));
 router.get('/admin', bindController(BannerController, 'getAdmin'));
 router.get('/trash', bindController(BannerController, 'getTrash'));
 router.get('/:param', bindController(BannerController, 'getByParam'));
 router.post(
   '/store',
-  upload,
+  uploadMulter.single('image'),
+  uploadMulter.single('logo'),
   validationBannerData,
   handleUploadOrUpdateImage,
   bindController(BannerController, 'create'),
 );
 router.put(
   '/update/:id',
-  upload,
+  uploadMulter.single('image'),
+  uploadMulter.single('logo'),
   validationBannerData,
   handleUploadOrUpdateImage,
   bindController(BannerController, 'update'),

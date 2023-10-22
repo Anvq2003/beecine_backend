@@ -16,28 +16,21 @@ const upload = uploadMulter.single('image');
 // Routes
 router.get('/', paginationMiddleware, bindController(UserController, 'getQuery'));
 router.get('/admin', bindController(UserController, 'getAdmin'));
-router.get('/top', bindController(UserController, 'getTop'));
-router.get('/admin', bindController(UserController, 'getAdmin'));
 router.get('/trash', bindController(UserController, 'getTrash'));
 router.get('/check-email/:id', bindController(UserController, 'checkEmail'));
-router.get('/me', bindController(UserController, 'getMe'));
-router.get('/uid/:id', bindController(UserController, 'getByUid'));
 router.get('/:param', bindController(UserController, 'getByParam'));
+router.get('/favorite-movies/:id', bindController(UserController, 'getFavoriteMovies'));
+router.get('/watched-list/:id', bindController(UserController, 'getWatchedList'));
+router.get('/watch-later-list/:id', bindController(UserController, 'getWatchLaterList'));
 router.post('/favorite', bindController(UserController, 'createFavorite'));
 router.post('/watched', bindController(UserController, 'createWatched'));
+router.post('/watch-later', bindController(UserController, 'createWatchLater'));
 router.post(
   '/store',
   upload,
   validationUser,
   handleUploadOrUpdateImage,
   bindController(UserController, 'create'),
-);
-router.post(
-  '/store-with-google',
-  upload,
-  validationUser,
-  handleUploadOrUpdateImage,
-  bindController(UserController, 'createWithGoogle'),
 );
 router.put(
   '/update/:id',
@@ -57,4 +50,3 @@ router.delete(
 );
 
 module.exports = router;
-// toi se viet code o day sao

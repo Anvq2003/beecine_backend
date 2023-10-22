@@ -1,61 +1,106 @@
 const BaseController = require('./BaseController');
 const UserModel = require('../models/user');
 const MovieModel = require('../models/movie');
-const admin = require('firebase-admin');
 
 class UserController extends BaseController {
   constructor() {
     super(UserModel);
   }
 
-  async getByUid(req, res) {
+  async getFavoriteMovies(req, res) {
     try {
-      const uid = req.params.id;
-      const user = await UserModel.findOne({ uid: uid });
+      const userId = req.params.id;
+      let user = await UserModel.findById(userId);
       if (!user) {
-        return res.status(404).json({ message: 'Not found' });
+        return res.status(404).json({ message: 'User not found' });
       }
-      const newUserData = {
-        _id: user._id,
-        uid: user.uid,
-        name: user.name,
-        email: user.email,
-        imageUrl: user.imageUrl,
-        subscription: user.subscription,
-        createdAt: user.createdAt,
-      };
-      res.status(200).json(newUserData);
+
+      user = await user.populate({
+        path: 'favoriteMovies.movieId',
+        model: 'Movie',
+      });
+
+      const favoriteMovies = user.favoriteMovies.map((item) => {
+        return {
+          _id: item._id,
+          movieInfo: item.movieId,
+          favoriteAt: item.createdAt,
+        };
+      });
+
+      favoriteMovies.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      res.status(200).json(favoriteMovies);
     } catch (error) {
       res.status(500).json(error.message);
     }
   }
 
-  async getMe(req, res) {
+  async getWatchedList(req, res) {
     try {
-      const token = req.headers.authorization.split(' ')[1];
-      const decodedToken = await admin.auth().verifyIdToken(token);
-      const uid = decodedToken.uid;
+      const userId = req.params.id;
+      let user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
 
-      const user = await UserModel.findOne({ uid: uid });
-      return res.status(200).json(user);
+      user = await user.populate([
+        {
+          path: 'watchedList.movieId',
+          model: 'Movie',
+        },
+        {
+          path: 'watchedList.episodeId',
+          model: 'Episode',
+        },
+      ]);
+
+      const watchedList = user.watchedList.map((item) => {
+        return {
+          _id: item._id,
+          movieInfo: item.movieId,
+          episodeInfo: item.episodeId,
+          minutes: item.minutes,
+          watchedAt: item.watchedAt,
+        };
+      });
+
+      watchedList.sort((a, b) => {
+        return new Date(b.watchedAt) - new Date(a.watchedAt);
+      });
+      res.status(200).json(watchedList);
     } catch (error) {
-      return res.status(401).send('Unauthorized');
+      res.status(500).json(error.message);
     }
   }
 
-  async create(req, res) {
+  async getWatchLaterList(req, res) {
     try {
-      // check email and uid
-      const { email, uid } = req.body;
-      const exist = await UserModel.findOne({
-        $or: [{ email }, { uid }],
-      });
-      if (exist) {
-        return res.status(400).json({ message: 'Email or uid already exists' });
+      const userId = req.params.id;
+      let user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
       }
-      const data = new UserModel(req.body);
-      const savedData = await data.save();
-      res.status(200).json(savedData);
+
+      user = await user.populate({
+        path: 'watchLaterList.movieId',
+        model: 'Movie',
+      });
+
+      const watchLaterList = user.watchLaterList.map((item) => {
+        return {
+          _id: item._id,
+          movieInfo: item.movieId,
+          createdAt: item.createdAt,
+        };
+      });
+
+      watchLaterList.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      res.status(200).json(watchLaterList);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -87,8 +132,11 @@ class UserController extends BaseController {
           createdAt: Date.now(),
         });
       }
-      const savedData = await user.save();
-      res.status(200).json(savedData.favoriteMovies);
+      await user.save();
+      const isNull = user.favoriteMovies.length === 0;
+      res.status(200).json({
+        message: isNull ? 'Delete successfully' : 'Add successfully',
+      });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -121,38 +169,42 @@ class UserController extends BaseController {
         });
       }
       const savedData = await user.save();
-      res.status(200).json(savedData.watchedList);
+      res.status(200).json({ message: 'Add successfully', data: savedData.watchedList });
     } catch (error) {
       res.status(500).json(error.message);
     }
   }
 
-  async createWithGoogle(req, res) {
+  async createWatchLater(req, res) {
     try {
-      const { email, uid } = req.body;
-      const user = await UserModel.findOne({
-        $or: [{ email }, { uid }],
-      });
-      if (user) {
-        Object.assign(user, req.body);
-        const savedData = await user.save();
-        return res.status(200).json(savedData);
+      const { movieId, userId } = req.body;
+      if (!movieId || !userId) {
+        return res.status(400).json({ message: 'MovieId or userId is required' });
       }
-      const data = new UserModel(req.body);
-      const savedData = await data.save();
-      res.status(200).json(savedData);
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const movie = await MovieModel.findById(movieId);
+      if (!movie) {
+        return res.status(404).json({ message: 'Movie not found' });
+      }
+
+      const exist = user.watchLaterList.find((item) => item.movieId == movieId);
+      if (exist) {
+        user.watchLaterList = user.watchLaterList.filter((item) => item.movieId != movieId);
+      } else {
+        user.watchLaterList.push({
+          movieId: movieId,
+          createdAt: Date.now(),
+        });
+      }
+
+      const savedData = await user.save();
+      res.status(200).json({ message: 'Add successfully', data: savedData.watchLaterList });
     } catch (error) {
       res.status(500).json(error.message);
-    }
-  }
-
-  async getTop(req, res) {
-    try {
-      const limit = parseInt(req.query.limit) || 10;
-      const data = await UserModel.find().sort({ createdAt: -1 }).limit(limit);
-      res.status(200).json(data);
-    } catch (error) {
-      console.log(error);
     }
   }
 

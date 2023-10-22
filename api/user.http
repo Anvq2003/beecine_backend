@@ -4,27 +4,31 @@
 
 # @name Getall
 GET {{baseUrl}}
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImYyZTgyNzMyYjk3MWExMzVjZjE0MTZlOGI0NmRhZTA0ZDgwODk0ZTciLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQW4gVm8gUXVvYyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMYXBodzFXYi14NUNUR2N0RkRXNWR6aUlHaGNwUFpXbVBvWFJiRmZrMDU9czk2LWMiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmVlY2luZS1hZmI4NCIsImF1ZCI6ImJlZWNpbmUtYWZiODQiLCJhdXRoX3RpbWUiOjE2OTcwOTQ2OTYsInVzZXJfaWQiOiJMVTNTRlpFVEt6UEtxMldpek56TDhkN3R2NzEzIiwic3ViIjoiTFUzU0ZaRVRLelBLcTJXaXpOekw4ZDd0djcxMyIsImlhdCI6MTY5NzA5NDY5NiwiZXhwIjoxNjk3MDk4Mjk2LCJlbWFpbCI6InZvcXVvY2FuOTlAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDY3MTczMzE4ODQ2NjU1Nzk4NzEiXSwiZW1haWwiOlsidm9xdW9jYW45OUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.Dwtr_dBiaB1j6uBOg1t0ZDNVbi6kFTm9tIAkSCoN2bGSoLCT488pyPkjD-xrpsjU0VvRDo5f9tZtOyZbDkR8L67aVSuJwMjzzfbuRsUwPdllP1mthsJRdHeqXARBd_C4YU1HO3COD_JSHhARpHOoXzuYvlxMVm_x0BxKJd3ciaDccW-rdnKTV45GaikUg9LTTEDXLxup8Ky1RvUt8iZjdw5lOJ8LYE_1SfD2SIkE4an3DsHxo-14fxDoIPqQWDgOljYX_cJF7s4nX80EtIRPQrtXR1ddAyit7u3CAf9Al8H72HRqDT6KQ-b8VweLoVY31fdwAIZFYRWCq5tDN9RCsw
-
-###
-# @name Getall Uid
-GET {{baseUrl}}/me
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImYyZTgyNzMyYjk3MWExMzVjZjE0MTZlOGI0NmRhZTA0ZDgwODk0ZTciLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQW4gVm8gUXVvYyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMYXBodzFXYi14NUNUR2N0RkRXNWR6aUlHaGNwUFpXbVBvWFJiRmZrMDU9czk2LWMiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmVlY2luZS1hZmI4NCIsImF1ZCI6ImJlZWNpbmUtYWZiODQiLCJhdXRoX3RpbWUiOjE2OTcwNzg5ODksInVzZXJfaWQiOiJMVTNTRlpFVEt6UEtxMldpek56TDhkN3R2NzEzIiwic3ViIjoiTFUzU0ZaRVRLelBLcTJXaXpOekw4ZDd0djcxMyIsImlhdCI6MTY5NzA3ODk4OSwiZXhwIjoxNjk3MDgyNTg5LCJlbWFpbCI6InZvcXVvY2FuOTlAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMDY3MTczMzE4ODQ2NjU1Nzk4NzEiXSwiZW1haWwiOlsidm9xdW9jYW45OUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.YqR9bbd2WpBgWJLpuDBySM6Tt7e83-X6xEZeFQuFAm2OhgT09uLEvrIoaR7R5-gg02EKyus077o_yuge-qArbMbswj-EO4Ts_Zouj_wQRy1ZASUvMHpBm8MIM10HnC0qVXs2xv-HHz0otet6-l95lPaAUyD8LsAJx6GCMpkoS-Zff4iOxNpCZeqCqk7VlGEDMAadBtcoejkTliOaBKXhshy0qAxYL3bof2eZVlhFWVStXSZdYoP25erPji60I3X8RGGYrWpBAflEb1V0JEx0SgxZOXcKXLQpTGAIfq6w1cN295T-favGZFtkHinwjNbku_xGyYK-_CH--BcWolE7oQ
-
 
 ###
 # @name GetbyId
 GET {{baseUrl}}/64c290ee173cda17c307a2fa
 
 ###
+# @name GetFavorite
+GET {{baseUrl}}/favorite-movies/6533cdd989ac42618a10014b
+###
+# @name GetWatched
+GET {{baseUrl}}/watched-list/6533cdd989ac42618a10014b
+###
+# @name GetWatchLater
+GET {{baseUrl}}/watch-later-list/6533cdd989ac42618a10014b
+###
 
 # @name Create favorite
 POST {{baseUrl}}/favorite
 Content-Type: application/json
 
+# 65329db7d207a51351bc1ced
+# 65329d4fd207a51351bc1cea
 {
-  "userId": "6525328cbc23bb7dad9e3cc4",
-  "movieId": "6520152cc58e982ae637764b"
+  "userId": "6533cdd989ac42618a10014b",
+  "movieId": "65329d4fd207a51351bc1cea"
 }
 ###
 
@@ -33,11 +37,22 @@ POST {{baseUrl}}/watched
 Content-Type: application/json
 
 {
-  "userId": "6525328cbc23bb7dad9e3cc4",
-  "movieId": "6520152cc58e982ae637764b",
-  "episodeId": "6520152dc58e982ae637764e",
-  "minutes": "120"
+  "userId": "6533cdd989ac42618a10014b",
+  "movieId": "65329db7d207a51351bc1ced",
+  "episodeId": "6532a0d34c5a6321d14d891b",
+  "minutes": "125650"
 }
+###
+
+# @name Create history
+POST {{baseUrl}}/watch-later
+Content-Type: application/json
+
+{
+  "userId": "6533cdd989ac42618a10014b",
+  "movieId": "65329d4fd207a51351bc1cea"
+}
+
 ###
 # @name Create
 POST {{baseUrl}}/store

@@ -92,9 +92,18 @@ const artistSchema = Joi.object({
   country: Joi.string().required(),
   status: Joi.boolean().default(true),
 });
-
 const bannerSchema = Joi.object({
-  movieId: Joi.string().required(),
+  title: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
+  description: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
+  logoUrl: Joi.string().uri().required(),
+  imageUrl: Joi.string().uri().required(),
+  link: Joi.string().required(),
   order: Joi.number().default(0),
   status: Joi.boolean().default(true),
 });

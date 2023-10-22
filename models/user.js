@@ -35,6 +35,15 @@ const userSchema = new mongoose.Schema(
       },
     ],
     watchedList: { type: [historySchema], default: [] },
+    watchLaterList: [
+      {
+        type: {
+          movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
+          createdAt: { type: Date, default: Date.now },
+        },
+        default: [],
+      },
+    ],
     status: { type: Boolean, default: true },
   },
   {
