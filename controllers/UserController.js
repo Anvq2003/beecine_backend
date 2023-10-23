@@ -10,6 +10,8 @@ class UserController extends BaseController {
   async getFavoriteMovies(req, res) {
     try {
       const userId = req.params.id;
+      const options = req.paginateOptions;
+
       let user = await UserModel.findById(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -18,21 +20,42 @@ class UserController extends BaseController {
       user = await user.populate({
         path: 'favoriteMovies.movieId',
         model: 'Movie',
+        populate: [
+          { path: 'genres', model: 'Genre', select: 'name slug' },
+          { path: 'country', model: 'Country', select: 'name slug' },
+          { path: 'directors', model: 'Artist', select: 'name slug' },
+          { path: 'cast', model: 'Artist', select: 'name slug' },
+        ],
       });
 
-      const favoriteMovies = user.favoriteMovies.map((item) => {
-        return {
-          _id: item._id,
-          movieInfo: item.movieId,
-          favoriteAt: item.createdAt,
-        };
-      });
-
-      favoriteMovies.sort((a, b) => {
+      user.favoriteMovies.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
 
-      res.status(200).json(favoriteMovies);
+      const paginatedFavoriteMovies = user.favoriteMovies.slice(
+        (options.page - 1) * options.limit,
+        options.page * options.limit,
+      );
+
+      const favoriteMovies = paginatedFavoriteMovies.map((item) => {
+        return {
+          _id: item._id,
+          movieInfo: item.movieId,
+          createdAt: item.createdAt,
+        };
+      });
+
+      res.status(200).json({
+        data: favoriteMovies,
+        info: {
+          totalResults: user.favoriteMovies.length,
+          limit: options.limit,
+          totalPages: Math.ceil(user.favoriteMovies.length / options.limit),
+          page: options.page,
+          hasPrevPage: options.page > 1,
+          hasNextPage: options.page < Math.ceil(user.favoriteMovies.length / options.limit),
+        },
+      });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -41,6 +64,8 @@ class UserController extends BaseController {
   async getWatchedList(req, res) {
     try {
       const userId = req.params.id;
+      const options = req.paginateOptions;
+
       let user = await UserModel.findById(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -50,6 +75,12 @@ class UserController extends BaseController {
         {
           path: 'watchedList.movieId',
           model: 'Movie',
+          populate: [
+            { path: 'genres', model: 'Genre', select: 'name slug' },
+            { path: 'country', model: 'Country', select: 'name slug' },
+            { path: 'directors', model: 'Artist', select: 'name slug' },
+            { path: 'cast', model: 'Artist', select: 'name slug' },
+          ],
         },
         {
           path: 'watchedList.episodeId',
@@ -57,20 +88,36 @@ class UserController extends BaseController {
         },
       ]);
 
-      const watchedList = user.watchedList.map((item) => {
+      user.watchedList.sort((a, b) => {
+        return new Date(b.watchedAt) - new Date(a.watchedAt);
+      });
+
+      const paginatedWatchedList = user.watchedList.slice(
+        (options.page - 1) * options.limit,
+        options.page * options.limit,
+      );
+
+      const watchedList = paginatedWatchedList.map((item) => {
         return {
           _id: item._id,
           movieInfo: item.movieId,
           episodeInfo: item.episodeId,
           minutes: item.minutes,
-          watchedAt: item.watchedAt,
+          createdAt: item.watchedAt,
         };
       });
 
-      watchedList.sort((a, b) => {
-        return new Date(b.watchedAt) - new Date(a.watchedAt);
+      res.status(200).json({
+        data: watchedList,
+        info: {
+          totalResults: user.watchedList.length,
+          limit: options.limit,
+          totalPages: Math.ceil(user.watchedList.length / options.limit),
+          page: options.page,
+          hasPrevPage: options.page > 1,
+          hasNextPage: options.page < Math.ceil(user.watchedList.length / options.limit),
+        },
       });
-      res.status(200).json(watchedList);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -79,6 +126,7 @@ class UserController extends BaseController {
   async getWatchLaterList(req, res) {
     try {
       const userId = req.params.id;
+      const options = req.paginateOptions;
       let user = await UserModel.findById(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -87,9 +135,24 @@ class UserController extends BaseController {
       user = await user.populate({
         path: 'watchLaterList.movieId',
         model: 'Movie',
+        populate: [
+          { path: 'genres', model: 'Genre', select: 'name slug' },
+          { path: 'country', model: 'Country', select: 'name slug' },
+          { path: 'directors', model: 'Artist', select: 'name slug' },
+          { path: 'cast', model: 'Artist', select: 'name slug' },
+        ],
       });
 
-      const watchLaterList = user.watchLaterList.map((item) => {
+      user.watchLaterList.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      const paginatedWatchLaterList = user.watchLaterList.slice(
+        (options.page - 1) * options.limit,
+        options.page * options.limit,
+      );
+
+      const watchLaterList = paginatedWatchLaterList.map((item) => {
         return {
           _id: item._id,
           movieInfo: item.movieId,
@@ -97,10 +160,17 @@ class UserController extends BaseController {
         };
       });
 
-      watchLaterList.sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
+      res.status(200).json({
+        data: watchLaterList,
+        info: {
+          totalResults: user.watchLaterList.length,
+          limit: options.limit,
+          totalPages: Math.ceil(user.watchLaterList.length / options.limit),
+          page: options.page,
+          hasPrevPage: options.page > 1,
+          hasNextPage: options.page < Math.ceil(user.watchLaterList.length / options.limit),
+        },
       });
-      res.status(200).json(watchLaterList);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -125,8 +195,10 @@ class UserController extends BaseController {
 
       const exist = user.favoriteMovies.find((item) => item.movieId == movieId);
       if (exist) {
+        movie.favoriteCount = movie.favoriteCount > 0 ? movie.favoriteCount - 1 : 0;
         user.favoriteMovies = user.favoriteMovies.filter((item) => item.movieId != movieId);
       } else {
+        movie.favoriteCount += 1;
         user.favoriteMovies.push({
           movieId: movieId,
           createdAt: Date.now(),

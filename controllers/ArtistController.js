@@ -57,7 +57,8 @@ class ArtistController extends BaseController {
     try {
       const query = {
         $or: [
-          { title: { $regex: q, $options: 'iu' } },
+          { 'title.vi': { $regex: q, $options: 'iu' } },
+          { 'title.en': { $regex: q, $options: 'iu' } },
           { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
         ],
       };

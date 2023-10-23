@@ -11,10 +11,10 @@ GET {{baseUrl}}/64c290ee173cda17c307a2fa
 
 ###
 # @name GetFavorite
-GET {{baseUrl}}/favorite-movies/6533cdd989ac42618a10014b
+GET {{baseUrl}}/favorite-movies/6533cdd989ac42618a10014b?page=1&limit=1
 ###
 # @name GetWatched
-GET {{baseUrl}}/watched-list/6533cdd989ac42618a10014b
+GET {{baseUrl}}/watched-list/6533cdd989ac42618a10014b?
 ###
 # @name GetWatchLater
 GET {{baseUrl}}/watch-later-list/6533cdd989ac42618a10014b

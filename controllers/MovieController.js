@@ -63,17 +63,11 @@ class MovieController extends BaseController {
       if (q) {
         query = {
           $or: [
-            { title: { $regex: q, $options: 'iu' } },
+            { 'title.vi': { $regex: q, $options: 'iu' } },
+            { 'title.en': { $regex: q, $options: 'iu' } },
             { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-            { tags: { $regex: q, $options: 'iu' } },
-            { 'genres.name': { $regex: q, $options: 'iu' } },
-            { 'genres.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-            { 'cast.name': { $regex: q, $options: 'iu' } },
-            { 'cast.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-            { 'directors.name': { $regex: q, $options: 'iu' } },
-            { 'directors.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-            { 'country.name': { $regex: q, $options: 'iu' } },
-            { 'country.slug': { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
+            { 'tags.vi': { $regex: q, $options: 'iu' } },
+            { 'tags.en': { $regex: q, $options: 'iu' } },
           ],
         };
       }

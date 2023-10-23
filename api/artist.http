@@ -7,7 +7,7 @@ GET {{baseUrl}}
 ###
 
 # @name Search
-GET {{baseUrl}}/search?q=a
+GET {{baseUrl}}/search?q=nguyen quang dung
 
 ###
 # @name GetbyId

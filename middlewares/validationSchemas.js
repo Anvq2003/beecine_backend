@@ -92,6 +92,7 @@ const artistSchema = Joi.object({
   country: Joi.string().required(),
   status: Joi.boolean().default(true),
 });
+
 const bannerSchema = Joi.object({
   title: Joi.object({
     en: Joi.string().required(),

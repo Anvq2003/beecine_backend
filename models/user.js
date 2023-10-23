@@ -18,13 +18,7 @@ const userSchema = new mongoose.Schema(
     uid: { type: String, required: true, unique: true, trim: true, minLength: 3, maxLength: 255 },
     points: { type: Number, default: 0 },
     subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription', default: null },
-    permissions: [
-      {
-        type: String,
-        enum: ['READ', 'ADD', 'UPDATE', 'DELETE', 'RESTORE', 'FORCE_DELETE'],
-        default: null,
-      },
-    ],
+    permissions: { type: [String], default: [] },
     favoriteMovies: [
       {
         type: {
