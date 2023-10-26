@@ -72,7 +72,10 @@ class BaseController {
   async delete(req, res, next) {
     try {
       await this.model.delete({ _id: req.params.id });
-      res.status(200).json({ message: 'Deleted successfully' });
+      res.status(200).json({
+        message: 'Deleted successfully',
+        _id: req.params.id,
+      });
     } catch (error) {
       res.status(500).json(error.message);
     }

@@ -15,13 +15,13 @@ router.get(
 router.get('/movie/:id', paginationMiddleware, bindController(CommentController, 'getByMovieId'));
 router.get('/admin', bindController(CommentController, 'getAdmin'));
 router.get('/trash', bindController(CommentController, 'getTrash'));
-router.get('/like-comment', bindController(CommentController, 'likeComment'));
-router.get('/like-reply', bindController(CommentController, 'likeReply'));
 router.get('/:param', bindController(CommentController, 'getByParam'));
+router.post('/like-comment', bindController(CommentController, 'likeComment'));
+router.post('/like-reply', bindController(CommentController, 'likeReply'));
 router.post('/store', validateCommentData, bindController(CommentController, 'create'));
 router.post('/store-reply', validateReplyData, bindController(CommentController, 'createReply'));
 router.patch('/update/:id', bindController(CommentController, 'update'));
-router.put('/update-reply', bindController(CommentController, 'updateReply'));
+router.patch('/update-reply', bindController(CommentController, 'updateReply'));
 router.delete('/delete/:id', bindController(CommentController, 'delete'));
 router.delete('/delete-reply', bindController(CommentController, 'deleteReply'));
 router.delete('/delete-many', bindController(CommentController, 'deleteMany'));

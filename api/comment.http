@@ -12,7 +12,7 @@ GET {{baseUrl}}/group-by-movie
 
 ###
 # @name Getall by id
-GET {{baseUrl}}/movie/6523b0776f1b32eb3c244bc9
+GET {{baseUrl}}/movie/65329fd4d207a51351bc1d04
 
 
 ###
@@ -21,12 +21,27 @@ GET {{baseUrl}}/6522accd37fe2aaaa93bc362
 
 ###
 # @name ToggleLike commentId, userId, action
-GET {{baseUrl}}/like-comment?action=dislike&commentId=6522accd37fe2aaaa93bc362&userId=64c290ee173cda17c307a2fa
+POST {{baseUrl}}/like-comment
+Content-Type: application/json
+
+{
+  "action": "DISLIKE",
+  "commentId": "653a4046c97e55d8eb2d4d52",
+  "userId": "6533cdd989ac42618a10014b"
+}
 
 ###
 ###
 # @name ToggleLike commentId, replyId, userId, action
-GET {{baseUrl}}/like-reply?action=dislike&replyId=6522aef25283b93724ff283c&commentId=6522accd37fe2aaaa93bc362&userId=64c290ee173cda17c307a2fa
+POST {{baseUrl}}/like-reply?action=dislike&replyId=6522aef25283b93724ff283c&commentId=6522accd37fe2aaaa93bc362&userId=64c290ee173cda17c307a2fa
+Content-Type: application/json
+
+{
+  "action": "DISLIKE",
+  "commentId": "653a4252c97e55d8eb2d4ddb",
+  "replyId": "653a4c7be66f3a0031c07389",
+  "userId": "6533cdd989ac42618a10014b"
+}
 
 ###
 
@@ -35,9 +50,9 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-  "userId": "64c290ee173cda17c307a2fa",
-  "movieId": "64c290ee173cda17c307a2fa",
-  "content": "demo"
+  "userId": "6533d14d89ac42618a10021d",
+  "movieId": "65329fd4d207a51351bc1d04",
+  "content": "Comment 124 78 67 89 ---- 8888"
 }
 
 ###
@@ -46,8 +61,10 @@ POST {{baseUrl}}/store-reply
 Content-Type: application/json
 
 {
-  "commentId": "6522accd37fe2aaaa93bc362",
-  "content": "demo reply 123"
+  "commentId": "6536847022a684c36c235499",
+  "userId":"6533cdd989ac42618a10014b",
+  "movieId":"65329fd4d207a51351bc1d04",
+  "content": "============9 8 0 9 90"
 }
 
 ###
@@ -60,25 +77,23 @@ Content-Type: application/json
 }
 ###
 # @name UpdateReply
-PUT {{baseUrl}}/update-reply
+PATCH {{baseUrl}}/update-reply
 Content-Type: application/json
 
 {
   "replyId": "6522aefa5283b93724ff2840",
   "commentId": "6522accd37fe2aaaa93bc362",
-  "userId": "64c290ee173cda17c307a2fa",
-  "movieId": "64c290ee173cda17c307a2fa",
   "content": "test 0987654"
 }
 
 ###
 
 # @name Delete
-DELETE {{baseUrl}}/delete/652cdd17deabd95512105faa
+DELETE {{baseUrl}}/delete/65360ca90931fef24e8cca1f
 ###
 
 # @name Delete Reply
-DELETE {{baseUrl}}/delete-reply?commentId=6522accd37fe2aaaa93bc362&replyId=6522aef25283b93724ff283c
+DELETE {{baseUrl}}/delete-reply?commentId=653a4252c97e55d8eb2d4ddb&replyId=653a48d4c073f9f6089527e7
 
 ###
 ###

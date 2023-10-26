@@ -1,11 +1,44 @@
-const MovieModel = require('../models/movie');
-const BaseController = require('./BaseController');
+const _ = require('lodash');
 const mongoose = require('mongoose');
+const MovieModel = require('../models/movie');
+const GenreModel = require('../models/genre');
+const BaseController = require('./BaseController');
 const { handleConvertStringToSlug } = require('../utils/format');
 
 class MovieController extends BaseController {
   constructor() {
     super(MovieModel);
+  }
+
+  async getHomePage(req, res) {
+    try {
+      const { limit = 10 } = req.query;
+      const genres = await GenreModel.find({ isHome: true }).sort({ order: -1 });
+
+      let data = [];
+
+      for (const genre of genres) {
+        const movies = await MovieModel.find({
+          genres: { $in: [genre._id] },
+        })
+          .populate([
+            { path: 'genres', select: 'name slug' },
+            { path: 'cast', select: 'name slug' },
+            { path: 'directors', select: 'name slug' },
+            { path: 'country', select: 'name slug' },
+          ])
+          .limit(limit);
+
+        data.push({
+          genre,
+          movies,
+        });
+      }
+
+      res.json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
   }
 
   async getQuery(req, res) {

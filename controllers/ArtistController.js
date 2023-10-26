@@ -11,10 +11,10 @@ class ArtistController extends BaseController {
   async getQuery(req, res, next) {
     try {
       const options = req.paginateOptions;
-      options.populate = {
-        path: 'country',
-        select: 'name slug',
-      };
+      // options.populate = {
+      //   path: 'country',
+      //   select: 'name slug',
+      // };
       const data = await this.model.paginate({}, options);
       res.status(200).json(data);
     } catch (error) {

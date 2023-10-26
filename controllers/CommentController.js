@@ -1,5 +1,7 @@
 const CommentModel = require('../models/comment');
+const UserModel = require('../models/user');
 const BaseController = require('./BaseController');
+
 const _ = require('lodash');
 
 class CommentController extends BaseController {
@@ -10,7 +12,7 @@ class CommentController extends BaseController {
   async getQuery(req, res) {
     try {
       const options = req.paginateOptions;
-      const data = await CommentModel.paginate({ status: true }, options);
+      const data = await CommentModel.paginate({}, options);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -23,7 +25,7 @@ class CommentController extends BaseController {
         path: 'movieId',
         select: 'title',
       });
-      const movies = _.groupBy(comments, 'movieId.title');
+      const movies = _.groupBy(comments, 'movieId._id');
       res.status(200).json(movies);
     } catch (error) {
       res.status(500).json(error.message);
@@ -32,17 +34,50 @@ class CommentController extends BaseController {
 
   async getByMovieId(req, res) {
     const { id } = req.params;
+    const { replyId, limitReply = 6 } = req.query;
+
     if (!id) return res.status(400).json({ message: 'Movie id is required' });
 
     try {
       const options = req.paginateOptions;
-      options.populate = {
-        path: 'userId',
-        select: 'name imageUrl',
-      };
-
+      options.populate = [
+        { path: 'userId', select: 'name imageUrl' },
+        { path: 'replies.userId', select: 'name imageUrl' },
+      ];
+      if (!options.sort)
+        options.sort = {
+          createdAt: -1,
+        };
       const data = await CommentModel.paginate({ movieId: id }, options);
+
+      // Sort replies
+      data.data.forEach((comment) => {
+        comment.replies.sort((a, b) => {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+      });
+
+      // Limit replies
+      if (replyId) {
+        const comment = data.data.find((c) => c._id.equals(replyId));
+        if (comment) {
+          comment.replies = comment.replies.slice(0, limitReply);
+        }
+      }
+
       res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async create(req, res) {
+    try {
+      const data = new CommentModel(req.body);
+      const savedData = await data.save();
+      const user = await UserModel.findById(savedData.userId, 'name imageUrl');
+      savedData.userId = user;
+      res.status(200).json(savedData);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -50,14 +85,21 @@ class CommentController extends BaseController {
 
   async createReply(req, res) {
     try {
-      const { commentId } = req.body;
+      const { commentId, content, userId, movieId } = req.body;
+      if (!content || !userId || !movieId) {
+        return res.status(400).json({ message: 'Content, userId and movieId are required' });
+      }
       const comment = await CommentModel.findById(commentId);
       if (!comment) {
         return res.status(404).json({ message: 'Comment not found' });
       }
       comment.replies.push(req.body);
       const savedData = await comment.save();
-      res.status(200).json(savedData);
+
+      const reply = savedData.replies[savedData.replies.length - 1];
+      const user = await UserModel.findById(reply.userId, 'name imageUrl');
+      reply.userId = user;
+      res.status(200).json(reply);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -65,19 +107,23 @@ class CommentController extends BaseController {
 
   async updateReply(req, res) {
     try {
-      const { commentId, replyId } = req.body;
-      const comment = await CommentModel.findByIdAndUpdate(
-        commentId,
-        { $pull: { replies: { _id: replyId } } },
-        { new: true },
-      );
+      const { commentId, replyId, content } = req.body;
+
+      const comment = await CommentModel.findById(commentId);
       if (!comment) {
         return res.status(404).json({ message: 'Comment not found' });
       }
 
-      comment.replies.push(req.body);
-      const savedData = await comment.save();
-      res.status(200).json(savedData);
+      const replyIndex = comment.replies.findIndex((r) => r._id == replyId);
+      if (replyIndex === -1) {
+        return res.status(404).json({ message: 'Reply not found' });
+      }
+
+      comment.replies[replyIndex].content = content;
+
+      await comment.save();
+
+      res.json(comment.replies[replyIndex]);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -85,7 +131,7 @@ class CommentController extends BaseController {
 
   async likeComment(req, res) {
     try {
-      const { commentId, userId, action } = req.query;
+      const { commentId, userId, action } = req.body;
       const comment = await CommentModel.findById(commentId);
 
       if (!comment) {
@@ -120,7 +166,7 @@ class CommentController extends BaseController {
 
   async likeReply(req, res) {
     try {
-      const { commentId, replyId, userId, action } = req.query;
+      const { commentId, replyId, userId, action } = req.body;
 
       const comment = await CommentModel.findById(commentId);
       if (!comment) {
@@ -136,14 +182,14 @@ class CommentController extends BaseController {
 
       let reply = replies[index];
 
-      if (action === 'like') {
+      if (action === 'LIKE') {
         if (reply.likes.includes(userId)) {
           reply.likes.pull(userId);
         } else {
           reply.likes.push(userId);
           reply.dislikes.pull(userId);
         }
-      } else if (action === 'dislike') {
+      } else if (action === 'DISLIKE') {
         if (reply.dislikes.includes(userId)) {
           reply.dislikes.pull(userId);
         } else {
@@ -154,7 +200,7 @@ class CommentController extends BaseController {
 
       comment.replies = [...replies.slice(0, index), reply, ...replies.slice(index + 1)];
       await comment.save();
-      res.json(comment);
+      res.json(comment.replies[index]);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -164,17 +210,16 @@ class CommentController extends BaseController {
     try {
       const { commentId, replyId } = req.query;
 
-      const result = await CommentModel.updateOne(
-        { _id: commentId },
-        {
-          $pull: {
-            replies: {
-              _id: replyId,
-            },
-          },
-        },
-      );
-      res.status(200).json(result);
+      const result = await CommentModel.findById(commentId, 'replies');
+      if (!result) return res.status(404).json({ message: 'Comment not found' });
+
+      const index = result.replies.findIndex((r) => r._id.equals(replyId));
+      if (index === -1) {
+        return res.status(404).json({ message: 'Reply not found' });
+      }
+      result.replies.pull(replyId);
+      await result.save();
+      res.status(200).json({ message: 'Delete successfully', commentId, replyId });
     } catch (error) {
       res.status(500).json(error.message);
     }

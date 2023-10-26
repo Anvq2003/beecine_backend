@@ -7,6 +7,11 @@ GET {{baseUrl}}
 
 
 ###
+# @name GetHome
+GET {{baseUrl}}/home
+
+
+###
 # @name GetbyId
 GET {{baseUrl}}/hanh-dong
 
@@ -20,20 +25,19 @@ Content-Type: application/json
     "name": {
         "vi": "Cổ trang",
         "en": "Historical"
-    }
+    },
+    "isHome": true
 }
 
 ###
 
 # @name Update
-PUT {{baseUrl}}/update/6532823550e098e22b5ed7dc
+PUT {{baseUrl}}/update/653294e56f4dee8b53be372e
 Content-Type: application/json
 
 {
-    "name": {
-        "vi": "Phim tình cảm 1",
-        "en": "Romantic movie 1"
-    }
+    "isHome": true,
+    "order": 5
 }
 
 ###

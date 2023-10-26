@@ -38,9 +38,8 @@ Content-Type: application/json
 
 {
   "userId": "6533cdd989ac42618a10014b",
-  "movieId": "65329db7d207a51351bc1ced",
-  "episodeId": "6532a0d34c5a6321d14d891b",
-  "minutes": "125650"
+  "movieId": "65329d4fd207a51351bc1cea",
+  "minutes": "89"
 }
 ###
 

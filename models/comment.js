@@ -4,6 +4,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const replySchema = new mongoose.Schema(
   {
+    commentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment', required: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     content: { type: String, required: true, trim: true, minLength: 3, maxLength: 255 },
     likes: { type: Array, default: [] },

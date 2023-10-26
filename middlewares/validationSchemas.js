@@ -61,6 +61,7 @@ const genreSchema = Joi.object({
   languages: Joi.array().items(Joi.string()),
   order: Joi.number().default(0),
   isChildren: Joi.boolean().default(false),
+  isHome: Joi.boolean().default(false),
   status: Joi.boolean().default(true),
 });
 
