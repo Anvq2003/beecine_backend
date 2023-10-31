@@ -4,6 +4,8 @@ const MovieController = require('../controllers/MovieController');
 const bindController = require('../helpers/controllerHelper');
 const { validationMovie } = require('../middlewares/validationMiddleware');
 const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
+const { convertData } = require('../middlewares/convertDataMiddleware');
+
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
@@ -34,6 +36,7 @@ router.get('/:param', bindController(MovieController, 'getByParam'));
 router.post(
   '/store',
   upload,
+  convertData,
   validationMovie,
   handleUploadOrUpdateImage,
   bindController(MovieController, 'create'),
@@ -41,6 +44,7 @@ router.post(
 router.put(
   '/update/:id',
   upload,
+  convertData,
   validationMovie,
   handleUploadOrUpdateImage,
   bindController(MovieController, 'update'),

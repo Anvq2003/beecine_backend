@@ -4,6 +4,7 @@ const ArtistController = require('../controllers/ArtistController');
 const bindController = require('../helpers/controllerHelper');
 const { validationArtistData } = require('../middlewares/validationMiddleware');
 const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
+const { convertData } = require('../middlewares/convertDataMiddleware');
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
@@ -15,13 +16,14 @@ const upload = uploadMulter.single('image');
 
 // Routes
 router.get('/', paginationMiddleware, bindController(ArtistController, 'getQuery'));
-router.get('/admin', bindController(ArtistController, 'getAdmin'));
+router.get('/admin', paginationMiddleware, bindController(ArtistController, 'getAdmin'));
 router.get('/trash', bindController(ArtistController, 'getTrash'));
 router.get('/search', paginationMiddleware, bindController(ArtistController, 'getByKeyword'));
 router.get('/:param', bindController(ArtistController, 'getByParam'));
 router.post(
   '/store',
   upload,
+  convertData,
   validationArtistData,
   handleUploadOrUpdateImage,
   bindController(ArtistController, 'create'),
@@ -29,7 +31,7 @@ router.post(
 router.put(
   '/update/:id',
   upload,
-  validationArtistData,
+  convertData,
   handleUploadOrUpdateImage,
   bindController(ArtistController, 'update'),
 );

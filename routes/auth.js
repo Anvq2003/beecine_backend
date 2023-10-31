@@ -3,6 +3,7 @@ const router = express.Router();
 const AuthController = require('../controllers/AuthController');
 const { verifyToken } = require('../middlewares/authMiddleware');
 const bindController = require('../helpers/controllerHelper');
+const { convertData } = require('../middlewares/convertDataMiddleware');
 
 router.get('/me', verifyToken, bindController(AuthController, 'getProfile'));
 router.post('/sign-in', bindController(AuthController, 'signIn'));

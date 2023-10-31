@@ -83,8 +83,8 @@ const handleUploadOrUpdateImage = async (req, res, next) => {
 
 const handleDeleteImage = async (req, res, next) => {
   try {
-    if (!req.body.image) return next();
-    const oldImage = req.body.image;
+    if (!req.body.imageUrl) return next();
+    const oldImage = req.body.imageUrl;
     const bucket = firebaseAdmin.storage().bucket();
     await deleteFileFromBucket(bucket, oldImage);
     next();

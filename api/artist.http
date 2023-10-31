@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}?populate=all
+GET {{baseUrl}}/admin
 ###
 
 # @name Search
@@ -38,12 +38,15 @@ Content-Type: application/json
 
 ###
 
+# 
+# 
 # @name Update
-PUT {{baseUrl}}/update/64c290ee173cda17c307a2fa
+PUT {{baseUrl}}/update/653297bca608544e51e1112a
 Content-Type: application/json
 
+
 {
-   "name": "demo mới"
+   "roles": ["Diễn viên"]
 }
 
 ###

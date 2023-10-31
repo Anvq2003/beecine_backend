@@ -82,10 +82,7 @@ const artistSchema = Joi.object({
   languages: Joi.array().items(Joi.string()),
   oldImage: Joi.string().uri().allow(''),
   imageUrl: Joi.string().uri(),
-  roles: Joi.object({
-    en: Joi.array().items(Joi.string()),
-    vi: Joi.array().items(Joi.string()),
-  }),
+  roles: Joi.array().items(Joi.string()),
   bio: Joi.object({
     en: Joi.string().allow(''),
     vi: Joi.string().allow(''),

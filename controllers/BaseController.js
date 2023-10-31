@@ -7,7 +7,7 @@ class BaseController {
 
   async getAdmin(req, res, next) {
     try {
-      const data = await this.model.findWithDeleted();
+      const data = await this.model.find().sort({ createdAt: -1 });
       return res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -57,12 +57,12 @@ class BaseController {
 
   async update(req, res, next) {
     try {
-      const data = await this.model.findByIdAndUpdate(
-        req.params.id,
-        { $set: req.body },
-        { new: true },
+      const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
+        (path) => path !== '_id' && path !== '__v',
       );
-
+      const data = await this.model
+        .findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+        .populate(pathsToPopulate);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);

@@ -9,7 +9,7 @@ const artistSchema = new mongoose.Schema(
     imageUrl: { type: String, required: true },
     name: { type: languageSchema, required: true },
     slug: { type: String, slug: 'name.en', unique: true },
-    roles: { type: languageArraySchema },
+    roles: { type: Array, required: true },
     bio: { type: languageSchema },
     country: { type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true },
     languages: { type: [String], default: ['en', 'vi'] },
