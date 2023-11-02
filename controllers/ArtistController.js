@@ -8,20 +8,6 @@ class ArtistController extends BaseController {
     super(ArtistModel);
   }
 
-  async getAdmin(req, res, next) {
-    try {
-      const data = await ArtistModel.find()
-        .populate({
-          path: 'country',
-          select: 'name slug',
-        })
-        .sort({ createdAt: -1 });
-      return res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
-  }
-
   async getQuery(req, res, next) {
     try {
       const options = req.paginateOptions;

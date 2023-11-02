@@ -22,10 +22,12 @@ router.post('/store', validateCommentData, bindController(CommentController, 'cr
 router.post('/store-reply', validateReplyData, bindController(CommentController, 'createReply'));
 router.patch('/update/:id', bindController(CommentController, 'update'));
 router.patch('/update-reply', bindController(CommentController, 'updateReply'));
+router.patch('/change-status/:id', bindController(CommentController, 'changeStatus'));
 router.delete('/delete/:id', bindController(CommentController, 'delete'));
 router.delete('/delete-reply', bindController(CommentController, 'deleteReply'));
 router.delete('/delete-many', bindController(CommentController, 'deleteMany'));
 router.patch('/restore/:id', bindController(CommentController, 'restore'));
+router.patch('/restore-many', bindController(CommentController, 'restoreMany'));
 router.delete('/force/:id', bindController(CommentController, 'forceDelete'));
 router.delete('/force-many', bindController(CommentController, 'forceDeleteMany'));
 

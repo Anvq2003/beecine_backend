@@ -49,9 +49,11 @@ router.put(
   handleUploadOrUpdateImage,
   bindController(MovieController, 'update'),
 );
+router.patch('/change-status/:id', bindController(MovieController, 'changeStatus'));
 router.delete('/delete/:id', bindController(MovieController, 'delete'));
 router.delete('/delete-many', bindController(MovieController, 'deleteMany'));
 router.patch('/restore/:id', bindController(MovieController, 'restore'));
+router.patch('/restore-many', bindController(MovieController, 'restoreMany'));
 router.delete('/force/:id', handleDeleteImage, bindController(MovieController, 'forceDelete'));
 router.delete(
   '/force-many',

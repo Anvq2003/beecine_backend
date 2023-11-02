@@ -36,9 +36,11 @@ router.put(
   handleUploadOrUpdateImage,
   bindController(EpisodeController, 'update'),
 );
+router.patch('/change-status/:id', bindController(EpisodeController, 'changeStatus'));
 router.delete('/delete/:id', bindController(EpisodeController, 'delete'));
 router.delete('/delete-many', bindController(EpisodeController, 'deleteMany'));
 router.patch('/restore/:id', bindController(EpisodeController, 'restore'));
+router.patch('/restore-many', bindController(EpisodeController, 'restoreMany'));
 router.delete('/force/:id', handleDeleteImage, bindController(EpisodeController, 'forceDelete'));
 router.delete(
   '/force-many',
