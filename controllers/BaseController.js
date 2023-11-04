@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 class BaseController {
   constructor(model) {
@@ -7,11 +7,12 @@ class BaseController {
 
   async getAdmin(req, res) {
     const { populate } = req.query;
+    const newPopulate = populate.split(",").join(" ");
     try {
       const dataAndDelete = await this.model
         .findWithDeleted()
         .sort({ createdAt: -1 })
-        .populate(populate);
+        .populate(newPopulate);
       const currentData = dataAndDelete.filter((item) => !item.deleted);
       const dataDeleted = dataAndDelete.filter((item) => item.deleted);
       const activeData = dataAndDelete.filter((item) => item.status);
@@ -51,7 +52,7 @@ class BaseController {
       }
 
       if (!data) {
-        return res.status(404).json({ message: 'Not found' });
+        return res.status(404).json({ message: "Not found" });
       }
 
       res.status(200).json(data);
@@ -73,7 +74,7 @@ class BaseController {
   async update(req, res) {
     try {
       const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
-        (path) => path !== '_id' && path !== '__v',
+        (path) => path !== "_id" && path !== "__v",
       );
       const data = await this.model
         .findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
@@ -87,7 +88,7 @@ class BaseController {
   async changeStatus(req, res) {
     try {
       const data = await this.model.findById(req.params.id);
-      if (!data) return res.status(404).json({ message: 'Not found' });
+      if (!data) return res.status(404).json({ message: "Not found" });
       data.status = !data.status;
       await data.save();
       res.status(200).json(data);
@@ -100,7 +101,7 @@ class BaseController {
     try {
       await this.model.delete({ _id: req.params.id });
       res.status(200).json({
-        message: 'Deleted successfully',
+        message: "Deleted successfully",
         _id: req.params.id,
       });
     } catch (error) {
@@ -111,9 +112,9 @@ class BaseController {
   async deleteMany(req, res) {
     try {
       const { ids } = req.body;
-      console.debug('🚀 ~ ids:', ids);
+      console.debug("🚀 ~ ids:", ids);
       await this.model.delete({ _id: { $in: ids } });
-      res.status(200).json({ message: 'Deleted successfully' });
+      res.status(200).json({ message: "Deleted successfully" });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -152,7 +153,7 @@ class BaseController {
   async forceDelete(req, res) {
     try {
       await this.model.findByIdAndDelete(req.params.id);
-      res.status(200).json({ message: 'Deleted successfully' });
+      res.status(200).json({ message: "Deleted successfully" });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -162,7 +163,7 @@ class BaseController {
     const { ids } = req.body;
     try {
       await this.model.deleteMany({ _id: { $in: ids } });
-      res.status(200).json({ message: 'Deleted successfully' });
+      res.status(200).json({ message: "Deleted successfully" });
     } catch (error) {
       res.status(500).json(error.message);
     }

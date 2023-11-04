@@ -1,7 +1,7 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const replySchema = Joi.object({
-  replyId: Joi.string().allow(''),
+  replyId: Joi.string().allow(""),
   commentId: Joi.string().required(),
   movieId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
@@ -38,7 +38,7 @@ const billSchema = Joi.object({
     .required(),
   startDate: Joi.date().default(Date.now),
   endDate: Joi.date(),
-  status: Joi.string().valid('active', 'expired', 'cancelled').default('active'),
+  status: Joi.string().valid("active", "expired", "cancelled").default("active"),
   total: Joi.number(),
   paymentMethod: Joi.string(),
 });
@@ -80,12 +80,12 @@ const artistSchema = Joi.object({
     vi: Joi.string().required(),
   }),
   languages: Joi.array().items(Joi.string()),
-  oldImage: Joi.string().uri().allow(''),
+  oldImage: Joi.string().uri().allow(""),
   imageUrl: Joi.string().uri(),
   roles: Joi.array().items(Joi.string()),
   bio: Joi.object({
-    en: Joi.string().allow(''),
-    vi: Joi.string().allow(''),
+    en: Joi.string().allow(""),
+    vi: Joi.string().allow(""),
   }),
   country: Joi.string().required(),
   status: Joi.boolean().default(true),
@@ -120,7 +120,7 @@ const episodeSchema = Joi.object({
     Joi.string().uri(),
     Joi.any(),
   ),
-  oldImage: Joi.string().uri().allow(''),
+  oldImage: Joi.string().uri().allow(""),
   imageUrl: Joi.object({
     en: Joi.string(),
     vi: Joi.string(),
@@ -130,8 +130,8 @@ const episodeSchema = Joi.object({
     vi: Joi.string().required(),
   }),
   description: Joi.object({
-    en: Joi.string().allow(''),
-    vi: Joi.string().allow(''),
+    en: Joi.string().allow(""),
+    vi: Joi.string().allow(""),
   }),
   views: Joi.number().default(0),
   videoUrl: Joi.string().required(),
@@ -143,10 +143,7 @@ const episodeSchema = Joi.object({
 });
 
 const movieSchema = Joi.object({
-  imageUrl: Joi.object({
-    en: Joi.string(),
-    vi: Joi.string(),
-  }),
+  videoUrl: Joi.string().optional(),
   genres: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   cast: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   directors: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
@@ -163,8 +160,8 @@ const movieSchema = Joi.object({
     vi: Joi.string().required(),
   }),
   description: Joi.object({
-    en: Joi.string().allow(''),
-    vi: Joi.string().allow(''),
+    en: Joi.string().allow(""),
+    vi: Joi.string().allow(""),
   }),
   releaseDate: Joi.date(),
   isSeries: Joi.boolean().default(false),
@@ -179,10 +176,7 @@ const movieSchema = Joi.object({
     Joi.string().uri(),
     Joi.any(),
   ),
-  oldImage: Joi.string().uri().allow(''),
   trailerUrl: Joi.string(),
-  totalFavorites: Joi.number().default(0),
-  totalComments: Joi.number().default(0),
   status: Joi.boolean().default(true),
 });
 
@@ -207,8 +201,8 @@ const featureFilmSchema = Joi.object({
     vi: Joi.string().required(),
   }),
   description: Joi.object({
-    en: Joi.string().allow(''),
-    vi: Joi.string().allow(''),
+    en: Joi.string().allow(""),
+    vi: Joi.string().allow(""),
   }),
   releaseDate: Joi.date().required(),
   isSeries: Joi.boolean().default(false),
@@ -223,7 +217,7 @@ const featureFilmSchema = Joi.object({
     Joi.string().uri(),
     Joi.any(),
   ),
-  oldImage: Joi.string().uri().allow(''),
+  oldImage: Joi.string().uri().allow(""),
   trailerUrl: Joi.string(),
   totalFavorites: Joi.number().default(0),
   totalComments: Joi.number().default(0),
@@ -268,9 +262,9 @@ const userSchema = Joi.object({
     Joi.any(),
   ),
   imageUrl: Joi.string().uri(),
-  oldImage: Joi.string().uri().allow(''),
+  oldImage: Joi.string().uri().allow(""),
   name: Joi.string().required(),
-  role: Joi.string().valid('ADMIN', 'USER').default('USER'),
+  role: Joi.string().valid("ADMIN", "USER").default("USER"),
   email: Joi.string().email().required(),
   uid: Joi.string().required(),
   points: Joi.number().default(0),

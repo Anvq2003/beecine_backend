@@ -20,7 +20,7 @@ GET {{baseUrl}}/search?q=come-back-home
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/artist/tran-thanh
+GET {{baseUrl}}/64c290ee173cda17c307a2fa
 
 ###
 ###
