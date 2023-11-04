@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 class BaseController {
   constructor(model) {
@@ -6,24 +6,43 @@ class BaseController {
   }
 
   async getAdmin(req, res) {
-    const { populate } = req.query;
+    const { field = "all", value = "all" } = req.query;
     try {
-      const dataAndDelete = await this.model
-        .findWithDeleted()
-        .sort({ createdAt: -1 })
-        .populate(populate);
-      const currentData = dataAndDelete.filter((item) => !item.deleted);
-      const dataDeleted = dataAndDelete.filter((item) => item.deleted);
-      const activeData = dataAndDelete.filter((item) => item.status);
-      const inActiveData = dataAndDelete.filter((item) => !item.status);
+      const options = req.paginateOptions;
+      options.sort = { createdAt: -1 };
+      options.populate = Object.keys(this.model.schema.paths).filter(
+        (path) => path !== "_id" && path !== "__v",
+      );
 
-      const data = {
-        allData: currentData,
-        trashData: dataDeleted,
-        activeData: activeData,
-        inActiveData: inActiveData,
-      };
-      return res.status(200).json(data);
+      // get trash
+      if (field === "deleted" && value === "true") {
+        let data = await this.model.findDeleted({ deleted: true }).populate(options.populate);
+        const totalResults = data.length;
+        const totalPages = Math.ceil(totalResults / options.limit);
+        const page = options.page;
+        const hasPrevPage = page > 1;
+        const hasNextPage = page < totalPages;
+        const skip = (page - 1) * options.limit;
+        data = data.slice(skip, skip + options.limit);
+
+        const info = {
+          totalResults,
+          totalPages,
+          page,
+          hasPrevPage,
+          hasNextPage,
+        };
+        return res.status(200).json({ data, info });
+      }
+
+      // Get all data
+      if (field === "all" && value === "all") {
+        const data = await this.model.paginate({}, options);
+        return res.status(200).json(data);
+      } else {
+        const data = await this.model.paginate({ [field]: value }, options);
+        res.status(200).json(data);
+      }
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -51,7 +70,7 @@ class BaseController {
       }
 
       if (!data) {
-        return res.status(404).json({ message: 'Not found' });
+        return res.status(404).json({ message: "Not found" });
       }
 
       res.status(200).json(data);
@@ -62,9 +81,13 @@ class BaseController {
 
   async create(req, res) {
     try {
+      const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
+        (path) => path !== "_id" && path !== "__v",
+      );
       const data = new this.model(req.body);
       const savedData = await data.save();
-      res.status(200).json(savedData);
+      const savedDataJoin = await this.model.findById(savedData._id).populate(pathsToPopulate);
+      res.status(200).json(savedDataJoin);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -73,7 +96,7 @@ class BaseController {
   async update(req, res) {
     try {
       const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
-        (path) => path !== '_id' && path !== '__v',
+        (path) => path !== "_id" && path !== "__v",
       );
       const data = await this.model
         .findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
@@ -87,7 +110,7 @@ class BaseController {
   async changeStatus(req, res) {
     try {
       const data = await this.model.findById(req.params.id);
-      if (!data) return res.status(404).json({ message: 'Not found' });
+      if (!data) return res.status(404).json({ message: "Not found" });
       data.status = !data.status;
       await data.save();
       res.status(200).json(data);
@@ -100,7 +123,7 @@ class BaseController {
     try {
       await this.model.delete({ _id: req.params.id });
       res.status(200).json({
-        message: 'Deleted successfully',
+        message: "Deleted successfully",
         _id: req.params.id,
       });
     } catch (error) {
@@ -111,9 +134,9 @@ class BaseController {
   async deleteMany(req, res) {
     try {
       const { ids } = req.body;
-      console.debug('🚀 ~ ids:', ids);
+      console.debug("🚀 ~ ids:", ids);
       await this.model.delete({ _id: { $in: ids } });
-      res.status(200).json({ message: 'Deleted successfully' });
+      res.status(200).json({ message: "Deleted successfully" });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -152,7 +175,7 @@ class BaseController {
   async forceDelete(req, res) {
     try {
       await this.model.findByIdAndDelete(req.params.id);
-      res.status(200).json({ message: 'Deleted successfully' });
+      res.status(200).json({ message: "Deleted successfully" });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -162,7 +185,7 @@ class BaseController {
     const { ids } = req.body;
     try {
       await this.model.deleteMany({ _id: { $in: ids } });
-      res.status(200).json({ message: 'Deleted successfully' });
+      res.status(200).json({ message: "Deleted successfully" });
     } catch (error) {
       res.status(500).json(error.message);
     }

@@ -3,8 +3,9 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin
+GET {{baseUrl}}/admin?field=deleted&value=true
 ###
+
 # @name Getall
 PATCH {{baseUrl}}/change-status/6540b6226c605c44082d40a9
 ###
