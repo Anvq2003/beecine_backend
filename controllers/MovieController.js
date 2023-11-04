@@ -1,9 +1,10 @@
-const _ = require('lodash');
-const mongoose = require('mongoose');
-const MovieModel = require('../models/movie');
-const GenreModel = require('../models/genre');
-const BaseController = require('./BaseController');
-const { handleConvertStringToSlug } = require('../utils/format');
+const _ = require("lodash");
+const mongoose = require("mongoose");
+const MovieModel = require("../models/movie");
+const EpisodeModel = require("../models/episode");
+const GenreModel = require("../models/genre");
+const BaseController = require("./BaseController");
+const { handleConvertStringToSlug } = require("../utils/format");
 
 class MovieController extends BaseController {
   constructor() {
@@ -22,10 +23,10 @@ class MovieController extends BaseController {
           genres: { $in: [genre._id] },
         })
           .populate([
-            { path: 'genres', select: 'name slug' },
-            { path: 'cast', select: 'name slug' },
-            { path: 'directors', select: 'name slug' },
-            { path: 'country', select: 'name slug' },
+            { path: "genres", select: "name slug" },
+            { path: "cast", select: "name slug" },
+            { path: "directors", select: "name slug" },
+            { path: "country", select: "name slug" },
           ])
           .limit(limit);
 
@@ -45,26 +46,12 @@ class MovieController extends BaseController {
     try {
       const options = req.paginateOptions;
       options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
+        { path: "genres", select: "name slug" },
+        { path: "cast", select: "name slug" },
+        { path: "directors", select: "name slug" },
+        { path: "country", select: "name slug" },
       ];
       const data = await MovieModel.paginate({}, options);
-      res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
-  }
-
-  async getAdmin(req, res) {
-    try {
-      const data = await MovieModel.findWithDeleted().populate([
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
-      ]);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -74,7 +61,7 @@ class MovieController extends BaseController {
   async getByKeyword(req, res) {
     const {
       q,
-      type = 'less',
+      type = "less",
       limit = 6,
       years,
       genres,
@@ -85,10 +72,10 @@ class MovieController extends BaseController {
     } = req.query;
     const options = req.paginateOptions;
     options.populate = [
-      { path: 'genres', select: 'name slug' },
-      { path: 'cast', select: 'name slug' },
-      { path: 'directors', select: 'name slug' },
-      { path: 'country', select: 'name slug' },
+      { path: "genres", select: "name slug" },
+      { path: "cast", select: "name slug" },
+      { path: "directors", select: "name slug" },
+      { path: "country", select: "name slug" },
     ];
 
     try {
@@ -96,27 +83,27 @@ class MovieController extends BaseController {
       if (q) {
         query = {
           $or: [
-            { 'title.vi': { $regex: q, $options: 'iu' } },
-            { 'title.en': { $regex: q, $options: 'iu' } },
-            { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
-            { 'tags.vi': { $regex: q, $options: 'iu' } },
-            { 'tags.en': { $regex: q, $options: 'iu' } },
+            { "title.vi": { $regex: q, $options: "iu" } },
+            { "title.en": { $regex: q, $options: "iu" } },
+            { slug: { $regex: handleConvertStringToSlug(q), $options: "iu" } },
+            { "tags.vi": { $regex: q, $options: "iu" } },
+            { "tags.en": { $regex: q, $options: "iu" } },
           ],
         };
       }
 
       if (years)
         query.releaseDate = { $gte: new Date(`${years}-01-01`), $lte: new Date(`${years}-12-31`) };
-      if (genres) query['genres.slug'] = { $in: genres.split(',') };
-      if (countries) query['country.slug'] = { $in: countries.split(',') };
+      if (genres) query["genres.slug"] = { $in: genres.split(",") };
+      if (countries) query["country.slug"] = { $in: countries.split(",") };
       if (artists) {
-        query['cast.slug'] = { $in: artists.split(',') };
-        query['directors.slug'] = { $in: artists.split(',') };
+        query["cast.slug"] = { $in: artists.split(",") };
+        query["directors.slug"] = { $in: artists.split(",") };
       }
       if (isSeries) query.isSeries = isSeries;
       if (isFree) query.isFree = isFree;
 
-      if (type === 'less') {
+      if (type === "less") {
         const movies = await MovieModel.find(query);
         return res.status(200).json({
           data: movies.slice(0, limit),
@@ -124,7 +111,7 @@ class MovieController extends BaseController {
             totalResults: movies.length,
           },
         });
-      } else if (type === 'more') {
+      } else if (type === "more") {
         const movies = await MovieModel.paginate(query, options);
         return res.status(200).json(movies);
       }
@@ -137,11 +124,11 @@ class MovieController extends BaseController {
     try {
       const movieId = req.params.id;
       if (!mongoose.Types.ObjectId.isValid(movieId)) {
-        return res.status(400).json({ message: 'Invalid movie id' });
+        return res.status(400).json({ message: "Invalid movie id" });
       }
       const movie = await MovieModel.findById(movieId);
       if (!movie) {
-        return res.status(404).json({ message: 'Not found' });
+        return res.status(404).json({ message: "Not found" });
       }
 
       const query = {
@@ -153,17 +140,17 @@ class MovieController extends BaseController {
               $elemMatch: { slug: { $in: movie.directors.map((artist) => artist.slug) } },
             },
           },
-          { 'country.slug': movie.country.slug },
+          { "country.slug": movie.country.slug },
         ],
         _id: { $ne: movieId },
       };
 
       const options = req.paginateOptions;
       options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
+        { path: "genres", select: "name slug" },
+        { path: "cast", select: "name slug" },
+        { path: "directors", select: "name slug" },
+        { path: "country", select: "name slug" },
       ];
       const data = await MovieModel.paginate(query, options);
       res.status(200).json(data);
@@ -173,34 +160,51 @@ class MovieController extends BaseController {
   }
 
   async getByParam(req, res) {
-    try {
-      const param = req.params.param;
-      let data;
+    // try {
+    const param = req.params.param;
+    const { season } = req.query;
+    let data;
 
-      if (mongoose.Types.ObjectId.isValid(param)) {
-        data = await MovieModel.findById(param).populate([
-          { path: 'genres', select: 'name slug' },
-          { path: 'cast', select: 'name slug' },
-          { path: 'directors', select: 'name slug' },
-          { path: 'country', select: 'name slug' },
-        ]);
-      } else {
-        data = await MovieModel.findOne({ slug: param }).populate([
-          { path: 'genres', select: 'name slug' },
-          { path: 'cast', select: 'name slug' },
-          { path: 'directors', select: 'name slug' },
-          { path: 'country', select: 'name slug' },
-        ]);
+    if (mongoose.Types.ObjectId.isValid(param)) {
+      data = await MovieModel.findById(param).populate([
+        { path: "genres", select: "name slug" },
+        { path: "cast", select: "name slug" },
+        { path: "directors", select: "name slug" },
+        { path: "country", select: "name slug" },
+      ]);
+
+      if (data?.isSeries) {
+        console.log("isSeries");
+        const episodes = await EpisodeModel.find({
+          $and: [{ movieId: data._id }, { season: season ? season : 1 }],
+        }).sort({ number: 1 });
+        data.episodes = [...episodes];
       }
+    } else {
+      data = await MovieModel.findOne({ slug: param }).populate([
+        { path: "genres", select: "name slug" },
+        { path: "cast", select: "name slug" },
+        { path: "directors", select: "name slug" },
+        { path: "country", select: "name slug" },
+      ]);
+      if (data?.isSeries) {
+        console.log("isSeries");
 
-      if (!data) {
-        return res.status(404).json({ message: 'Not found' });
+        const episodes = await EpisodeModel.find({
+          $and: [{ movieId: data._id }, { season: season ? season : 1 }],
+        }).sort({ number: 1 });
+        data.episodes = [...episodes];
       }
-
-      res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error.message);
     }
+
+    if (!data) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    res.status(200).json(data);
+    // } catch (error) {
+    //   res.status(500).json(error.message);
+    // }
   }
 
   async getByArtistSlug(req, res) {
@@ -208,10 +212,10 @@ class MovieController extends BaseController {
       const slug = req.params.slug;
       const options = req.paginateOptions;
       options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
+        { path: "genres", select: "name slug" },
+        { path: "cast", select: "name slug" },
+        { path: "directors", select: "name slug" },
+        { path: "country", select: "name slug" },
       ];
 
       const query = {
@@ -223,7 +227,7 @@ class MovieController extends BaseController {
       const data = await MovieModel.paginate(query, options);
 
       if (!data) {
-        return res.status(404).json({ message: 'Not found' });
+        return res.status(404).json({ message: "Not found" });
       }
 
       res.status(200).json(data);
@@ -237,17 +241,17 @@ class MovieController extends BaseController {
       const slug = req.params.slug;
       const options = req.paginateOptions;
       options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
+        { path: "genres", select: "name slug" },
+        { path: "cast", select: "name slug" },
+        { path: "directors", select: "name slug" },
+        { path: "country", select: "name slug" },
       ];
 
-      const query = { 'country.slug': slug };
+      const query = { "country.slug": slug };
       const data = await MovieModel.paginate(query, options);
 
       if (!data) {
-        return res.status(404).json({ message: 'Not found' });
+        return res.status(404).json({ message: "Not found" });
       }
 
       res.status(200).json(data);
@@ -261,16 +265,16 @@ class MovieController extends BaseController {
       const slug = req.params.slug;
       const options = req.paginateOptions;
       options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
+        { path: "genres", select: "name slug" },
+        { path: "cast", select: "name slug" },
+        { path: "directors", select: "name slug" },
+        { path: "country", select: "name slug" },
       ];
 
       const query = { genres: { $elemMatch: { slug: slug } } };
       const data = await MovieModel.paginate(query, options);
       if (!data) {
-        return res.status(404).json({ message: 'Not found' });
+        return res.status(404).json({ message: "Not found" });
       }
 
       res.status(200).json(data);
