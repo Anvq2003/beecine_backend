@@ -1,6 +1,7 @@
 const Joi = require("joi");
 
 const replySchema = Joi.object({
+  _id: Joi.string(),
   replyId: Joi.string().allow(""),
   commentId: Joi.string().required(),
   movieId: Joi.string()
@@ -16,6 +17,7 @@ const replySchema = Joi.object({
 });
 
 const commentSchema = Joi.object({
+  _id: Joi.string(),
   userId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
@@ -30,6 +32,7 @@ const commentSchema = Joi.object({
 });
 
 const billSchema = Joi.object({
+  _id: Joi.string(),
   userId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
@@ -44,6 +47,7 @@ const billSchema = Joi.object({
 });
 
 const countrySchema = Joi.object({
+  _id: Joi.string(),
   name: Joi.object({
     en: Joi.string().required(),
     vi: Joi.string().required(),
@@ -54,6 +58,7 @@ const countrySchema = Joi.object({
 });
 
 const genreSchema = Joi.object({
+  _id: Joi.string(),
   name: Joi.object({
     en: Joi.string().required(),
     vi: Joi.string().required(),
@@ -66,6 +71,7 @@ const genreSchema = Joi.object({
 });
 
 const artistSchema = Joi.object({
+  _id: Joi.string(),
   image: Joi.alternatives().try(
     Joi.object({
       file: Joi.binary().required(),
@@ -92,6 +98,7 @@ const artistSchema = Joi.object({
 });
 
 const bannerSchema = Joi.object({
+  _id: Joi.string(),
   title: Joi.object({
     en: Joi.string().required(),
     vi: Joi.string().required(),
@@ -108,6 +115,7 @@ const bannerSchema = Joi.object({
 });
 
 const episodeSchema = Joi.object({
+  _id: Joi.string(),
   movieId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
@@ -143,6 +151,7 @@ const episodeSchema = Joi.object({
 });
 
 const movieSchema = Joi.object({
+  _id: Joi.string(),
   videoUrl: Joi.string().optional(),
   genres: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   cast: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
@@ -181,6 +190,7 @@ const movieSchema = Joi.object({
 });
 
 const featureFilmSchema = Joi.object({
+  _id: Joi.string(),
   imageUrl: Joi.object({
     en: Joi.string(),
     vi: Joi.string(),
@@ -226,6 +236,7 @@ const featureFilmSchema = Joi.object({
 });
 
 const subscriptionSchema = Joi.object({
+  _id: Joi.string(),
   name: Joi.object({
     en: Joi.string().required(),
     vi: Joi.string().required(),
@@ -241,6 +252,7 @@ const subscriptionSchema = Joi.object({
 });
 
 const historySchema = Joi.object({
+  _id: Joi.string(),
   movieId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
@@ -252,6 +264,7 @@ const historySchema = Joi.object({
 });
 
 const userSchema = Joi.object({
+  _id: Joi.string(),
   image: Joi.alternatives().try(
     Joi.object({
       file: Joi.binary().required(),
@@ -278,6 +291,7 @@ const userSchema = Joi.object({
 });
 
 const refreshTokenSchema = Joi.object({
+  _id: Joi.string(),
   token: Joi.string().required(),
   userId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)

@@ -1,11 +1,11 @@
-require('dotenv').config();
+require("dotenv").config();
 const { JWT_ACCESS_KEY, JWT_REFRESH_KEY, ACCESS_TOKEN_EXPIRATION, REFRESH_TOKEN_EXPIRATION } =
   process.env;
-const admin = require('firebase-admin');
-const jwt = require('jsonwebtoken');
-const UserModel = require('../models/user');
-const RefreshTokenModel = require('../models/refreshToken');
-const { getMillisecondsInDuration } = require('../utils/format');
+const admin = require("firebase-admin");
+const jwt = require("jsonwebtoken");
+const UserModel = require("../models/user");
+const RefreshTokenModel = require("../models/refreshToken");
+const { getMillisecondsInDuration } = require("../utils/format");
 
 class AuthController {
   async signUp(req, res) {
@@ -13,12 +13,12 @@ class AuthController {
       const { token, name } = req.body;
       const decodedToken = await this.verifyTokenFirebase(token);
 
-      if (!decodedToken) return res.status(404).json({ message: 'User not found' });
+      if (!decodedToken) return res.status(404).json({ message: "User not found" });
 
       await admin.auth().updateUser(decodedToken.uid, { displayName: name });
       await this.createUser({ ...decodedToken, name });
 
-      return res.status(200).json('Sign up successfully');
+      return res.status(200).json("Sign up successfully");
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -28,10 +28,10 @@ class AuthController {
     try {
       const { token } = req.body;
       const decodedToken = await this.verifyTokenFirebase(token);
-      if (!decodedToken) return res.status(404).json({ message: 'User not found' });
+      if (!decodedToken) return res.status(404).json({ message: "User not found" });
 
       const user = await UserModel.findOne({ uid: decodedToken.uid });
-      if (!user) return res.status(404).json({ message: 'User not found' });
+      if (!user) return res.status(404).json({ message: "User not found" });
 
       const { accessToken, refreshToken } = this.createTokens(user);
 
@@ -51,7 +51,7 @@ class AuthController {
     try {
       const { token } = req.body;
       const decodedToken = await this.verifyTokenFirebase(token);
-      if (!decodedToken) return res.status(404).json({ message: 'User not found' });
+      if (!decodedToken) return res.status(404).json({ message: "User not found" });
 
       let user = await UserModel.findOne({ email: decodedToken.email });
       if (!user) {
@@ -78,20 +78,20 @@ class AuthController {
   async refreshToken(req, res) {
     try {
       const { refreshToken } = req.body;
-      if (!refreshToken) return res.status(404).json({ message: 'Refresh token is required' });
+      if (!refreshToken) return res.status(404).json({ message: "Refresh token is required" });
 
       const storedRefreshToken = await RefreshTokenModel.findOne({ token: refreshToken });
       if (!storedRefreshToken)
-        return res.status(404).json({ message: 'Refresh  1223 token not found' });
+        return res.status(404).json({ message: "Refresh  1223 token not found" });
 
       const currentTimestamp = Date.now();
 
       if (storedRefreshToken.expiresAt < currentTimestamp) {
-        return res.status(404).json({ message: 'Refresh token has expired' });
+        return res.status(404).json({ message: "Refresh token has expired" });
       }
 
       const decodedToken = jwt.verify(refreshToken, JWT_REFRESH_KEY);
-      if (!decodedToken) return res.status(404).json({ message: 'Refresh token is invalid' });
+      if (!decodedToken) return res.status(404).json({ message: "Refresh token is invalid" });
 
       const newTokens = this.createTokens(decodedToken);
       this.createNewRefreshToken(newTokens.refreshToken, decodedToken._id);
@@ -109,8 +109,8 @@ class AuthController {
   async getProfile(req, res) {
     try {
       const { _id } = req.user;
-      const user = await UserModel.findById(_id);
-      if (!user) return res.status(404).json({ message: 'User not found' });
+      const user = await UserModel.findById(_id).populate("subscription");
+      if (!user) return res.status(404).json({ message: "User not found" });
       res.status(200).json(user);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -124,9 +124,9 @@ class AuthController {
   async createUser(payload) {
     const data = Object.assign(
       {
-        uid: '',
-        email: '',
-        name: '',
+        uid: "",
+        email: "",
+        name: "",
         imageUrl: null,
       },
       payload,
