@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const _ = require("lodash");
 
 class BaseController {
   constructor(model) {
@@ -14,9 +15,20 @@ class BaseController {
         (path) => path !== "_id" && path !== "__v",
       );
 
+      const allData = await this.model.findWithDeleted();
+      const count = {
+        all: _.filter(allData, (item) => !item.deleted).length,
+        active: _.filter(allData, (item) => item.status).length,
+        inactive: _.filter(allData, (item) => !item.status).length,
+        trash: _.filter(allData, (item) => item.deleted).length,
+      };
+      if (field !== "all") {
+        count[field] = _.filter(allData, (item) => item[field] === value).length;
+      }
+
       // get trash
       if (field === "deleted" && value === "true") {
-        let data = await this.model.findDeleted({ deleted: true }).populate(options.populate);
+        let data = await this.model.findWithDeleted({ deleted: true }).populate(options.populate);
         const totalResults = data.length;
         const totalPages = Math.ceil(totalResults / options.limit);
         const page = options.page;
@@ -32,16 +44,16 @@ class BaseController {
           hasPrevPage,
           hasNextPage,
         };
-        return res.status(200).json({ data, info });
+        return res.status(200).json({ data, info, count });
       }
 
       // Get all data
       if (field === "all" && value === "all") {
         const data = await this.model.paginate({}, options);
-        return res.status(200).json(data);
+        return res.status(200).json({ ...data, count });
       } else {
         const data = await this.model.paginate({ [field]: value }, options);
-        res.status(200).json(data);
+        res.status(200).json({ ...data, count });
       }
     } catch (error) {
       res.status(500).json(error.message);
