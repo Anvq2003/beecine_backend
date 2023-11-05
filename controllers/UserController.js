@@ -39,9 +39,8 @@ class UserController extends BaseController {
 
       const favoriteMovies = paginatedFavoriteMovies.map((item) => {
         return {
-          _id: item._id,
-          movieInfo: item.movieId,
-          createdAt: item.createdAt,
+          ...item.movieId._doc,
+          createdItemAt: item.createdAt,
         };
       });
 
@@ -99,11 +98,10 @@ class UserController extends BaseController {
 
       const watchedList = paginatedWatchedList.map((item) => {
         return {
-          _id: item._id,
-          movieInfo: item.movieId,
-          episodeInfo: item.episodeId,
+          ...item.movieId._doc,
           minutes: item.minutes,
-          createdAt: item.watchedAt,
+          createdItemAt: item.watchedAt,
+          episodeInfo: item.episodeId,
         };
       });
 
@@ -154,9 +152,8 @@ class UserController extends BaseController {
 
       const watchLaterList = paginatedWatchLaterList.map((item) => {
         return {
-          _id: item._id,
-          movieInfo: item.movieId,
-          createdAt: item.createdAt,
+          ...item.movieId._doc,
+          createdItemAt: item.createdAt,
         };
       });
 
