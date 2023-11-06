@@ -160,51 +160,51 @@ class MovieController extends BaseController {
   }
 
   async getByParam(req, res) {
-    // try {
-    const param = req.params.param;
-    const { season } = req.query;
-    let data;
+    try {
+      const param = req.params.param;
+      const { season } = req.query;
+      let data;
 
-    if (mongoose.Types.ObjectId.isValid(param)) {
-      data = await MovieModel.findById(param).populate([
-        { path: "genres", select: "name slug" },
-        { path: "cast", select: "name slug" },
-        { path: "directors", select: "name slug" },
-        { path: "country", select: "name slug" },
-      ]);
+      if (mongoose.Types.ObjectId.isValid(param)) {
+        data = await MovieModel.findById(param).populate([
+          { path: "genres", select: "name slug" },
+          { path: "cast", select: "name slug" },
+          { path: "directors", select: "name slug" },
+          { path: "country", select: "name slug" },
+        ]);
 
-      if (data?.isSeries) {
-        console.log("isSeries");
-        const episodes = await EpisodeModel.find({
-          $and: [{ movieId: data._id }, { season: season ? season : 1 }],
-        }).sort({ number: 1 });
-        data.episodes = [...episodes];
+        if (data?.isSeries) {
+          console.log("isSeries");
+          const episodes = await EpisodeModel.find({
+            $and: [{ movieId: data._id }, { season: season ? season : 1 }],
+          }).sort({ number: 1 });
+          data.episodes = [...episodes];
+        }
+      } else {
+        data = await MovieModel.findOne({ slug: param }).populate([
+          { path: "genres", select: "name slug" },
+          { path: "cast", select: "name slug" },
+          { path: "directors", select: "name slug" },
+          { path: "country", select: "name slug" },
+        ]);
+        if (data?.isSeries) {
+          console.log("isSeries");
+
+          const episodes = await EpisodeModel.find({
+            $and: [{ movieId: data._id }, { season: season ? season : 1 }],
+          }).sort({ number: 1 });
+          data.episodes = [...episodes];
+        }
       }
-    } else {
-      data = await MovieModel.findOne({ slug: param }).populate([
-        { path: "genres", select: "name slug" },
-        { path: "cast", select: "name slug" },
-        { path: "directors", select: "name slug" },
-        { path: "country", select: "name slug" },
-      ]);
-      if (data?.isSeries) {
-        console.log("isSeries");
 
-        const episodes = await EpisodeModel.find({
-          $and: [{ movieId: data._id }, { season: season ? season : 1 }],
-        }).sort({ number: 1 });
-        data.episodes = [...episodes];
+      if (!data) {
+        return res.status(404).json({ message: "Not found" });
       }
-    }
 
-    if (!data) {
-      return res.status(404).json({ message: "Not found" });
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
     }
-
-    res.status(200).json(data);
-    // } catch (error) {
-    //   res.status(500).json(error.message);
-    // }
   }
 
   async getByArtistSlug(req, res) {

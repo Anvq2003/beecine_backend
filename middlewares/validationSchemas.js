@@ -100,8 +100,15 @@ const bannerSchema = Joi.object({
     en: Joi.string().required(),
     vi: Joi.string().required(),
   }),
-  logoUrl: Joi.string().uri().required(),
-  imageUrl: Joi.string().uri().required(),
+  image: Joi.alternatives().try(
+    Joi.object({
+      file: Joi.binary(),
+      filename: Joi.string(),
+      mimetype: Joi.string(),
+    }),
+    Joi.string().uri(),
+    Joi.any(),
+  ),
   link: Joi.string().required(),
   order: Joi.number().default(0),
   status: Joi.boolean().default(true),
