@@ -1,6 +1,6 @@
-const BaseController = require('./BaseController');
-const UserModel = require('../models/user');
-const MovieModel = require('../models/movie');
+const BaseController = require("./BaseController");
+const UserModel = require("../models/user");
+const MovieModel = require("../models/movie");
 
 class UserController extends BaseController {
   constructor() {
@@ -14,17 +14,17 @@ class UserController extends BaseController {
 
       let user = await UserModel.findById(userId);
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
 
       user = await user.populate({
-        path: 'favoriteMovies.movieId',
-        model: 'Movie',
+        path: "favoriteMovies.movieId",
+        model: "Movie",
         populate: [
-          { path: 'genres', model: 'Genre', select: 'name slug' },
-          { path: 'country', model: 'Country', select: 'name slug' },
-          { path: 'directors', model: 'Artist', select: 'name slug' },
-          { path: 'cast', model: 'Artist', select: 'name slug' },
+          { path: "genres", model: "Genre", select: "name slug" },
+          { path: "country", model: "Country", select: "name slug" },
+          { path: "directors", model: "Artist", select: "name slug" },
+          { path: "cast", model: "Artist", select: "name slug" },
         ],
       });
 
@@ -39,9 +39,8 @@ class UserController extends BaseController {
 
       const favoriteMovies = paginatedFavoriteMovies.map((item) => {
         return {
-          _id: item._id,
-          movieInfo: item.movieId,
-          createdAt: item.createdAt,
+          ...item.movieId._doc,
+          createdItemAt: item.createdAt,
         };
       });
 
@@ -68,23 +67,23 @@ class UserController extends BaseController {
 
       let user = await UserModel.findById(userId);
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
 
       user = await user.populate([
         {
-          path: 'watchedList.movieId',
-          model: 'Movie',
+          path: "watchedList.movieId",
+          model: "Movie",
           populate: [
-            { path: 'genres', model: 'Genre', select: 'name slug' },
-            { path: 'country', model: 'Country', select: 'name slug' },
-            { path: 'directors', model: 'Artist', select: 'name slug' },
-            { path: 'cast', model: 'Artist', select: 'name slug' },
+            { path: "genres", model: "Genre", select: "name slug" },
+            { path: "country", model: "Country", select: "name slug" },
+            { path: "directors", model: "Artist", select: "name slug" },
+            { path: "cast", model: "Artist", select: "name slug" },
           ],
         },
         {
-          path: 'watchedList.episodeId',
-          model: 'Episode',
+          path: "watchedList.episodeId",
+          model: "Episode",
         },
       ]);
 
@@ -99,11 +98,10 @@ class UserController extends BaseController {
 
       const watchedList = paginatedWatchedList.map((item) => {
         return {
-          _id: item._id,
-          movieInfo: item.movieId,
-          episodeInfo: item.episodeId,
+          ...item.movieId._doc,
           minutes: item.minutes,
-          createdAt: item.watchedAt,
+          createdItemAt: item.watchedAt,
+          episodeInfo: item.episodeId,
         };
       });
 
@@ -129,17 +127,17 @@ class UserController extends BaseController {
       const options = req.paginateOptions;
       let user = await UserModel.findById(userId);
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
 
       user = await user.populate({
-        path: 'watchLaterList.movieId',
-        model: 'Movie',
+        path: "watchLaterList.movieId",
+        model: "Movie",
         populate: [
-          { path: 'genres', model: 'Genre', select: 'name slug' },
-          { path: 'country', model: 'Country', select: 'name slug' },
-          { path: 'directors', model: 'Artist', select: 'name slug' },
-          { path: 'cast', model: 'Artist', select: 'name slug' },
+          { path: "genres", model: "Genre", select: "name slug" },
+          { path: "country", model: "Country", select: "name slug" },
+          { path: "directors", model: "Artist", select: "name slug" },
+          { path: "cast", model: "Artist", select: "name slug" },
         ],
       });
 
@@ -154,9 +152,8 @@ class UserController extends BaseController {
 
       const watchLaterList = paginatedWatchLaterList.map((item) => {
         return {
-          _id: item._id,
-          movieInfo: item.movieId,
-          createdAt: item.createdAt,
+          ...item.movieId._doc,
+          createdItemAt: item.createdAt,
         };
       });
 
@@ -180,17 +177,17 @@ class UserController extends BaseController {
     const { movieId, userId } = req.body;
     try {
       if (!movieId || !userId) {
-        return res.status(400).json({ message: 'MovieId or userId is required' });
+        return res.status(400).json({ message: "MovieId or userId is required" });
       }
 
       const user = await UserModel.findById(userId);
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
 
       const movie = MovieModel.findById(movieId);
       if (!movie) {
-        return res.status(404).json({ message: 'Movie not found' });
+        return res.status(404).json({ message: "Movie not found" });
       }
 
       const exist = user.favoriteMovies.find((item) => item.movieId == movieId);
@@ -207,7 +204,7 @@ class UserController extends BaseController {
       await user.save();
       const isNull = user.favoriteMovies.length === 0;
       res.status(200).json({
-        message: isNull ? 'Delete successfully' : 'Add successfully',
+        message: isNull ? "Delete successfully" : "Add successfully",
       });
     } catch (error) {
       res.status(500).json(error.message);
@@ -218,14 +215,14 @@ class UserController extends BaseController {
     const { movieId, episodeId = null, userId, minutes } = req.body;
     try {
       if (!movieId || !userId || !minutes) {
-        return res.status(400).json({ message: 'MovieId, episodeId, userId, minutes is required' });
+        return res.status(400).json({ message: "MovieId, episodeId, userId, minutes is required" });
       }
 
       const user = await UserModel.findById(userId);
-      if (!user) return res.status(404).json({ message: 'User not found' });
+      if (!user) return res.status(404).json({ message: "User not found" });
 
       const movie = MovieModel.findById(movieId);
-      if (!movie) return res.status(404).json({ message: 'Movie not found' });
+      if (!movie) return res.status(404).json({ message: "Movie not found" });
 
       const index = user.watchedList.findIndex((item) => item.movieId == movieId);
       if (index !== -1) {
@@ -241,7 +238,7 @@ class UserController extends BaseController {
         });
       }
       const savedData = await user.save();
-      res.status(200).json({ message: 'Add successfully', data: savedData.watchedList });
+      res.status(200).json({ message: "Add successfully", data: savedData.watchedList });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -251,16 +248,16 @@ class UserController extends BaseController {
     try {
       const { movieId, userId } = req.body;
       if (!movieId || !userId) {
-        return res.status(400).json({ message: 'MovieId or userId is required' });
+        return res.status(400).json({ message: "MovieId or userId is required" });
       }
       const user = await UserModel.findById(userId);
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
 
       const movie = await MovieModel.findById(movieId);
       if (!movie) {
-        return res.status(404).json({ message: 'Movie not found' });
+        return res.status(404).json({ message: "Movie not found" });
       }
 
       const exist = user.watchLaterList.find((item) => item.movieId == movieId);
@@ -274,7 +271,7 @@ class UserController extends BaseController {
       }
 
       const savedData = await user.save();
-      res.status(200).json({ message: 'Add successfully', data: savedData.watchLaterList });
+      res.status(200).json({ message: "Add successfully", data: savedData.watchLaterList });
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -283,7 +280,7 @@ class UserController extends BaseController {
   async checkEmail(req, res) {
     try {
       const email = req.params.id;
-      const existEmail = UserModel.findOne({ email: email });
+      const existEmail = await UserModel.findOne({ email: email });
       res.status(200).json(existEmail ? true : false);
     } catch (error) {
       res.status(500).json(error.message);

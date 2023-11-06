@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin?field=deleted&value=true
+GET {{baseUrl}}/admin?filed=status&value=true
 ###
 
 # @name Getall
