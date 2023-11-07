@@ -10,6 +10,10 @@ GET {{baseUrl}}
 # @name GetHome
 GET {{baseUrl}}/home
 
+###
+# @name ChangeBoolean
+PATCH {{baseUrl}}/change-boolean/653294e56f4dee8b53be372e?field=isChildrent
+
 
 ###
 # @name GetbyId

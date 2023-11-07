@@ -131,6 +131,19 @@ class BaseController {
     }
   }
 
+  async changeBoolean(req, res) {
+    try {
+      const { field } = req.query;
+      const data = await this.model.findById(req.params.id);
+      if (!data) return res.status(404).json({ message: "Not found" });
+      data[field] = !data[field];
+      const savedData = await data.save();
+      res.status(200).json(savedData);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async delete(req, res) {
     try {
       await this.model.delete({ _id: req.params.id });

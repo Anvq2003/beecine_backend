@@ -33,6 +33,7 @@ router.put(
   bindController(BannerController, "update"),
 );
 router.patch("/change-status/:id", bindController(BannerController, "changeStatus"));
+router.patch("/change-boolean/:id", bindController(BannerController, "changeBoolean"));
 router.delete("/delete/:id", bindController(BannerController, "delete"));
 router.delete("/delete-many", bindController(BannerController, "deleteMany"));
 router.patch("/restore/:id", bindController(BannerController, "restore"));

@@ -17,7 +17,7 @@ const movieSchema = new mongoose.Schema(
     isFree: { type: Boolean, default: true },
     duration: { type: Number },
     rating: { type: Number },
-    tags: { type: languageArraySchema },
+    tags: { type: [String], default: null },
     minimumAge: { type: Number, default: 0 },
 
     genres: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genre" }], default: null },
