@@ -18,7 +18,7 @@ router.get("/trash", bindController(BannerController, "getTrash"));
 router.get("/:param", bindController(BannerController, "getByParam"));
 router.post(
   "/store",
-  uploadMulter.single("image"),
+  uploadMulter.single("imageUrl"),
   convertData,
   validationBannerData,
   handleUploadOrUpdateImage,
@@ -26,7 +26,7 @@ router.post(
 );
 router.put(
   "/update/:id",
-  uploadMulter.single("image"),
+  uploadMulter.single("imageUrl"),
   convertData,
   validationBannerData,
   handleUploadOrUpdateImage,

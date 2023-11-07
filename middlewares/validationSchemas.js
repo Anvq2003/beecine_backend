@@ -72,7 +72,7 @@ const genreSchema = Joi.object({
 
 const artistSchema = Joi.object({
   _id: Joi.string(),
-  image: Joi.alternatives().try(
+  imageUrl: Joi.alternatives().try(
     Joi.object({
       file: Joi.binary().required(),
       filename: Joi.string().required(),
@@ -107,7 +107,7 @@ const bannerSchema = Joi.object({
     en: Joi.string().required(),
     vi: Joi.string().required(),
   }),
-  image: Joi.alternatives().try(
+  imageUrl: Joi.alternatives().try(
     Joi.object({
       file: Joi.binary(),
       filename: Joi.string(),
@@ -126,7 +126,7 @@ const episodeSchema = Joi.object({
   movieId: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
-  image: Joi.alternatives().try(
+  imageUrl: Joi.alternatives().try(
     Joi.object({
       file: Joi.binary(),
       filename: Joi.string(),
@@ -135,11 +135,6 @@ const episodeSchema = Joi.object({
     Joi.string().uri(),
     Joi.any(),
   ),
-  oldImage: Joi.string().uri().allow(""),
-  imageUrl: Joi.object({
-    en: Joi.string(),
-    vi: Joi.string(),
-  }),
   title: Joi.object({
     en: Joi.string().required(),
     vi: Joi.string().required(),
@@ -183,7 +178,7 @@ const movieSchema = Joi.object({
   isSeries: Joi.boolean().default(false),
   duration: Joi.number(),
   rating: Joi.number(),
-  image: Joi.alternatives().try(
+  imageUrl: Joi.alternatives().try(
     Joi.object({
       file: Joi.binary().required(),
       filename: Joi.string().required(),
