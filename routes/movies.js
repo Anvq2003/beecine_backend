@@ -8,12 +8,15 @@ const { convertData } = require("../middlewares/convertDataMiddleware");
 
 const {
   uploadMulter,
-  handleUploadOrUpdateImage,
-  handleDeleteImage,
+  handleUploadMultipleImages,
+  handleDeleteMultipleImagesLanguage,
   handleDeleteMultipleImages,
 } = require("../middlewares/uploadMiddleware");
 
-const upload = uploadMulter.single("image");
+const upload = uploadMulter.fields([
+  { name: "imageUrl.vi", maxCount: 1 },
+  { name: "imageUrl.en", maxCount: 10 },
+]);
 
 router.get("/", paginationMiddleware, bindController(MovieController, "getQuery"));
 router.get("/admin", paginationMiddleware, bindController(MovieController, "getAdmin"));
@@ -38,7 +41,7 @@ router.post(
   upload,
   convertData,
   validationMovie,
-  handleUploadOrUpdateImage,
+  handleUploadMultipleImages,
   bindController(MovieController, "create"),
 );
 router.put(
@@ -46,7 +49,7 @@ router.put(
   upload,
   convertData,
   validationMovie,
-  handleUploadOrUpdateImage,
+  handleUploadMultipleImages,
   bindController(MovieController, "update"),
 );
 router.patch("/change-status/:id", bindController(MovieController, "changeStatus"));
@@ -54,7 +57,7 @@ router.delete("/delete/:id", bindController(MovieController, "delete"));
 router.delete("/delete-many", bindController(MovieController, "deleteMany"));
 router.patch("/restore/:id", bindController(MovieController, "restore"));
 router.patch("/restore-many", bindController(MovieController, "restoreMany"));
-router.delete("/force/:id", handleDeleteImage, bindController(MovieController, "forceDelete"));
+router.delete("/force/:id", handleDeleteMultipleImagesLanguage, bindController(MovieController, "forceDelete"));
 router.delete(
   "/force-many",
   handleDeleteMultipleImages,

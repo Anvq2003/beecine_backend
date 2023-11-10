@@ -1,6 +1,7 @@
 const multer = require("multer");
 const firebaseAdmin = require("firebase-admin");
 const { v4: uuidv4 } = require("uuid");
+const _ = require("lodash");
 
 // Set multer upload image to firebase storage
 const uploadMulter = multer({
@@ -63,13 +64,6 @@ const handleUploadOrUpdateImage = async (req, res, next) => {
     if (!file) return next();
 
     const bucket = firebaseAdmin.storage().bucket();
-    const oldImage = req.body.oldImage;
-
-    if (oldImage) {
-      // Delete the old image if it exists
-      await deleteFileFromBucket(bucket, oldImage);
-    }
-
     req.body.imageUrl = await uploadFileToBucketAndGetPath(bucket, file);
     next();
   } catch (error) {
@@ -77,6 +71,23 @@ const handleUploadOrUpdateImage = async (req, res, next) => {
     next(error);
   }
 };
+
+const handleUploadMultipleImages = async (req, res, next) => {
+  try {
+    const files = req?.files;
+    if (_.isEmpty(files)) return next();
+    const bucket = firebaseAdmin.storage().bucket();
+    const imageUrl = {
+      vi: await uploadFileToBucketAndGetPath(bucket, files['imageUrl.vi'][0]),
+      en: await uploadFileToBucketAndGetPath(bucket, files['imageUrl.en'][0]),
+    }
+    req.body.imageUrl = imageUrl;
+    next();
+  } catch (error) {
+    console.error("Error handling file upload:", error);
+    next(error);
+  }
+}
 
 const handleDeleteImage = async (req, res, next) => {
   try {
@@ -89,6 +100,19 @@ const handleDeleteImage = async (req, res, next) => {
     console.log(error);
   }
 };
+
+const handleDeleteMultipleImagesLanguage = async (req, res, next) => {
+  try {
+    if (!req.body.imageUrl) return next();
+    const oldImage = req.body.imageUrl;
+    const bucket = firebaseAdmin.storage().bucket();
+    const deletePromises = Object.values(oldImage).map((item) => deleteFileFromBucket(bucket, item));
+    await Promise.all(deletePromises);
+    next();
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const handleDeleteMultipleImages = async (req, res, next) => {
   try {
@@ -103,9 +127,12 @@ const handleDeleteMultipleImages = async (req, res, next) => {
   }
 };
 
+
 module.exports = {
   uploadMulter,
   handleDeleteImage,
   handleUploadOrUpdateImage,
   handleDeleteMultipleImages,
+  handleUploadMultipleImages,
+  handleDeleteMultipleImagesLanguage,
 };

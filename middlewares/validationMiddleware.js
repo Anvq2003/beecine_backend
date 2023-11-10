@@ -10,7 +10,6 @@ const {
   movieSchema,
   subscriptionSchema,
   userSchema,
-  featureFilmSchema,
   replySchema,
   refreshTokenSchema,
 } = require('./validationSchemas');
@@ -27,7 +26,6 @@ const validationEpisodeData = validateDataAgainstSchema(episodeSchema);
 const validationMovie = validateDataAgainstSchema(movieSchema);
 const validationSubscription = validateDataAgainstSchema(subscriptionSchema);
 const validationUser = validateDataAgainstSchema(userSchema);
-const validationFeatureFilm = validateDataAgainstSchema(featureFilmSchema);
 const validationRefreshToken = validateDataAgainstSchema(refreshTokenSchema);
 
 module.exports = {
@@ -42,6 +40,5 @@ module.exports = {
   validationMovie,
   validationSubscription,
   validationUser,
-  validationFeatureFilm,
   validationRefreshToken,
 };

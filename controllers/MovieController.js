@@ -11,6 +11,60 @@ class MovieController extends BaseController {
     super(MovieModel);
   }
 
+  async getAdmin(req, res) {
+    const { field = "all", value = "all" } = req.query;
+    try {
+      const options = req.paginateOptions;
+      options.sort = { createdAt: -1 };
+      options.populate = Object.keys(MovieModel.schema.paths).filter(
+        (path) => path !== "_id" && path !== "__v",
+      );
+
+      const allData = await MovieModel.findWithDeleted();
+      const count = {
+        isSeries: _.filter(allData, (item) => item.isSeries).length,
+        isNotSeries: _.filter(allData, (item) => !item.isSeries).length,
+        isFree: _.filter(allData, (item) => item.isFree).length,
+        all: _.filter(allData, (item) => !item.deleted).length,
+        active: _.filter(allData, (item) => item.status).length,
+        inactive: _.filter(allData, (item) => !item.status).length,
+        trash: _.filter(allData, (item) => item.deleted).length,
+      };
+
+      // get trash
+      if (field === "deleted" && value === "true") {
+        let data = await MovieModel.findWithDeleted({ deleted: true }).populate(options.populate);
+        const totalResults = data.length;
+        const totalPages = Math.ceil(totalResults / options.limit);
+        const page = options.page;
+        const hasPrevPage = page > 1;
+        const hasNextPage = page < totalPages;
+        const skip = (page - 1) * options.limit;
+        data = data.slice(skip, skip + options.limit);
+
+        const info = {
+          totalResults,
+          totalPages,
+          page,
+          hasPrevPage,
+          hasNextPage,
+        };
+        return res.status(200).json({ data, info, count });
+      }
+
+      // Get all data
+      if (field === "all" && value === "all") {
+        const data = await MovieModel.paginate({}, options);
+        return res.status(200).json({ ...data, count });
+      } else {
+        const data = await MovieModel.paginate({ [field]: value }, options);
+        res.status(200).json({ ...data, count });
+      }
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async getHomePage(req, res) {
     try {
       const { limit = 10 } = req.query;
