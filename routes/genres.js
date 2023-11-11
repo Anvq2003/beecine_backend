@@ -7,6 +7,7 @@ const { paginationMiddleware } = require("../middlewares/paginationMiddleware");
 
 // Routes
 router.get("/", paginationMiddleware, bindController(GenreController, "getQuery"));
+router.get("/all", bindController(GenreController, "getAll"));
 router.get("/home", paginationMiddleware, bindController(GenreController, "getHomePage"));
 router.get("/admin", paginationMiddleware, bindController(GenreController, "getAdmin"));
 router.get("/trash", bindController(GenreController, "getTrash"));

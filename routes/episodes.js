@@ -7,17 +7,21 @@ const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 const { convertData } = require('../middlewares/convertDataMiddleware');
 const {
   uploadMulter,
-  handleUploadOrUpdateImage,
-  handleDeleteImage,
+  handleUploadMultipleImages,
+  handleDeleteMultipleImagesLanguage,
   handleDeleteMultipleImages,
 } = require('../middlewares/uploadMiddleware');
 
-const upload = uploadMulter.single('image');
+const upload = uploadMulter.fields([
+  { name: "imageUrl.vi", maxCount: 1 },
+  { name: "imageUrl.en", maxCount: 1 },
+]);
 
 // Routes
 router.get('/', paginationMiddleware, bindController(EpisodeController, 'getQuery'));
+router.get('/all', bindController(EpisodeController, 'getAll'));
 router.get('/admin', paginationMiddleware, bindController(EpisodeController, 'getAdmin'));
-router.get('/movie/:id', bindController(EpisodeController, 'getByMovieId'));
+router.get('/movie/:id',paginationMiddleware, bindController(EpisodeController, 'getByMovieId'));
 router.get('/trash', bindController(EpisodeController, 'getTrash'));
 router.get('/:param', bindController(EpisodeController, 'getByParam'));
 router.post(
@@ -25,7 +29,7 @@ router.post(
   upload,
   convertData,
   validationEpisodeData,
-  handleUploadOrUpdateImage,
+  handleUploadMultipleImages,
   bindController(EpisodeController, 'create'),
 );
 router.put(
@@ -33,7 +37,7 @@ router.put(
   upload,
   convertData,
   validationEpisodeData,
-  handleUploadOrUpdateImage,
+  handleUploadMultipleImages,
   bindController(EpisodeController, 'update'),
 );
 router.patch('/change-status/:id', bindController(EpisodeController, 'changeStatus'));
@@ -41,7 +45,7 @@ router.delete('/delete/:id', bindController(EpisodeController, 'delete'));
 router.delete('/delete-many', bindController(EpisodeController, 'deleteMany'));
 router.patch('/restore/:id', bindController(EpisodeController, 'restore'));
 router.patch('/restore-many', bindController(EpisodeController, 'restoreMany'));
-router.delete('/force/:id', handleDeleteImage, bindController(EpisodeController, 'forceDelete'));
+router.delete('/force/:id', handleDeleteMultipleImagesLanguage, bindController(EpisodeController, 'forceDelete'));
 router.delete(
   '/force-many',
   handleDeleteMultipleImages,

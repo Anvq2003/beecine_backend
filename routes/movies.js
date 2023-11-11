@@ -19,6 +19,8 @@ const upload = uploadMulter.fields([
 ]);
 
 router.get("/", paginationMiddleware, bindController(MovieController, "getQuery"));
+router.get("/all", bindController(MovieController, "getAll"));
+router.get("/is-series", bindController(MovieController, "getIsSeries"));
 router.get("/admin", paginationMiddleware, bindController(MovieController, "getAdmin"));
 router.get("/homepage", bindController(MovieController, "getHomePage"));
 router.get("/trash", bindController(MovieController, "getTrash"));

@@ -12,7 +12,6 @@ class MovieController extends BaseController {
   }
 
   async getAdmin(req, res) {
-    const { field = "all", value = "all" } = req.query;
     try {
       const options = req.paginateOptions;
       options.sort = { createdAt: -1 };
@@ -22,20 +21,19 @@ class MovieController extends BaseController {
 
       const allData = await MovieModel.findWithDeleted();
       const count = {
-        isSeries: _.filter(allData, (item) => item.isSeries).length,
-        isNotSeries: _.filter(allData, (item) => !item.isSeries).length,
-        isFree: _.filter(allData, (item) => item.isFree).length,
+        isSeries: _.filter(allData, (item) => item.isSeries && !item.deleted).length,
+        isNotSeries: _.filter(allData, (item) => !item.isSeries && !item.deleted).length,
+        isFree: _.filter(allData, (item) => item.isFree && !item.deleted).length,
         all: _.filter(allData, (item) => !item.deleted).length,
-        active: _.filter(allData, (item) => item.status).length,
-        inactive: _.filter(allData, (item) => !item.status).length,
-        trash: _.filter(allData, (item) => item.deleted).length,
+        active: _.filter(allData, (item) => item.status && !item.deleted).length,
+        inactive: _.filter(allData, (item) => !item.status && !item.deleted).length,
+        deleted: _.filter(allData, (item) => item.deleted).length,
       };
 
-      // get trash
-      if (field === "deleted" && value === "true") {
-        let data = await MovieModel.findWithDeleted({ deleted: true }).populate(options.populate);
+      if (options.query && options.query.deleted) {
+        let data = await this.model.findWithDeleted({ deleted: true }).populate(options.populate);
         const totalResults = data.length;
-        const totalPages = Math.ceil(totalResults / options.limit);
+        const totalPages = Math.ceil( totalResults / options.limit);
         const page = options.page;
         const hasPrevPage = page > 1;
         const hasNextPage = page < totalPages;
@@ -52,14 +50,23 @@ class MovieController extends BaseController {
         return res.status(200).json({ data, info, count });
       }
 
-      // Get all data
-      if (field === "all" && value === "all") {
-        const data = await MovieModel.paginate({}, options);
-        return res.status(200).json({ ...data, count });
-      } else {
-        const data = await MovieModel.paginate({ [field]: value }, options);
-        res.status(200).json({ ...data, count });
-      }
+      const data = await this.model.paginate(options.query || {}, options);
+      const info = { ...data, count };
+      res.status(200).json(info);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async getIsSeries(req, res) {
+    try {
+      const data = await MovieModel.find({ isSeries: true }).populate([
+        { path: "genres", select: "name slug" },
+        { path: "cast", select: "name slug" },
+        { path: "directors", select: "name slug" },
+        { path: "country", select: "name slug" },
+      ]);
+      res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
     }
