@@ -12,7 +12,7 @@ const {
   handleDeleteMultipleImages,
 } = require("../middlewares/uploadMiddleware");
 
-const upload = uploadMulter.single("image");
+const upload = uploadMulter.single("imageUrl");
 
 // Routes
 router.get("/", paginationMiddleware, bindController(ArtistController, "getQuery"));

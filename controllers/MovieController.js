@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const MovieModel = require('../models/movie');
 const EpisodeModel = require('../models/episode');
 const UserModel = require('../models/user');
+const KeywordModel = require('../models/keyword');
 const GenreModel = require('../models/genre');
 const BaseController = require('./BaseController');
 const { handleConvertStringToSlug } = require('../utils/format');
@@ -376,6 +377,29 @@ class MovieController extends BaseController {
       }
 
       res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async create(req, res) {
+    try {
+      const tags = req.body.tags;
+      const existKeywords = await KeywordModel.find({ keyword: { $in: tags } });
+      const keywords = tags.map((tag) => {
+        const existKeyword = existKeywords.find((keyword) => keyword.keyword === tag);
+        if (existKeyword) return;
+        return { keyword: tag, slug: handleConvertStringToSlug(tag) };
+      });
+
+      await KeywordModel.insertMany(keywords, { ordered: false });
+      const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
+        (path) => path !== '_id' && path !== '__v',
+      );
+      const data = new MovieModel(req.body);
+      const savedData = await data.save();
+      const savedDataJoin = await MovieModel.findById(savedData._id).populate(pathsToPopulate);
+      res.status(200).json(savedDataJoin);
     } catch (error) {
       res.status(500).json(error.message);
     }
