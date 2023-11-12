@@ -53,6 +53,7 @@ router.put(
 router.patch("/change-status/:id", bindController(UserController, "changeStatus"));
 router.delete("/delete/:id", bindController(UserController, "delete"));
 router.delete("/delete-many", bindController(UserController, "deleteMany"));
+router.delete("/delete-many-type", bindController(UserController, "deleteManyByType"));
 router.patch("/restore/:id", bindController(UserController, "restore"));
 router.patch("/restore-many", bindController(UserController, "restoreMany"));
 router.delete("/force/:id", handleDeleteImage, bindController(UserController, "forceDelete"));

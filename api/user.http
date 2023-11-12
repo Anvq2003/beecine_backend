@@ -7,8 +7,20 @@ GET {{baseUrl}}
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/64c290ee173cda17c307a2fa
+GET {{baseUrl}}/6533cdd989ac42618a10014b
 
+###
+DELETE {{baseUrl}}/delete-many-type
+Content-Type: application/json
+
+{
+    "userId": "6533cdd989ac42618a10014b",
+    "type": "WATCH_LATER",
+    "ids": [
+        "65329d4fd207a51351bc1cea"
+        ]
+        
+}
 ###
 # @name GetFavorite
 GET {{baseUrl}}/favorite-movies/6533cdd989ac42618a10014b?page=1&limit=1
@@ -24,8 +36,6 @@ GET {{baseUrl}}/watch-later-list/6533cdd989ac42618a10014b
 POST {{baseUrl}}/favorite
 Content-Type: application/json
 
-# 65329db7d207a51351bc1ced
-# 65329d4fd207a51351bc1cea
 {
   "userId": "6533cdd989ac42618a10014b",
   "movieId": "65329d4fd207a51351bc1cea"

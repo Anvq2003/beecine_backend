@@ -3,16 +3,16 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin?filter=deleted:false
+GET {{baseUrl}}/admin
 
 ###
 # @name GetHomepage
-GET {{baseUrl}}/homepage?limit=1
+GET {{baseUrl}}/upcoming
 
 ###
 
 # @name Related
-GET {{baseUrl}}/related/6520152cc58e982ae637764b
+GET {{baseUrl}}/related/654e49282f9d04210aec3220
 ###
 
 # @name Search
@@ -20,9 +20,8 @@ GET {{baseUrl}}/search?q=come-back-home
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/64c290ee173cda17c307a2fa
+GET {{baseUrl}}/654e49282f9d04210aec3220
 
-###
 ###
 # @name GetbyId
 GET {{baseUrl}}/genre/phim-han
