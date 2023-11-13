@@ -1,66 +1,68 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const UserController = require("../controllers/UserController");
-const bindController = require("../helpers/controllerHelper");
-const { validationUser } = require("../middlewares/validationMiddleware");
-const { paginationMiddleware } = require("../middlewares/paginationMiddleware");
+const UserController = require('../controllers/UserController');
+const bindController = require('../helpers/controllerHelper');
+const { validationUser, validationUserAdmin } = require('../middlewares/validationMiddleware');
+const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
   handleDeleteImage,
   handleDeleteMultipleImages,
-} = require("../middlewares/uploadMiddleware");
+} = require('../middlewares/uploadMiddleware');
 
-const upload = uploadMulter.single("image");
+const upload = uploadMulter.single('image');
 
 // Routes
-router.get("/", paginationMiddleware, bindController(UserController, "getQuery"));
-router.get("/admin", bindController(UserController, "getAdmin"));
-router.get("/trash", bindController(UserController, "getTrash"));
-router.get("/check-email/:id", bindController(UserController, "checkEmail"));
-router.get("/:param", bindController(UserController, "getByParam"));
+router.get('/', paginationMiddleware, bindController(UserController, 'getQuery'));
+router.get('/admin', paginationMiddleware, bindController(UserController, 'getAdmin'));
+router.get('/all', bindController(UserController, 'getAll'));
+router.get('/trash', bindController(UserController, 'getTrash'));
+router.get('/check-email/:id', bindController(UserController, 'checkEmail'));
+router.get('/:param', bindController(UserController, 'getByParam'));
 router.get(
-  "/favorite-movies/:id",
+  '/favorite-movies/:id',
   paginationMiddleware,
-  bindController(UserController, "getFavoriteMovies"),
+  bindController(UserController, 'getFavoriteMovies'),
 );
 router.get(
-  "/watched-list/:id",
+  '/watched-list/:id',
   paginationMiddleware,
-  bindController(UserController, "getWatchedList"),
+  bindController(UserController, 'getWatchedList'),
 );
 router.get(
-  "/watch-later-list/:id",
+  '/watch-later-list/:id',
   paginationMiddleware,
-  bindController(UserController, "getWatchLaterList"),
+  bindController(UserController, 'getWatchLaterList'),
 );
-router.post("/favorite", bindController(UserController, "createFavorite"));
-router.post("/watched", bindController(UserController, "createWatched"));
-router.post("/watch-later", bindController(UserController, "createWatchLater"));
+router.post('/favorite', bindController(UserController, 'createFavorite'));
+router.post('/watched', bindController(UserController, 'createWatched'));
+router.post('/watch-later', bindController(UserController, 'createWatchLater'));
+router.post('/store-admin', validationUserAdmin, bindController(UserController, 'createAdmin'));
 router.post(
-  "/store",
+  '/store',
   upload,
   validationUser,
   handleUploadOrUpdateImage,
-  bindController(UserController, "create"),
+  bindController(UserController, 'create'),
 );
 router.put(
-  "/update/:id",
+  '/update/:id',
   upload,
   handleUploadOrUpdateImage,
-  bindController(UserController, "update"),
+  bindController(UserController, 'update'),
 );
-router.patch("/change-status/:id", bindController(UserController, "changeStatus"));
-router.delete("/delete/:id", bindController(UserController, "delete"));
-router.delete("/delete-many", bindController(UserController, "deleteMany"));
-router.delete("/delete-many-type", bindController(UserController, "deleteManyByType"));
-router.patch("/restore/:id", bindController(UserController, "restore"));
-router.patch("/restore-many", bindController(UserController, "restoreMany"));
-router.delete("/force/:id", handleDeleteImage, bindController(UserController, "forceDelete"));
+router.patch('/change-status/:id', bindController(UserController, 'changeStatus'));
+router.delete('/delete/:id', bindController(UserController, 'delete'));
+router.delete('/delete-many', bindController(UserController, 'deleteMany'));
+router.delete('/delete-many-type', bindController(UserController, 'deleteManyByType'));
+router.patch('/restore/:id', bindController(UserController, 'restore'));
+router.patch('/restore-many', bindController(UserController, 'restoreMany'));
+router.delete('/force/:id', handleDeleteImage, bindController(UserController, 'forceDelete'));
 router.delete(
-  "/force-many",
+  '/force-many',
   handleDeleteMultipleImages,
-  bindController(UserController, "forceDeleteMany"),
+  bindController(UserController, 'forceDeleteMany'),
 );
 
 module.exports = router;

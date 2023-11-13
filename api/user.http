@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}
+GET {{baseUrl}}/admin
 
 ###
 # @name GetbyId
@@ -86,11 +86,15 @@ Content-Type: application/json
 
 ###
 # @name CreateMany
-POST {{baseUrl}}/store-many
+POST {{baseUrl}}/store-admin
 Content-Type: application/json
 
-[
-]
+{
+  "email": "voquocan23@gmail.com",
+  "password": "12345678",
+  "name": "demo 2",
+  "role": "ADMIN"
+}
 
 ###
 

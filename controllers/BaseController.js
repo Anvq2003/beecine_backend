@@ -92,11 +92,11 @@ class BaseController {
 
   async create(req, res) {
     try {
+      const data = new this.model(req.body);
+      const savedData = await data.save();
       const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
         (path) => path !== '_id' && path !== '__v',
       );
-      const data = new this.model(req.body);
-      const savedData = await data.save();
       const savedDataJoin = await this.model.findById(savedData._id).populate(pathsToPopulate);
       res.status(200).json(savedDataJoin);
     } catch (error) {

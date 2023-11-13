@@ -243,6 +243,13 @@ const userSchema = Joi.object({
   watchedList: Joi.array().items(historySchema).default([]),
   status: Joi.boolean().default(true),
 });
+const userAdminSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
+  role: Joi.string().valid("ADMIN", "USER").default("USER"),
+  permissions: Joi.array().default(null),
+});
 
 const refreshTokenSchema = Joi.object({
   _id: Joi.string(),
@@ -267,4 +274,5 @@ module.exports = {
   subscriptionSchema,
   userSchema,
   refreshTokenSchema,
+  userAdminSchema,
 };

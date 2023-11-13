@@ -3,6 +3,7 @@ const UserModel = require('../models/user');
 const MovieModel = require('../models/movie');
 const mongoose = require('mongoose');
 const _ = require('lodash');
+const admin = require('firebase-admin');
 
 class UserController extends BaseController {
   constructor() {
@@ -320,6 +321,24 @@ class UserController extends BaseController {
       const email = req.params.id;
       const existEmail = await UserModel.findOne({ email: email });
       res.status(200).json(existEmail ? true : false);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async createAdmin(req, res) {
+    try {
+      const { email, password, name } = req.body;
+      const user = await admin.auth().createUser({
+        email: email,
+        password: password,
+      });
+      await admin.auth().setCustomUserClaims(user.uid, { admin: true });
+      await admin.auth().updateUser(user.uid, { displayName: name });
+
+      const data = new UserModel({...req.body, uid: user.uid});
+      const savedData = await data.save();
+      res.status(200).json(savedData);
     } catch (error) {
       res.status(500).json(error.message);
     }
