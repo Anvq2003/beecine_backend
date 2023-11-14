@@ -67,9 +67,7 @@ class MovieController extends BaseController {
       let data;
       let episodes = [];
       let currentEpisode;
-      const id = '6533cdd989ac42618a10014b';
-      const user = await UserModel.findById(id);
-      // const user = await UserModel.findById(req.user._id);
+      const user = await UserModel.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: 'You must login to watch this movie' });
       }
