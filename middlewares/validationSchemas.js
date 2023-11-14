@@ -249,6 +249,7 @@ const userAdminSchema = Joi.object({
   password: Joi.string().required(),
   role: Joi.string().valid("ADMIN", "USER").default("USER"),
   permissions: Joi.array().default(null),
+  status: Joi.boolean().default(true),
 });
 
 const refreshTokenSchema = Joi.object({
