@@ -7,7 +7,7 @@ GET {{baseUrl}}/admin
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/6533cdd989ac42618a10014b
+GET {{baseUrl}}/6536044c0931fef24e8cc601
 
 ###
 DELETE {{baseUrl}}/delete-many-type
@@ -23,13 +23,13 @@ Content-Type: application/json
 }
 ###
 # @name GetFavorite
-GET {{baseUrl}}/favorite-movies/6533cdd989ac42618a10014b?page=1&limit=1
+GET {{baseUrl}}/favorite-movies/6536044c0931fef24e8cc601
 ###
 # @name GetWatched
-GET {{baseUrl}}/watched-list/6533cdd989ac42618a10014b?
+GET {{baseUrl}}/watched-list/6536044c0931fef24e8cc601
 ###
 # @name GetWatchLater
-GET {{baseUrl}}/watch-later-list/6533cdd989ac42618a10014b
+GET {{baseUrl}}/watch-later-list/6536044c0931fef24e8cc601
 ###
 
 # @name Create favorite

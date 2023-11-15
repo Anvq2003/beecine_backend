@@ -41,10 +41,7 @@ class UserController extends BaseController {
       );
 
       const favoriteMovies = paginatedFavoriteMovies.map((item) => {
-        return {
-          ...item.movieId._doc,
-          createdItemAt: item.createdAt,
-        };
+        return _.merge(item.movieId, { createdItemAt: item.createdAt });
       });
 
       res.status(200).json({
@@ -100,12 +97,11 @@ class UserController extends BaseController {
       );
 
       const watchedList = paginatedWatchedList.map((item) => {
-        return {
-          ...item.movieId._doc,
+        return _.merge(item.movieId, {
           minutes: item.minutes,
           createdItemAt: item.watchedAt,
           episodeInfo: item.episodeId,
-        };
+        });
       });
 
       res.status(200).json({
@@ -154,10 +150,7 @@ class UserController extends BaseController {
       );
 
       const watchLaterList = paginatedWatchLaterList.map((item) => {
-        return {
-          ...item.movieId._doc,
-          createdItemAt: item.createdAt,
-        };
+        return _.merge(item.movieId, { createdItemAt: item.createdAt });
       });
 
       res.status(200).json({
