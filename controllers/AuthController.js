@@ -47,6 +47,31 @@ class AuthController {
     }
   }
 
+  async signInAdmin(req, res) {
+    try {
+      const { token } = req.body;
+      const decodedToken = await this.verifyTokenFirebase(token);
+      if (!decodedToken) return res.status(404).json({ message: "User not found" });
+
+      const user = await UserModel.findOne({ uid: decodedToken.uid });
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      if (user.role !== "ADMIN") return res.status(404).json({ message: "You are not admin" });
+
+      const { accessToken, refreshToken } = this.createTokens(user);
+
+      const exitsRefreshToken = await RefreshTokenModel.findOne({ userId: user._id });
+      if (exitsRefreshToken) {
+        await RefreshTokenModel.deleteOne({ userId: user._id });
+      }
+      this.createNewRefreshToken(refreshToken, user._id);
+
+      res.status(200).json({ token: { accessToken, refreshToken } });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   async signInWithGoogle(req, res) {
     try {
       const { token } = req.body;
