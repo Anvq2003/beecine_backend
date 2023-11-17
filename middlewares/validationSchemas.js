@@ -184,6 +184,7 @@ const movieSchema = Joi.object({
     Joi.string().uri(),
     Joi.any(),
   ),
+  views: Joi.number().default(0),
   trailerUrl: Joi.string(),
   status: Joi.boolean().default(true),
 });
