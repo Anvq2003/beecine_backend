@@ -18,7 +18,7 @@ router.get('/', paginationMiddleware, bindController(UserController, 'getQuery')
 router.get('/admin', paginationMiddleware, bindController(UserController, 'getAdmin'));
 router.get('/all', bindController(UserController, 'getAll'));
 router.get('/trash', bindController(UserController, 'getTrash'));
-router.get('/check-email/:id', bindController(UserController, 'checkEmail'));
+router.get('/check-email/:email', bindController(UserController, 'checkEmail'));
 router.get('/:param', bindController(UserController, 'getByParam'));
 router.get(
   '/favorite-movies/:id',

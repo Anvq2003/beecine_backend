@@ -4,13 +4,10 @@ const EpisodeModel = require('../models/episode');
 
 class CommonController {
   async search(req, res) {
-    const { q } = req.query;
-    const options = req.paginateOptions;
 
     try {
-      const query = { title: { $regex: new RegExp(q, 'i') } };
-      const movies = await MovieModel.paginate(query, options);
-      res.status(200).json(movies);
+      
+      res.status(200).json("ok");
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

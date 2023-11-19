@@ -8,18 +8,24 @@ class BaseController {
 
   async getAdmin(req, res) {
     try {
+      const { counts } = req.query;
       const options = req.paginateOptions;
       options.sort = { createdAt: -1 };
       options.populate = Object.keys(this.model.schema.paths).filter(
         (path) => path !== '_id' && path !== '__v',
       );
 
+      const countFields = counts ? counts.split(',') : [];
       const allData = await this.model.findWithDeleted();
       const count = {
         all: _.filter(allData, (item) => !item.deleted && item.status).length,
         active: _.filter(allData, (item) => item.status && !item.deleted).length,
         inactive: _.filter(allData, (item) => !item.status && !item.deleted).length,
         deleted: _.filter(allData, (item) => item.deleted).length,
+        ..._.mapValues(_.keyBy(countFields), (value) => {
+          const [field, fieldValue] = value.split(':');
+          return _.filter(allData, (item) => item[field] === fieldValue).length;
+        }),
       };
 
       if (options.query && options.query.deleted) {

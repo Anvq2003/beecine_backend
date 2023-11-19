@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin?filter=null
+GET {{baseUrl}}/admin?counts=order:0
 
 
 ###

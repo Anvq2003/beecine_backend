@@ -311,7 +311,7 @@ class UserController extends BaseController {
 
   async checkEmail(req, res) {
     try {
-      const email = req.params.id;
+      const email = req.params.email;
       const existEmail = await UserModel.findOne({ email: email });
       res.status(200).json(existEmail ? true : false);
     } catch (error) {
