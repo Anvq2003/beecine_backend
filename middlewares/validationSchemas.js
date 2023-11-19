@@ -63,6 +63,10 @@ const genreSchema = Joi.object({
     en: Joi.string().required(),
     vi: Joi.string().required(),
   }),
+  description: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
   languages: Joi.array().items(Joi.string()),
   order: Joi.number().default(0),
   isChildren: Joi.boolean().default(false),
@@ -99,6 +103,10 @@ const artistSchema = Joi.object({
 
 const bannerSchema = Joi.object({
   _id: Joi.string(),
+  tag: Joi.object({
+    en: Joi.string().required(),
+    vi: Joi.string().required(),
+  }),
   title: Joi.object({
     en: Joi.string().required(),
     vi: Joi.string().required(),
@@ -244,6 +252,7 @@ const userSchema = Joi.object({
   watchedList: Joi.array().items(historySchema).default([]),
   status: Joi.boolean().default(true),
 });
+
 const userAdminSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email().required(),

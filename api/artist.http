@@ -11,7 +11,7 @@ PATCH {{baseUrl}}/change-status/6540b6226c605c44082d40a9
 ###
 
 # @name Search
-GET {{baseUrl}}/search?q=nguyen quang dung
+GET {{baseUrl}}/search?q=tran-thanh
 
 ###
 # @name GetbyId

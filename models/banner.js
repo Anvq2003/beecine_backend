@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
-const mongooseDelete = require("mongoose-delete");
-const mongoosePaginate = require("mongoose-paginate-v2");
-const { languageSchema } = require("./language");
+const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
+const mongoosePaginate = require('mongoose-paginate-v2');
+const { languageSchema } = require('./language');
 
 const Banner = new mongoose.Schema(
   {
+    tag: { type: languageSchema, required: true },
     title: { type: languageSchema, required: true },
     description: { type: languageSchema, required: true },
     imageUrl: { type: String, required: true },
@@ -17,7 +18,7 @@ const Banner = new mongoose.Schema(
   },
 );
 
-Banner.plugin(mongooseDelete, { overrideMethods: "all", deletedAt: true });
+Banner.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
 Banner.plugin(mongoosePaginate);
 
-module.exports = mongoose.model("Banner", Banner);
+module.exports = mongoose.model('Banner', Banner);

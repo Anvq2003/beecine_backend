@@ -9,15 +9,6 @@ class CommentController extends BaseController {
     super(CommentModel);
   }
 
-  async getQuery(req, res) {
-    try {
-      const options = req.paginateOptions;
-      const data = await CommentModel.paginate({}, options);
-      res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
-  }
 
   async getGroupByMovie(req, res) {
     try {
@@ -66,18 +57,6 @@ class CommentController extends BaseController {
       }
 
       res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
-  }
-
-  async create(req, res) {
-    try {
-      const data = new CommentModel(req.body);
-      const savedData = await data.save();
-      const user = await UserModel.findById(savedData.userId, 'name imageUrl');
-      savedData.userId = user;
-      res.status(200).json(savedData);
     } catch (error) {
       res.status(500).json(error.message);
     }

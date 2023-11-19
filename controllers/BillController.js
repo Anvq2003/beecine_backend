@@ -40,15 +40,6 @@ class BillController extends BaseController {
     }
   }
 
-  async getAll(req, res) {
-    try {
-      const data = await BillModel.find().populate('userId').populate('subscriptionId');
-      res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
-  }
-
   async getTop(req, res) {
     try {
       const limit = parseInt(req.query.limit) || 10;

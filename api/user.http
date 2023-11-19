@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin?counts=role:ADMIN,role:USER
+GET {{baseUrl}}/admin?
 ###
 # @name Getall
 GET {{baseUrl}}/check-email/@gmail.com

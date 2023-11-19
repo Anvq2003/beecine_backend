@@ -321,6 +321,7 @@ class MovieController extends BaseController {
           { directors: { $elemMatch: { slug: slug } } },
         ],
       };
+      
       const data = await MovieModel.paginate(query, options);
 
       if (!data) {

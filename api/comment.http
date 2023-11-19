@@ -50,9 +50,9 @@ POST {{baseUrl}}/store
 Content-Type: application/json
 
 {
-  "userId": "6533d14d89ac42618a10021d",
-  "movieId": "65329fd4d207a51351bc1d04",
-  "content": "Comment 124 78 67 89 ---- 8888"
+  "userId": "655889f57664bae62ef05f78",
+  "movieId": "6559f67e7664bae62ef077e1",
+  "content": "Comment  342"
 }
 
 ###

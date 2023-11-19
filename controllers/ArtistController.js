@@ -1,4 +1,5 @@
 const ArtistModel = require('../models/artist');
+const MovieModel = require('../models/movie');
 const BaseController = require('./BaseController');
 const mongoose = require('mongoose');
 const { handleConvertStringToSlug } = require('../utils/format');
@@ -6,47 +7,6 @@ const { handleConvertStringToSlug } = require('../utils/format');
 class ArtistController extends BaseController {
   constructor() {
     super(ArtistModel);
-  }
-
-  async getQuery(req, res, next) {
-    try {
-      const options = req.paginateOptions;
-      options.populate = {
-        path: 'country',
-        select: 'name slug',
-      };
-      const data = await this.model.paginate({}, options);
-      res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
-  }
-
-  async getByParam(req, res, next) {
-    try {
-      const param = req.params.param;
-      let data;
-
-      if (mongoose.Types.ObjectId.isValid(param)) {
-        data = await ArtistModel.findById(param).populate({
-          path: 'country',
-          select: 'name slug',
-        });
-      } else {
-        data = await ArtistModel.findOne({ slug: param }).populate({
-          path: 'country',
-          select: 'name slug',
-        });
-      }
-
-      if (!data) {
-        return res.status(404).json({ message: 'Not found' });
-      }
-
-      res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
   }
 
   async getByKeyword(req, res) {

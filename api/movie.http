@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin
+GET {{baseUrl}}/admin 
 
 ###
 # @name GetHomepage
@@ -20,11 +20,11 @@ GET {{baseUrl}}/search?q=come-back-home
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/654e49282f9d04210aec3220
+GET {{baseUrl}}/tran-thanh
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/genre/phim-han
+GET {{baseUrl}}/artist/le-giang
 
 ###
 ###

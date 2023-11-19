@@ -9,6 +9,7 @@ const replySchema = new mongoose.Schema(
     content: { type: String, required: true, trim: true, minLength: 3, maxLength: 255 },
     likes: { type: Array, default: [] },
     dislikes: { type: Array, default: [] },
+    favorites: { type: Array, default: [] },
     status: { type: Boolean, default: true },
   },
   {
@@ -23,6 +24,7 @@ const commentSchema = new mongoose.Schema(
     content: { type: String },
     likes: { type: Array, default: [] },
     dislikes: { type: Array, default: [] },
+    favorites: { type: Array, default: [] },
     status: { type: Boolean, default: true },
     replies: [replySchema],
   },
