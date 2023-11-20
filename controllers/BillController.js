@@ -1,7 +1,9 @@
+require('dotenv').config();
 const BillModel = require('../models/bill');
 const SubscriptionModel = require('../models/subscription');
 const UserModel = require('../models/user');
 const BaseController = require('./BaseController');
+const { sendMail } = require('../helpers/sender');
 
 class BillController extends BaseController {
   constructor() {
@@ -21,7 +23,7 @@ class BillController extends BaseController {
       }
 
       const oneDay = 24 * 60 * 60 * 1000;
-      subscription.duration = parseInt(subscription.duration); // 30 (days)
+      subscription.duration = parseInt(subscription.duration);
       const end = Date.now() + subscription.duration * oneDay;
 
       const bill = {
@@ -32,8 +34,18 @@ class BillController extends BaseController {
         total: subscription.price,
       };
 
+      const info = {
+        from: {
+          name: 'Beecine',
+          address: process.env.EMAIL,
+        },
+        to: user.email,
+        subject: 'Hóa đơn thanh toán',
+        text: `Bạn đã thanh toán thành công ${subscription?.name?.vi} với giá ${subscription.price} VNĐ`,
+      };
       await BillModel.create(bill);
       await UserModel.findByIdAndUpdate(userId, { subscription: subscriptionId });
+      await sendMail(info);
       res.status(201).json({ message: 'Create bill successfully' });
     } catch (error) {
       res.status(500).json(error.message);

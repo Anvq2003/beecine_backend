@@ -1,18 +1,23 @@
+require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.forwardemail.net',
-  port:587,
-  secure: false,
+  service: 'gmail',
+  host: 'smtp.gmail.net',
+  port: 465,
+  secure: true,
   auth: {
-    user: 'voquocan99@gmail.com',
-    pass: 'ggQuocAn150403@#',
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
   },
 });
 
-const sendMailMiddleware = (req, res, next) => {
-  const info = transporter.sendMail({
-    from: '"Quoc An" <voquocan99@gmail.com>',
+const sendMailMiddleware = async (req, res, next) => {
+  const info = await transporter.sendMail({
+    from: {
+      name: 'Beecine',
+      address: process.env.EMAIL,
+    },
     to: 'anvqps20351@fpt.edu.vn',
     subject: 'Hello ✔',
     text: 'Hello world?',
