@@ -9,15 +9,58 @@ class CommentController extends BaseController {
     super(CommentModel);
   }
 
-
   async getGroupByMovie(req, res) {
+    const options = req.paginateOptions;
     try {
-      const comments = await CommentModel.find().populate({
-        path: 'movieId',
-        select: 'title',
-      });
-      const movies = _.groupBy(comments, 'movieId._id');
-      res.status(200).json(movies);
+      const comments = await CommentModel.aggregate([
+        {
+          $group: {
+            _id: '$movieId',
+            totalComments: { $sum: 1 },
+            totalLikes: { $sum: { $size: '$likes' } },
+            totalDislikes: { $sum: { $size: '$dislikes' } },
+          },
+        },
+        {
+          $lookup: {
+            from: 'movies',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'movie',
+          },
+        },
+        {
+          $unwind: '$movie',
+        },
+        {
+          $project: {
+            _id: 1,
+            movie: {
+              _id: 1,
+              title: 1,
+              imageUrl: 1,
+              isSeries: 1,
+              isFree: 1,
+            },
+            totalComments: '$totalComments',
+            totalLikes: '$totalLikes',
+            totalDislikes: '$totalDislikes',
+          },
+        },
+      ]);
+
+      const skip = (options.page - 1) * options.limit;
+      const data = {
+        data: comments.slice( skip, skip + options.limit),
+        info: {
+          totalResults: comments.length,
+          limit: options.limit,
+          page: options.page,
+          totalPages: Math.ceil(comments.length / options.limit),
+        },
+      };
+
+      res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
     }

@@ -12,7 +12,7 @@ GET {{baseUrl}}/group-by-movie
 
 ###
 # @name Getall by id
-GET {{baseUrl}}/movie/65329fd4d207a51351bc1d04
+GET {{baseUrl}}/movie/655888fd7664bae62ef05bca
 
 
 ###
