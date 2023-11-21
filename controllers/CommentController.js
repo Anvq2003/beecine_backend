@@ -75,8 +75,8 @@ class CommentController extends BaseController {
     try {
       const options = req.paginateOptions;
       options.populate = [
-        { path: 'userId', select: 'name imageUrl' },
-        { path: 'replies.userId', select: 'name imageUrl' },
+        { path: 'userId', select: 'name imageUrl role' },
+        { path: 'replies.userId', select: 'name imageUrl role' },
       ];
       if (!options.sort)
         options.sort = {
