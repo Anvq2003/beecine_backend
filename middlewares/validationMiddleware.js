@@ -13,6 +13,7 @@ const {
   replySchema,
   refreshTokenSchema,
   userAdminSchema,
+  seoSchema,
 } = require('./validationSchemas');
 
 const validateCommentData = validateDataAgainstSchema(commentSchema);
@@ -29,6 +30,7 @@ const validationMovie = validateDataAgainstSchema(movieSchema);
 const validationSubscription = validateDataAgainstSchema(subscriptionSchema);
 const validationUser = validateDataAgainstSchema(userSchema);
 const validationRefreshToken = validateDataAgainstSchema(refreshTokenSchema);
+const validationSeo = validateDataAgainstSchema(seoSchema);
 
 module.exports = {
   validateReplyData,
@@ -44,4 +46,5 @@ module.exports = {
   validationUser,
   validationRefreshToken,
   validationUserAdmin,
+  validationSeo,
 };

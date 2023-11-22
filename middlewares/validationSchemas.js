@@ -272,6 +272,16 @@ const refreshTokenSchema = Joi.object({
   expiresAt: Joi.number().required(),
 });
 
+const seoSchema = Joi.object({
+  name: Joi.string().required(),
+  title: Joi.string().required(),
+  description: Joi.string().required(),
+  keywords: Joi.array().items(Joi.string()).required(),
+  imageUrl: Joi.string().uri().required(),
+  canonicalUrl: Joi.string().uri().required(),
+  robots: Joi.string().required(),
+});
+
 module.exports = {
   replySchema,
   artistSchema,
@@ -286,4 +296,5 @@ module.exports = {
   userSchema,
   refreshTokenSchema,
   userAdminSchema,
+  seoSchema,
 };
