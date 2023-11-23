@@ -6,22 +6,30 @@
 GET http://localhost:3000/api/users
 
 ###
-
-# @name SignOut
-@cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTJmZTczOTRmM2Q0NTQyZjZkNWU1YjEiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5NzY0MDAxNSwiZXhwIjoxNzI5MTc2MDE1fQ.jFR5R4MJpzD3D_YbVF86zumQIv8uw29xHoSVFFxntKk
-POST {{baseUrl}}/sign-out
-Cookie: {{cookie}}
-
-###
-
 # @name SignIn
+
 POST {{baseUrl}}/sign-in
 Content-Type: application/json
 
 {
-  "userId" : "652fe7394f3d4542f6d5e5b1"
+  "email": "user@gmail.com",
+  "password": "123456"
 }
 
+###
+
+# @name RefreshToken
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTVlZTBjYTZmN2NkOGRkYzA4YjY2MmEiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MDA3MTk5ODMsImV4cCI6MTcwMDcyMzU4M30.9BrjSJvnuHE_7zEZ3odN4PZHQUja5dG1-8ZisjkfjYw
+
+PUT {{baseUrl}}/change-password
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "uid": "6159e0ca6f7cd8ddc08b662a",
+  "oldPassword": "123456",
+  "newPassword": "1234567"
+}
 ###
 
 # @name SignInWithGoogle

@@ -9,6 +9,7 @@ const RefreshTokenModel = require('../models/refreshToken');
 const { getMillisecondsInDuration } = require('../utils/format');
 const generateOTP = require('../helpers/generateOTP');
 const { sendMail } = require('../helpers/sender');
+const firebase = require('firebase');
 
 class AuthController {
   async signUp(req, res) {
@@ -83,7 +84,7 @@ class AuthController {
       const otpCode = generateOTP();
       const now = Date.now();
       await OTPModel.findByIdAndDelete({ email });
-      const otp = await OTPModel.create({
+      await OTPModel.create({
         email,
         code: otpCode,
         issuedAt: now,
@@ -109,14 +110,39 @@ class AuthController {
   async verifyOtp(req, res) {
     try {
       const { email, otp } = req.body;
-      if(!email || !otp) return res.status(404).json({ message: 'Email and OTP are required' });
+      if (!email || !otp) return res.status(404).json({ message: 'Email and OTP are required' });
       const now = Date.now();
-      const data = await OTPModel.findOne({ email });
-      if (!data) return res.status(404).json({ message: 'OTP not found' });
-      if (data.expiresAt < now) return res.status(404).json({ message: 'OTP has expired' });
-      if (data.code !== otp) return res.status(404).json({ message: 'OTP is incorrect' });
-      await OTPModel.findByIdAndDelete(data._id);
+      const currentOTP = await OTPModel.findOne({ email });
+      if (!currentOTP) return res.status(404).json({ message: 'OTP not found' });
+      if (currentOTP.expiresAt < now) return res.status(404).json({ message: 'OTP has expired' });
+      if (currentOTP.code !== otp) return res.status(404).json({ message: 'OTP is incorrect' });
+      await OTPModel.findByIdAndUpdate(currentOTP._id, { isVerified: true });
       res.status(200).json({ message: 'Verify OTP successfully' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  async checkIsVerified(req, res) {
+    try {
+      const { email } = req.params;
+      const currentOTP = await OTPModel.findOne({ email });
+      if (!currentOTP) return res.status(404).json({ message: 'OTP not found' });
+      if (currentOTP.isVerified) return res.status(200).json({ message: 'OTP is verified' });
+      res.status(404).json({ message: 'OTP is not verified' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  async updateNewPassword(req, res) {
+    try {
+      const { email, password } = req.body;
+      const user = await admin.auth().getUserByEmail(email);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      await admin.auth().updateUser(user.uid, { password });
+      await OTPModel.findOneAndDelete({ email });
+      res.status(200).json({ message: 'Update password successfully' });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -124,7 +150,8 @@ class AuthController {
 
   async changePassword(req, res) {
     try {
-      const { uid, oldPassword, newPassword } = req.body;
+      // const uid = req.user.uid;
+      const { oldPassword, newPassword, uid } = req.body;
       if (oldPassword === newPassword)
         return res
           .status(500)
@@ -132,16 +159,12 @@ class AuthController {
 
       const user = await admin.auth().getUser(uid);
       if (!user) return res.status(404).json({ message: 'User not found' });
+      // firebase.auth().currentUser.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, oldPassword);
+      const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword);
+      if (!credential) return res.status(404).json({ message: 'Credential not found' });
+      // const result = await admin.auth().reauthenticateWithCredential(credential);
 
-      const validPassword = await admin.auth().verifyPassword(oldPassword, user.passwordHash);
-
-      if (!validPassword) {
-        return res.status(500).json({ message: 'Old password is incorrect' });
-      }
-
-      await admin.auth().updateUser(uid, { password: newPassword });
-
-      res.status(200).json('Change password successfully');
+      res.status(200).json(credential);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
