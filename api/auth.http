@@ -6,16 +6,36 @@
 GET http://localhost:3000/api/users
 
 ###
-# @name SignIn
+# @name GetUsers
+GET {{baseUrl}}/check-verified/884583
 
-POST {{baseUrl}}/sign-in
+###
+# @name SendVerify
+POST {{baseUrl}}/send-verify
 Content-Type: application/json
 
 {
-  "email": "user@gmail.com",
-  "password": "123456"
+  "email": "anvqps20351@fpt.edu.vn"
 }
 
+###
+# @name CheckVerify
+POST {{baseUrl}}/verify-otp
+Content-Type: application/json
+
+{
+  "email": "anvqps20351@fpt.edu.vn",
+  "otp": "884583"
+}
+###
+# @name updatePassword
+PUT {{baseUrl}}/update-password
+Content-Type: application/json
+
+{
+  "email": "anvqps20351@fpt.edu.vn",
+  "password": "123456789"
+}
 ###
 
 # @name RefreshToken
@@ -23,10 +43,9 @@ Content-Type: application/json
 
 PUT {{baseUrl}}/change-password
 Content-Type: application/json
-Authorization: Bearer {{token}}
 
 {
-  "uid": "6159e0ca6f7cd8ddc08b662a",
+  "uid": "x5BSFTKxcdTTqPrVZp6OwtD3zpi1",
   "oldPassword": "123456",
   "newPassword": "1234567"
 }

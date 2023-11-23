@@ -6,7 +6,7 @@ const bindController = require('../helpers/controllerHelper');
 const { convertData } = require('../middlewares/convertDataMiddleware');
 
 router.get('/me', verifyToken, bindController(AuthController, 'getProfile'));
-router.get('/check-verified/:email', bindController(AuthController, 'checkIsVerified'));
+router.get('/check-verified/:code', bindController(AuthController, 'checkIsVerified'));
 
 router.post('/sign-in', bindController(AuthController, 'signIn'));
 router.post('/sign-in-admin', bindController(AuthController, 'signInAdmin'));
