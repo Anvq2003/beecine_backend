@@ -11,6 +11,10 @@ GET {{baseUrl}}
 GET {{baseUrl}}/home
 
 ###
+# @name GetHome
+GET {{baseUrl}}/check-genre-has-movie/65587b557664bae62ef04cce
+
+###
 # @name ChangeBoolean
 PATCH {{baseUrl}}/change-boolean/653294e56f4dee8b53be372e?field=isChildrent
 

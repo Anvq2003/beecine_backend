@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema(
     role: { type: String, required: true, enum: ['ADMIN', 'USER'], default: 'USER', trim: true },
     email: { type: String, required: true, unique: true, trim: true, minLength: 3, maxLength: 255 },
     uid: { type: String, required: true, unique: true, trim: true, minLength: 3, maxLength: 255 },
-    points: { type: Number, default: 0 },
     subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription', default: null },
     permissions: { type: [String], default: [] },
     favoriteMovies: [
@@ -39,6 +38,12 @@ const userSchema = new mongoose.Schema(
       },
     ],
     status: { type: Boolean, default: true },
+
+    lastCheckIn: { type: Date, default: null }, // Ngày điểm danh gần nhất
+    checkInStreak: { type: Number, default: 0 }, // Số ngày điểm danh liên tiếp
+    
+    totalCheckIns: { type: Number, default: 0 }, // Tổng số lần điểm danh 
+    points: { type: Number, default: 0 } // Điểm tích lũy
   },
   {
     timestamps: true,

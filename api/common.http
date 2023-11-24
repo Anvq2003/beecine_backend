@@ -3,4 +3,16 @@
 # User API
 
 # @name Search
-GET {{baseUrl}}/search
+GET {{baseUrl}}/stats
+###
+# @name Search
+GET {{baseUrl}}/top-movie?period=month
+###
+# @name Search
+GET {{baseUrl}}/top-genre
+###
+# @name Search
+GET {{baseUrl}}/top-user
+###
+# @name Search
+GET {{baseUrl}}/profit?period=month

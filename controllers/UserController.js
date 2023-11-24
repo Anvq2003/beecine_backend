@@ -1,13 +1,36 @@
 const BaseController = require('./BaseController');
 const UserModel = require('../models/user');
 const MovieModel = require('../models/movie');
-const mongoose = require('mongoose');
 const _ = require('lodash');
 const admin = require('firebase-admin');
 
 class UserController extends BaseController {
   constructor() {
     super(UserModel);
+  }
+
+  async checkIn(req, res) {
+    try {
+      const user = req.user;
+
+      if (user.lastCheckIn && user.lastCheckIn.toDateString() === new Date().toDateString()) {
+        return res.json({ message: 'Already checked in today' });
+      }
+
+      user.lastCheckIn = new Date();
+      user.checkInStreak++; 
+      user.totalCheckIns++;
+
+      const streakBonus = user.checkInStreak * 5;
+
+      user.points += streakBonus;
+
+      await user.save();
+
+      res.json(user);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
   }
 
   async getFavoriteMovies(req, res) {
@@ -329,7 +352,7 @@ class UserController extends BaseController {
       await admin.auth().setCustomUserClaims(user.uid, { admin: true });
       await admin.auth().updateUser(user.uid, { displayName: name });
 
-      const data = new UserModel({...req.body, uid: user.uid});
+      const data = new UserModel({ ...req.body, uid: user.uid });
       const savedData = await data.save();
       res.status(200).json(savedData);
     } catch (error) {

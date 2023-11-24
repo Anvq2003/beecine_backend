@@ -126,8 +126,8 @@ class AuthController {
 
   async checkIsVerified(req, res) {
     try {
-      const { code } = req.params;
-      const currentOTP = await OTPModel.findOne({ code });
+      const { email } = req.query;
+      const currentOTP = await OTPModel.findOne({ email });
       if (!currentOTP) return res.status(404).json({ message: 'OTP not found' });
       if (currentOTP.isVerified) return res.status(200).json({ message: 'OTP is verified' });
       res.status(404).json({ message: 'OTP is not verified' });
@@ -136,10 +136,10 @@ class AuthController {
     }
   }
 
-  async updateNewPassword(req, res) {
+  async resetPassword(req, res) {
     try {
       const { email, password } = req.body;
-      const user = await admin.auth().getUserByEmail(email);
+      const user = await getAuth().getUserByEmail(email);
       if (!user) return res.status(404).json({ message: 'User not found' });
       await getAuth().updateUser(user.uid, { password });
       await OTPModel.findOneAndDelete({ email });

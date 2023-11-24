@@ -5,9 +5,12 @@ const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 const { sendMailMiddleware } = require('../middlewares/mailMiddleware');
 
 // Routes
-router.get('/search', sendMailMiddleware, CommonController.search);
 router.get('/stats', CommonController.stats);
 router.get('/top-movie', CommonController.getTopMovie);
-router.get('/update-data', CommonController.update);
+router.get('/top-genre', CommonController.getTopGenre);
+router.get('/top-user', CommonController.getTopUser);
+router.get('/profit', CommonController.getProfit);
+
+
 
 module.exports = router;
