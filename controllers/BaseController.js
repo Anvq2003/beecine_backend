@@ -30,22 +30,13 @@ class BaseController {
 
       if (options.query && options.query.deleted) {
         let data = await this.model.findWithDeleted({ deleted: true }).populate(options.populate);
-        const totalResults = data.length;
-        const totalPages = Math.ceil(totalResults / options.limit);
-        const page = options.page;
-        const hasPrevPage = page > 1;
-        const hasNextPage = page < totalPages;
-        const skip = (page - 1) * options.limit;
-        data = data.slice(skip, skip + options.limit);
+        const newData = paginationHelper({
+          page: options.page,
+          limit: options.limit,
+          data,
+        });
 
-        const info = {
-          totalResults,
-          totalPages,
-          page,
-          hasPrevPage,
-          hasNextPage,
-        };
-        return res.status(200).json({ data, info, count });
+        return res.status(200).json({ ...newData, count, options });
       }
 
       const data = await this.model.paginate(options.query || {}, options);

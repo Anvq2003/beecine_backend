@@ -1,7 +1,7 @@
 const config = require('../config');
 
 const paginationMiddleware = (req, res, next) => {
-  const { page, limit, sort, fields, search, populate, filter } = req.query;
+  const { page, limit, sort, fields, search, populate, filter, pagination = true } = req.query;
 
   // filter = filed:value,filed:value,filed:value
   const pageNum = parseInt(page, 10) || 1;
@@ -20,6 +20,10 @@ const paginationMiddleware = (req, res, next) => {
   if (fields) {
     const fieldsArray = fields.split(',');
     options.select = fieldsArray.join(' ');
+  }
+
+  if (pagination === 'false') {
+    options.pagination = false;
   }
 
   if (filter) {

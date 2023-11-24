@@ -17,5 +17,5 @@ router.post('/send-otp', bindController(AuthController, 'sendOtpToEmail'));
 router.post('/verify-otp', bindController(AuthController, 'verifyOtp'));
 
 router.put('/change-password', verifyToken, bindController(AuthController, 'changePassword'));
-router.put('/reset-password', verifyToken, bindController(AuthController, 'resetPassword'));
+router.put('/reset-password', bindController(AuthController, 'resetPassword'));
 module.exports = router;

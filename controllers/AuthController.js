@@ -139,7 +139,7 @@ class AuthController {
   async resetPassword(req, res) {
     try {
       const { email, password } = req.body;
-      const user = await getAuth().getUserByEmail(email);
+      const user = await admin.auth().getUserByEmail(email);
       if (!user) return res.status(404).json({ message: 'User not found' });
       await getAuth().updateUser(user.uid, { password });
       await OTPModel.findOneAndDelete({ email });
