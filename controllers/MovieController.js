@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const MovieModel = require('../models/movie');
 const EpisodeModel = require('../models/episode');
 const UserModel = require('../models/user');
+const ArtistModel = require('../models/artist');
 const KeywordModel = require('../models/keyword');
+const CountryModel = require('../models/country');
 const GenreModel = require('../models/genre');
 const BaseController = require('./BaseController');
 const { handleConvertStringToSlug } = require('../utils/format');
@@ -315,13 +317,15 @@ class MovieController extends BaseController {
         { path: 'country', select: 'name slug' },
       ];
 
+      const artist = await ArtistModel.findOne({ slug });
+      if (!artist) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+
       const query = {
-        $or: [
-          { cast: { $elemMatch: { slug: slug } } },
-          { directors: { $elemMatch: { slug: slug } } },
-        ],
+        $or: [{ cast: artist._id }, { directors: artist._id }],
       };
-      
+
       const data = await MovieModel.paginate(query, options);
 
       if (!data) {
@@ -345,8 +349,11 @@ class MovieController extends BaseController {
         { path: 'country', select: 'name slug' },
       ];
 
-      const query = { 'country.slug': slug };
-      const data = await MovieModel.paginate(query, options);
+      const country = await CountryModel.findOne({ slug });
+      if (!country) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+      const data = await MovieModel.paginate({ country: country._id }, options);
 
       if (!data) {
         return res.status(404).json({ message: 'Not found' });
@@ -368,9 +375,17 @@ class MovieController extends BaseController {
         { path: 'directors', select: 'name slug' },
         { path: 'country', select: 'name slug' },
       ];
+      const genre = await GenreModel.findOne({ slug });
+      if (!genre) {
+        return res.status(404).json({ message: 'Not found' });
+      }
 
-      const query = { genres: { $elemMatch: { slug: slug } } };
-      const data = await MovieModel.paginate(query, options);
+      const data = await MovieModel.paginate(
+        {
+          genres: genre._id,
+        },
+        options,
+      );
       if (!data) {
         return res.status(404).json({ message: 'Not found' });
       }

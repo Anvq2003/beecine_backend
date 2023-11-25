@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin 
+GET {{baseUrl}}?pagination=false 
 
 ###
 # @name GetHomepage
@@ -24,7 +24,7 @@ GET {{baseUrl}}/tran-thanh
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/artist/le-giang
+GET {{baseUrl}}/genre/emotional
 
 ###
 ###

@@ -29,4 +29,6 @@ genre.plugin(mongooseDelete, {
   deletedAt: true,
 });
 
-module.exports = mongoose.model('Genre', genre);
+const Genre = mongoose.model('Genre', genre);
+
+module.exports = Genre;
