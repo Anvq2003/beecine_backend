@@ -41,7 +41,6 @@ const userSchema = new mongoose.Schema(
 
     lastCheckIn: { type: Date, default: null }, // Ngày điểm danh gần nhất
     checkInStreak: { type: Number, default: 0 }, // Số ngày điểm danh liên tiếp
-    
     totalCheckIns: { type: Number, default: 0 }, // Tổng số lần điểm danh 
     points: { type: Number, default: 0 } // Điểm tích lũy
   },
