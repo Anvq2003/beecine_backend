@@ -1,4 +1,3 @@
-// const dayjs = require('dayjs');
 const mongoose = require('mongoose');
 const MovieModel = require('../models/movie');
 const UserModel = require('../models/user');
@@ -34,174 +33,37 @@ class CommonController {
   async getTopMovie(req, res) {
     const { limit = 3, period = 'day' } = req.query;
     // period = day | week | month
-    // the result : [{_id:_id, title: '...', imageUrl: '...', data:[num1,...]}]
 
     try {
       let movies = [];
-      // switch (period) {
-      //   case 'day':
-      //     // return limit movies with the most views in the last 24 hours
-      //     // data: [num1, num2, num3, num4, num5, num6, num7, num8, num9, num10]
-      //     // num1: views in the last 1 hour
-      //     // if some field is null, we will fill it with 0 data: [num1, num2, num3, num4, num5, num6, num7, num8, num9, num10]
-      //     movies = await MovieModel.aggregate([
-      //       {
-      //         $match: {
-      //           createdAt: {
-      //             $gte: dayjs().subtract(1, 'day').toDate(),
-      //           },
-      //         },
-      //       },
-      //       {
-      //         $project: {
-      //           _id: 1,
-      //           title: 1,
-      //           imageUrl: 1,
-      //           views: 1,
-      //           createdAt: 1,
-      //           data: {
-      //             $map: {
-      //               input: Array.from({ length: 10 }, (_, i) => i + 1),
-      //               as: 'hour',
-      //               in: {
-      //                 $size: {
-      //                   $filter: {
-      //                     input: '$views',
-      //                     as: 'view',
-      //                     cond: {
-      //                       $and: [
-      //                         { $gte: ['$$view.createdAt', dayjs().subtract(1, 'hour').toDate()] },
-      //                         { $lt: ['$$view.createdAt', dayjs().toDate()] },
-      //                       ],
-      //                     },
-      //                   },
-      //                 },
-      //               },
-      //             },
-      //           },
-      //         },
-      //       },
-      //       {
-      //         $sort: {
-      //           createdAt: -1,
-      //         },
-      //       },
-      //       {
-      //         $limit: parseInt(limit),
-      //       },
-      //     ]);
-
-      //     break;
-      //   case 'week':
-      //     // return limit movies with the most views in the last 7 days`
-      //     // data: [num1, num2, num3, num4, num5, num6, num7]
-      //     // num1: views in the last 1 hour
-      //     // if some field is null, we will fill it with 0 data
-
-      //     movies = await MovieModel.aggregate([
-      //       {
-      //         $match: {
-      //           createdAt: {
-      //             $gte: dayjs().subtract(7, 'day').toDate(),
-      //           },
-      //         },
-      //       },
-      //       {
-      //         $project: {
-      //           _id: 1,
-      //           title: 1,
-      //           imageUrl: 1,
-      //           views: 1,
-      //           createdAt: 1,
-      //           data: {
-      //             $map: {
-      //               input: Array.from({ length: 7 }, (_, i) => i + 1),
-      //               as: 'day',
-      //               in: {
-      //                 $size: {
-      //                   $filter: {
-      //                     input: '$views',
-      //                     as: 'view',
-      //                     cond: {
-      //                       $and: [
-      //                         { $gte: ['$$view.createdAt', dayjs().subtract(1, 'day').toDate()] },
-      //                         { $lt: ['$$view.createdAt', dayjs().toDate()] },
-      //                       ],
-      //                     },
-      //                   },
-      //                 },
-      //               },
-      //             },
-      //           },
-      //         },
-      //       },
-      //       {
-      //         $sort: {
-      //           createdAt: -1,
-      //         },
-      //       },
-      //       {
-      //         $limit: parseInt(limit),
-      //       },
-      //     ]);
-
-      //     break;
-
-      //   case 'month':
-      //     // return limit movies with the most views in the last 30 days
-      //     // data: [num1, num2, num3, num4, num5, num6, num7, num8, num9, num10]
-      //     // num1: views in the last 1 hour
-      //     // if some field is null, we will fill it with 0 data
-
-      //     movies = await MovieModel.aggregate([
-      //       {
-      //         $match: {
-      //           createdAt: {
-      //             $gte: dayjs().subtract(30, 'day').toDate(),
-      //           },
-      //         },
-      //       },
-      //       {
-      //         $project: {
-      //           _id: 1,
-      //           title: 1,
-      //           imageUrl: 1,
-      //           views: 1,
-      //           createdAt: 1,
-      //           data: {
-      //             $map: {
-      //               input: Array.from({ length: 10 }, (_, i) => i + 1),
-      //               as: 'day',
-      //               in: {
-      //                 $size: {
-      //                   $filter: {
-      //                     input: '$views',
-      //                     as: 'view',
-      //                     cond: {
-      //                       $and: [
-      //                         { $gte: ['$$view.createdAt', dayjs().subtract(1, 'day').toDate()] },
-      //                         { $lt: ['$$view.createdAt', dayjs().toDate()] },
-      //                       ],
-      //                     },
-      //                   },
-      //                 },
-      //               },
-      //             },
-      //           },
-      //         },
-      //       },
-      //       {
-      //         $sort: {
-      //           createdAt: -1,
-      //         },
-      //       },
-      //       {
-      //         $limit: parseInt(limit),
-      //       },
-      //     ]);
-
-      //     break;
-      // }
+      switch (period) {
+        case 'day':
+          // get top 3 movies in day data is { label: '1h', value: 1000, movie: { ... } }
+          movies = await MovieModel.aggregate([
+            {
+              $project: {
+                title: 1,
+                viewsPerHour: {
+                  $slice: ['$viewsPerHour', -12],
+                },
+              },
+            },
+            {
+              $sort: {
+                'viewsPerHour.value': -1,
+              },
+            },
+            {
+              $group: {
+                _id: '$title',
+                viewsPerHour: { $first: '$viewsPerHour' },
+              },
+            },
+            {
+              $limit: 3,
+            },
+          ]);
+      }
       res.status(200).json(movies);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -212,49 +74,51 @@ class CommonController {
     const { limit = 5, period = 'month' } = req.query;
     // period = month | year
     try {
-      // const genres = await GenreModel.aggregate([
-      //   {
-      //     $lookup: {
-      //       from: 'movies',
-      //       localField: '_id',
-      //       foreignField: 'genres',
-      //       as: 'movies',
-      //     },
-      //   },
-      //   {
-      //     $unwind: '$movies',
-      //   },
-      //   {
-      //     $match: {
-      //       'movies.createdAt': {
-      //         $gte: dayjs().subtract(1, period).toDate(),
-      //       },
-      //     },
-      //   },
-      //   {
-      //     $group: {
-      //       _id: '$_id',
-      //       name: { $first: '$name' },
-      //       movies: { $push: '$movies' },
-      //     },
-      //   },
-      //   {
-      //     $project: {
-      //       _id: 1,
-      //       name: 1,
-      //       totalViews: { $sum: '$movies.views' },
-      //     },
-      //   },
-      //   {
-      //     $sort: {
-      //       totalViews: -1,
-      //     },
-      //   },
-      //   {
-      //     $limit: parseInt(limit),
-      //   },
-      // ]);
-      const genres = [];
+      const genres = await GenreModel.aggregate([
+        {
+          $lookup: {
+            from: 'movies',
+            localField: '_id',
+            foreignField: 'genres',
+            as: 'movies',
+          },
+        },
+        {
+          $unwind: '$movies',
+        },
+        {
+          $match: {
+            'movies.createdAt': {
+              $gte:
+                period === 'month'
+                  ? new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+                  : new Date(new Date().getFullYear(), 0, 1),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            name: { $first: '$name' },
+            movies: { $push: '$movies' },
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            totalViews: { $sum: '$movies.views' },
+          },
+        },
+        {
+          $sort: {
+            totalViews: -1,
+          },
+        },
+        {
+          $limit: parseInt(limit),
+        },
+      ]);
       res.json(genres);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -263,26 +127,29 @@ class CommonController {
 
   async getTopUser(req, res) {
     const { limit = 7, period = 'month' } = req.query;
+    // period = month | year
     try {
-      // const users = await UserModel.aggregate([
-      //   {
-      //     $match: {
-      //       role: 'USER',
-      //       createdAt: {
-      //         $gte: dayjs().subtract(1, period).toDate(),
-      //       },
-      //     },
-      //   },
-      //   {
-      //     $sort: {
-      //       points: -1,
-      //     },
-      //   },
-      //   {
-      //     $limit: parseInt(limit),
-      //   },
-      // ]);
-      const users = [];
+      const users = await UserModel.aggregate([
+        {
+          $match: {
+            role: 'USER',
+            createdAt: {
+              $gte:
+                period === 'month'
+                  ? new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+                  : new Date(new Date().getFullYear(), 0, 1),
+            },
+          },
+        },
+        {
+          $sort: {
+            points: -1,
+          },
+        },
+        {
+          $limit: parseInt(limit),
+        },
+      ]);
       res.json(users);
     } catch (error) {
       res.status(500).json({ error: error.message });

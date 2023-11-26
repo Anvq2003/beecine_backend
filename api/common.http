@@ -9,7 +9,7 @@ GET {{baseUrl}}/stats
 GET {{baseUrl}}/top-movie?period=month
 ###
 # @name Search
-GET {{baseUrl}}/top-genre
+GET {{baseUrl}}/top-genre?period=year
 ###
 # @name Search
 GET {{baseUrl}}/top-user
