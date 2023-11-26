@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const _ = require('lodash');
+const paginationHelper = require('../helpers/Pagination');
 
 class BaseController {
   constructor(model) {
@@ -17,15 +18,29 @@ class BaseController {
 
       const countFields = counts ? counts.split(',') : [];
       const allData = await this.model.findWithDeleted();
+
+      const getKeyAndCount = countFields.map((value) => {
+        const [field, fieldValue] = value.split(':');
+        const count = allData.filter((item) => {
+          switch (typeof item[field]) {
+            case 'boolean':
+              return item[field] === Boolean(fieldValue);
+            case 'string':
+              return item[field].toLowerCase() === fieldValue.toLowerCase();
+            default:
+              return item[field] === fieldValue;
+          }
+        }).length;
+        return { [value]: count };
+      });
+      
+
       const count = {
         all: _.filter(allData, (item) => !item.deleted && item.status).length,
         active: _.filter(allData, (item) => item.status && !item.deleted).length,
         inactive: _.filter(allData, (item) => !item.status && !item.deleted).length,
         deleted: _.filter(allData, (item) => item.deleted).length,
-        ..._.mapValues(_.keyBy(countFields), (value) => {
-          const [field, fieldValue] = value.split(':');
-          return _.filter(allData, (item) => item[field] === fieldValue).length;
-        }),
+        ...Object.assign({}, ...getKeyAndCount),
       };
 
       if (options.query && options.query.deleted) {

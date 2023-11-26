@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}?pagination=false 
+GET {{baseUrl}}/admin?counts=isFree:true,isSeries:true
 
 ###
 # @name GetHomepage

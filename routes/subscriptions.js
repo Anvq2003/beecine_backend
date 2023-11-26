@@ -14,6 +14,7 @@ router.get('/:param', bindController(SubscriptionController, 'getByParam'));
 router.post('/store', validationSubscription, bindController(SubscriptionController, 'create'));
 router.put('/update/:id', validationSubscription, bindController(SubscriptionController, 'update'));
 router.patch('/change-status/:id', bindController(SubscriptionController, 'changeStatus'));
+router.patch("/change-boolean/:id", bindController(SubscriptionController, 'changeBoolean'));
 router.delete('/delete/:id', bindController(SubscriptionController, 'delete'));
 router.delete('/delete-many', bindController(SubscriptionController, 'deleteMany'));
 router.patch('/restore/:id', bindController(SubscriptionController, 'restore'));
