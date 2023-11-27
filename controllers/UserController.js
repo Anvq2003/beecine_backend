@@ -54,7 +54,7 @@ class UserController extends BaseController {
 
       checkIn.points += this.getPoints(checkIn.checkInStreak);
       await user.save();
-      res.status(200).json(user.checkIn);
+      res.status(200).json(user);
     } catch (error) {
       res.status(500).json(error.message);
     }
