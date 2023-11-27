@@ -9,25 +9,88 @@ class UserController extends BaseController {
     super(UserModel);
   }
 
+  getPoints(checkIn) {
+    // Check-in 1-3 ngày liên tiếp: 5 điểm/ngày
+    // Check-in 4-6 ngày liên tiếp: 10 điểm/ngày
+    // Check-in 7+ ngày liên tiếp: 15 điểm/ngày
+    let pointsEarned = 5;
+
+    if (checkIn.checkInStreak >= 4 && checkIn.checkInStreak <= 6) {
+      pointsEarned = 10;
+    } else if (checkIn.checkInStreak >= 7) {
+      pointsEarned = 15;
+    }
+
+    return pointsEarned;
+  }
+
   async checkIn(req, res) {
     try {
-      const user = req.user;
+      const { userId } = req.query;
+      const user = await UserModel.findById(userId);
+      // const user = await UserModel.findById(req.user._id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
 
-      if (user.lastCheckIn && user.lastCheckIn.toDateString() === new Date().toDateString()) {
+      const today = new Date();
+      const checkIn = user.checkIn;
+
+      if (checkIn.lastCheckIn && checkIn.lastCheckIn.toDateString() === today.toDateString()) {
         return res.json({ message: 'Already checked in today' });
       }
 
-      user.lastCheckIn = new Date();
-      user.checkInStreak++; 
-      user.totalCheckIns++;
+      if (
+        checkIn.lastCheckIn &&
+        checkIn.lastCheckIn.toDateString() ===
+          new Date(today.setDate(today.getDate() - 1)).toDateString()
+      ) {
+        checkIn.checkInStreak += 1;
+      } else {
+        checkIn.checkInStreak = 1;
+      }
 
-      const streakBonus = user.checkInStreak * 5;
+      checkIn.lastCheckIn = today;
+      checkIn.totalCheckIns += 1;
+      checkIn.checkInHistory.push(today);
 
-      user.points += streakBonus;
-
+      checkIn.points += this.getPoints(checkIn);
       await user.save();
+      res.status(200).json(user.checkIn);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
 
-      res.json(user);
+  async getStatusCurrentWeek(req, res) {
+    try {
+      const { userId } = req.query;
+      const user = await UserModel.findById(userId);
+      // const user = await UserModel.findById(req.user._id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const today = new Date();
+      const checkIn = user.checkIn;
+      const checkInHistory = checkIn.checkInHistory;
+      const currentWeek = [];
+
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(today.setDate(today.getDate() - i));
+        const dayName = day.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+        const checkInDay = checkInHistory.find(
+          (item) => item.toDateString() === day.toDateString(),
+        );
+        const points = checkInDay ? this.getPoints(checkIn) : 0;
+        currentWeek.push({
+          name: dayName,
+          checkIn: checkInDay ? true : false,
+          points: points,
+        });
+      }
+
+      res.status(200).json(currentWeek);
     } catch (error) {
       res.status(500).json(error.message);
     }

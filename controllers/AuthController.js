@@ -152,20 +152,12 @@ class AuthController {
   async changePassword(req, res) {
     try {
       const uid = req.user.uid;
-      const { oldPassword, newPassword } = req.body;
-      if (oldPassword === newPassword) {
-        return res
-          .status(500)
-          .json({ message: 'New password must be different from old password' });
-      }
+      const { password } = req.body;
+      if (!password) return res.status(404).json({ message: 'Password is required' });
 
       const user = await admin.auth().getUser(uid);
       if (!user) return res.status(404).json({ message: 'User not found' });
-      // firebase.auth().currentUser.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, oldPassword);
-      // const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword);
-      // const result = await admin.auth().reauthenticateWithCredential(credential);
-      // await admin.auth().updateUser(uid, { password: newPassword });
-      await getAuth().updateUser(uid, { password: newPassword });
+      await getAuth().updateUser(uid, { password });
       res.status(200).json({ message: 'Change password successfully' });
     } catch (error) {
       res.status(500).json({ message: error.message });

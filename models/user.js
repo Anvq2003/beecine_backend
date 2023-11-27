@@ -38,11 +38,22 @@ const userSchema = new mongoose.Schema(
       },
     ],
     status: { type: Boolean, default: true },
-
-    lastCheckIn: { type: Date, default: null }, // Ngày điểm danh gần nhất
-    checkInStreak: { type: Number, default: 0 }, // Số ngày điểm danh liên tiếp
-    totalCheckIns: { type: Number, default: 0 }, // Tổng số lần điểm danh 
-    points: { type: Number, default: 0 } // Điểm tích lũy
+    checkIn: {
+      type: {
+        points: { type: Number, default: 0 }, // Điểm tích lũy
+        lastCheckIn: { type: Date, default: null }, // Ngày điểm danh gần nhất
+        checkInStreak: { type: Number, default: 0 }, // Số ngày điểm danh liên tiếp
+        totalCheckIns: { type: Number, default: 0 }, // Tổng số lần điểm danh
+        checkInHistory: { type: [Date], default: [] }, // Lịch sử điểm danh
+      },
+      default: {
+        points: 0,
+        lastCheckIn: null,
+        checkInStreak: 0,
+        totalCheckIns: 0,
+        checkInHistory: [],
+      },
+    },
   },
   {
     timestamps: true,

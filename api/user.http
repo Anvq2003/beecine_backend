@@ -3,7 +3,13 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin?
+GET {{baseUrl}}/admin
+###
+# @name Checkin
+GET {{baseUrl}}/check-in?userId=65619f2eafdcc44945f1d667
+###
+# @name CurrentWeek
+GET {{baseUrl}}/current-week?userId=65619f2eafdcc44945f1d667
 ###
 # @name Getall
 GET {{baseUrl}}/check-email/@gmail.com
