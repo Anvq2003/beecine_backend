@@ -9,15 +9,15 @@ class UserController extends BaseController {
     super(UserModel);
   }
 
-  getPoints(checkIn) {
+  getPoints(lastCheckIn) {
     // Check-in 1-3 ngày liên tiếp: 5 điểm/ngày
     // Check-in 4-6 ngày liên tiếp: 10 điểm/ngày
     // Check-in 7+ ngày liên tiếp: 15 điểm/ngày
     let pointsEarned = 5;
 
-    if (checkIn.checkInStreak >= 4 && checkIn.checkInStreak <= 6) {
+    if (lastCheckIn >= 4 && lastCheckIn <= 6) {
       pointsEarned = 10;
-    } else if (checkIn.checkInStreak >= 7) {
+    } else if (lastCheckIn >= 7) {
       pointsEarned = 15;
     }
 
@@ -26,9 +26,7 @@ class UserController extends BaseController {
 
   async checkIn(req, res) {
     try {
-      const { userId } = req.query;
-      const user = await UserModel.findById(userId);
-      // const user = await UserModel.findById(req.user._id);
+      const user = await UserModel.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
@@ -54,7 +52,7 @@ class UserController extends BaseController {
       checkIn.totalCheckIns += 1;
       checkIn.checkInHistory.push(today);
 
-      checkIn.points += this.getPoints(checkIn);
+      checkIn.points += this.getPoints(checkIn.checkInStreak);
       await user.save();
       res.status(200).json(user.checkIn);
     } catch (error) {
@@ -64,9 +62,7 @@ class UserController extends BaseController {
 
   async getStatusCurrentWeek(req, res) {
     try {
-      const { userId } = req.query;
-      const user = await UserModel.findById(userId);
-      // const user = await UserModel.findById(req.user._id);
+      const user = await UserModel.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
@@ -82,9 +78,10 @@ class UserController extends BaseController {
         const checkInDay = checkInHistory.find(
           (item) => item.toDateString() === day.toDateString(),
         );
-        const points = checkInDay ? this.getPoints(checkIn) : 0;
+
+        const points = this.getPoints(checkIn.checkInStreak + i);
         currentWeek.push({
-          name: dayName,
+          label: dayName,
           checkIn: checkInDay ? true : false,
           points: points,
         });

@@ -5,6 +5,7 @@ const bindController = require("../helpers/controllerHelper");
 const { validationArtistData } = require("../middlewares/validationMiddleware");
 const { paginationMiddleware } = require("../middlewares/paginationMiddleware");
 const { convertData } = require("../middlewares/convertDataMiddleware");
+const { verifyToken } = require('../middlewares/authMiddleware');
 const {
   uploadMulter,
   handleUploadOrUpdateImage,
