@@ -257,6 +257,7 @@ const userAdminSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().required(),
+  confirmPassword: Joi.string().required(),
   role: Joi.string().valid("ADMIN", "USER").default("USER"),
   permissions: Joi.array().default(null),
   status: Joi.boolean().default(true),
