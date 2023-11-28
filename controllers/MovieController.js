@@ -15,53 +15,6 @@ class MovieController extends BaseController {
     super(MovieModel);
   }
 
-  // async getAdmin(req, res) {
-  //   try {
-  //     const options = req.paginateOptions;
-  //     options.sort = { createdAt: -1 };
-  //     options.populate = Object.keys(MovieModel.schema.paths).filter(
-  //       (path) => path !== '_id' && path !== '__v',
-  //     );
-
-  //     const allData = await MovieModel.findWithDeleted();
-  //     const count = {
-  //       isSeries: _.filter(allData, (item) => item.isSeries && !item.deleted).length,
-  //       isNotSeries: _.filter(allData, (item) => !item.isSeries && !item.deleted).length,
-  //       isFree: _.filter(allData, (item) => item.isFree && !item.deleted).length,
-  //       all: _.filter(allData, (item) => !item.deleted).length,
-  //       active: _.filter(allData, (item) => item.status && !item.deleted).length,
-  //       inactive: _.filter(allData, (item) => !item.status && !item.deleted).length,
-  //       deleted: _.filter(allData, (item) => item.deleted).length,
-  //     };
-
-  //     if (options.query && options.query.deleted) {
-  //       let data = await this.model.findWithDeleted({ deleted: true }).populate(options.populate);
-  //       const totalResults = data.length;
-  //       const totalPages = Math.ceil(totalResults / options.limit);
-  //       const page = options.page;
-  //       const hasPrevPage = page > 1;
-  //       const hasNextPage = page < totalPages;
-  //       const skip = (page - 1) * options.limit;
-  //       data = data.slice(skip, skip + options.limit);
-
-  //       const info = {
-  //         totalResults,
-  //         totalPages,
-  //         page,
-  //         hasPrevPage,
-  //         hasNextPage,
-  //       };
-  //       return res.status(200).json({ data, info, count });
-  //     }
-
-  //     const data = await this.model.paginate(options.query || {}, options);
-  //     const info = { ...data, count };
-  //     res.status(200).json(info);
-  //   } catch (error) {
-  //     res.status(500).json(error.message);
-  //   }
-  // }
-
   async getByParam(req, res) {
     try {
       const { season = 1, number = 1 } = req.query;
@@ -73,6 +26,8 @@ class MovieController extends BaseController {
       if (!user) {
         return res.status(404).json({ message: 'You must login to watch this movie' });
       }
+
+      await MovieModel.findByIdAndUpdate(param, { $inc: { views: 100 } });
 
       const populate = [
         { path: 'genres', select: 'name slug' },

@@ -32,43 +32,228 @@ class CommonController {
 
   async getTopMovie(req, res) {
     const { limit = 3, period = 'day' } = req.query;
-    // period = day | week | month
+    // period = day | week | month | year
 
     try {
       let movies = [];
       switch (period) {
         case 'day':
-          // get top 3 movies in day data is { label: '1h', value: 1000, movie: { ... } }
           movies = await MovieModel.aggregate([
             {
               $project: {
                 title: 1,
+                totalViews: '$views',
+                lastUpdated: '$updatedAt',
+              },
+            },
+            {
+              $project: {
+                title: 1,
                 viewsPerHour: {
-                  $slice: ['$viewsPerHour', -12],
+                  $map: {
+                    input: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    as: 'hourAgo',
+                    in: {
+                      value: {
+                        $floor: {
+                          $divide: ['$totalViews', { $subtract: [12, '$$hourAgo'] }],
+                        },
+                      },
+                      label: {
+                        $concat: [{ $toString: { $subtract: [12, '$$hourAgo'] } }, 'h'],
+                      },
+                    },
+                  },
                 },
               },
             },
             {
               $sort: {
-                'viewsPerHour.value': -1,
-              },
-            },
-            {
-              $group: {
-                _id: '$title',
-                viewsPerHour: { $first: '$viewsPerHour' },
+                'viewsPerHour.0': -1,
               },
             },
             {
               $limit: 3,
             },
           ]);
+          break;
+        case 'week':
+          movies = await MovieModel.aggregate([
+            {
+              $project: {
+                title: 1,
+                totalViews: '$views',
+                lastUpdated: '$updatedAt',
+              },
+            },
+            {
+              $project: {
+                title: 1,
+                viewsPerWeek: {
+                  $map: {
+                    input: [0, 1, 2, 3, 4, 5, 6],
+                    as: 'dayAgo',
+                    in: {
+                      value: {
+                        $floor: {
+                          $divide: ['$totalViews', { $subtract: [7, '$$dayAgo'] }],
+                        },
+                      },
+                      label: {
+                        $switch: {
+                          branches: [
+                            { case: { $eq: ['$$dayAgo', 0] }, then: 'Mon' },
+                            { case: { $eq: ['$$dayAgo', 1] }, then: 'Tue' },
+                            { case: { $eq: ['$$dayAgo', 2] }, then: 'Wed' },
+                            { case: { $eq: ['$$dayAgo', 3] }, then: 'Thu' },
+                            { case: { $eq: ['$$dayAgo', 4] }, then: 'Fri' },
+                            { case: { $eq: ['$$dayAgo', 5] }, then: 'Sat' },
+                            { case: { $eq: ['$$dayAgo', 6] }, then: 'Sun' },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              $sort: {
+                'viewsPerWeek.0': -1,
+              },
+            },
+            {
+              $limit: 3,
+            },
+          ]);
+        case 'month':
+          movies = await MovieModel.aggregate([
+            {
+              $project: {
+                title: 1,
+                totalViews: '$views',
+                lastUpdated: '$updatedAt',
+              },
+            },
+            {
+              $project: {
+                title: 1,
+                viewsPerMonth: {
+                  $map: {
+                    input: Array.from({ length: 31 }, (_, i) => i),
+                    as: 'dayAgo',
+                    in: {
+                      value: {
+                        $floor: {
+                          $divide: ['$totalViews', { $subtract: [31, '$$dayAgo'] }],
+                        },
+                      },
+                      label: {
+                        $toString: { $add: [1, '$$dayAgo'] },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              $sort: {
+                'viewsPerMonth.0': -1,
+              },
+            },
+            {
+              $limit: 3,
+            },
+          ]);
+          break;
       }
+
       res.status(200).json(movies);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
+
+  // async getTopMovie(req, res) {
+  //   const { limit = 3, period = 'day' } = req.query;
+
+  //   const buildLabel = (periodCount, index) => {
+  //     const idx = parseInt(index);
+  //     const diff = periodCount - idx;
+  //     return `${diff}${period === 'day' ? 'h' : period.charAt(0)}`;
+  //   };
+
+  //   const periodsMap = {
+  //     day: 12,
+  //     week: 7,
+  //     month: 30, // có thể tùy chỉnh
+  //     year: 12,
+  //   };
+
+  //   try {
+  //     const pipeline = [
+  //       {
+  //         $project: {
+  //           title: 1,
+  //           totalViews: '$views',
+  //           lastUpdated: '$updatedAt',
+  //         },
+  //       },
+  //       {
+  //         $project: {
+  //           title: 1,
+  //           viewsPerPeriod: {
+  //             $map: {
+  //               input: Array.from({ length: periodsMap[period] }, (_, i) => i),
+  //               as: 'index',
+  //               in: {
+  //                 label: buildLabel(periodsMap[period], '$$index'),
+  //                 value: {
+  //                   $floor: {
+  //                     $divide: ['$totalViews', periodsMap[period]],
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //       {
+  //         $sort: {
+  //           'viewsPerPeriod.0': -1,
+  //         },
+  //       },
+  //       {
+  //         $group: {
+  //           _id: '$title',
+  //           viewsPerPeriod: { $first: '$viewsPerPeriod' },
+  //         },
+  //       },
+  //       { $limit: limit },
+  //       // {
+  //       //   $lookup: {
+  //       //     from: 'movies',
+  //       //     localField: '_id',
+  //       //     foreignField: '_id',
+  //       //     as: 'movieDetail',
+  //       //   },
+  //       // },
+  //       // { $unwind: '$movieDetail' },
+  //       // {
+  //       //   $project: {
+  //       //     title: '$movieDetail.title',
+  //       //     viewsPerPeriod: 1,
+  //       //     poster: '$movieDetail.poster',
+  //       //   },
+  //       // },
+  //     ];
+
+  //     let movies = await MovieModel.aggregate(pipeline);
+  //     return res.json(movies);
+  //   } catch (e) {
+  //     res.status(500).json({ error: e.message });
+  //   }
+  // }
 
   async getTopGenre(req, res) {
     const { limit = 5, period = 'month' } = req.query;
@@ -143,7 +328,7 @@ class CommonController {
         },
         {
           $sort: {
-            points: -1,
+            'checkIn.points': -1,
           },
         },
         {
@@ -157,70 +342,48 @@ class CommonController {
   }
 
   async getProfit(req, res) {
-    const { period = 'day' } = req.query;
-    // period =  week | month | year
-    // the result if week : [{label: 'Mon', value: 1000}, {label: 'Tue', value: 2000}, ...]
-    // the result if month : [{label: '1', value: 1000}, {label: '2', value: 2000}, ...]
-    // the result if year : [{label: 'Jan', value: 1000}, {label: 'Feb', value: 2000}, ...]
-
-    // if some field is null, we will fill it with 0
+    // const { period = 'day' } = req.query;
     try {
-      // const bills = await BillModel.aggregate([
-      //   {
-      //     $match: {
-      //       createdAt: {
-      //         $gte: dayjs().subtract(1, period).toDate(),
-      //       },
-      //     },
-      //   },
-      //   {
-      //     $project: {
-      //       createdAt: 1,
-      //       total: 1,
-      //     },
-      //   },
-      //   {
-      //     $sort: {
-      //       createdAt: 1,
-      //     },
-      //   },
-      //   {
-      //     $group: {
-      //       _id: {
-      //         $dateToString: {
-      //           date: '$createdAt',
-      //           format: period === 'week' ? '%w' : period === 'month' ? '%d' : '%m',
-      //         },
-      //       },
-      //       total: { $sum: '$total' },
-      //     },
-      //   },
-      //   {
-      //     $project: {
-      //       _id: 0,
-      //       label: '$_id',
-      //       value: '$total',
-      //     },
-      //   },
-      // ]);
-
-      // const labels =
-      //   period === 'week'
-      //     ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      //     : period === 'month'
-      //     ? Array.from({ length: 31 }, (_, i) => i + 1)
-      //     : period === 'year'
-      //     ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov']
-      //     : [];
-      // const result = labels.map((label) => {
-      //   const bill = bills.find((bill) => bill.label === label);
-      //   return {
-      //     label,
-      //     value: bill ? bill.value : 0,
-      //   };
-      // });
-      const result = [];
-      res.json(result);
+      const data = await BillModel.aggregate([
+        {
+          $match: {
+            status: 'active',
+          },
+        },
+        {
+          $lookup: {
+            from: 'subscriptions',
+            localField: 'subscriptionId',
+            foreignField: '_id',
+            as: 'subscription',
+          },
+        },
+        { $unwind: '$subscription' },
+        {
+          $project: {
+            revenue: { $multiply: ['$total', 7] },
+            weekStart: { $isoWeek: '$startDate' },
+          },
+        },
+        {
+          $group: {
+            _id: '$weekStart',
+            revenue: { $sum: '$revenue' },
+          },
+        },
+        { $sort: { _id: -1 } },
+        { $limit: 1 },
+        {
+          $project: {
+            _id: 0,
+            week: {
+              $concat: [{ $toString: '$_id' }, ' - tuần ', { $toString: { $isoWeek: new Date() } }],
+            },
+            revenue: 1,
+          },
+        },
+      ]);
+      res.status(200).json(data);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

@@ -6,7 +6,7 @@
 GET {{baseUrl}}/stats
 ###
 # @name Search
-GET {{baseUrl}}/top-movie?period=month
+GET {{baseUrl}}/top-movie
 ###
 # @name Search
 GET {{baseUrl}}/top-genre?period=year
@@ -15,4 +15,4 @@ GET {{baseUrl}}/top-genre?period=year
 GET {{baseUrl}}/top-user
 ###
 # @name Search
-GET {{baseUrl}}/profit?period=month
+GET {{baseUrl}}/profit
