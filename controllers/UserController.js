@@ -62,24 +62,43 @@ class UserController extends BaseController {
 
   async getStatusCurrentWeek(req, res) {
     try {
-      const user = await UserModel.findById(req.user._id);
+      const { userId } = req.query;
+      const user = await UserModel.findById(userId);
+      // const user = await UserModel.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
 
-      const today = new Date();
       const checkIn = user.checkIn;
       const checkInHistory = checkIn.checkInHistory;
       const currentWeek = [];
 
+      const startWeek = new Date(
+        new Date().setDate(new Date().getDate() - new Date().getDay() + 1),
+      );
+
       for (let i = 0; i < 7; i++) {
-        const day = new Date(today.setDate(today.getDate() - i));
+        const day = new Date(startWeek.setDate(startWeek.getDate() + i));
         const dayName = day.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
         const checkInDay = checkInHistory.find(
           (item) => item.toDateString() === day.toDateString(),
         );
 
-        const points = this.getPoints(checkIn.checkInStreak + i);
+        let points = 0;
+        const passedDay = new Date() > day;
+        const missedDay = [...Array(7)].some((_, i) => {
+          const day = new Date(startWeek.setDate(startWeek.getDate() + i));
+          return day.toDateString() === new Date().toDateString();
+        });
+
+        if (checkInDay) {
+          points = this.getPoints(checkIn.checkInStreak);
+        } else if (passedDay) {
+          points = 0;
+        } else {
+          points = this.getPoints(checkIn.checkInStreak + i);
+        }
+
         currentWeek.push({
           label: dayName,
           checkIn: checkInDay ? true : false,

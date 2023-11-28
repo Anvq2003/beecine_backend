@@ -21,7 +21,7 @@ router.get('/all', bindController(UserController, 'getAll'));
 router.get('/trash', bindController(UserController, 'getTrash'));
 router.get('/check-email/:email', bindController(UserController, 'checkEmail'));
 router.get('/check-in', verifyToken, bindController(UserController, 'checkIn'));
-router.get('/current-week', verifyToken, bindController(UserController, 'getStatusCurrentWeek'));
+router.get('/current-week', bindController(UserController, 'getStatusCurrentWeek'));
 router.get('/:param', bindController(UserController, 'getByParam'));
 router.get(
   '/favorite-movies/:id',

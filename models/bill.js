@@ -10,8 +10,8 @@ const billSchema = new mongoose.Schema(
     endDate: { type: Date, required: true, default: null },
     status: {
       type: String,
-      enum: ['active', 'expired', 'cancelled'],
-      default: 'active',
+      enum: ['ACTIVE', 'EXPIRED', 'CANCELLED'],
+      default: 'ACTIVE'
     },
     total: { type: Number, required: true },
     paymentMethod: { type: String, default: null },
