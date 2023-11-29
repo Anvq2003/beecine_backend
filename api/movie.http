@@ -24,7 +24,7 @@ GET {{baseUrl}}/mrs-nu-s-house
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/genre/emotional
+GET {{baseUrl}}/artist/tran-thanh?sort=-views
 
 ###
 ###

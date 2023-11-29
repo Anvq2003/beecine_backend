@@ -19,14 +19,15 @@ class MovieController extends BaseController {
     try {
       const { season = 1, number = 1 } = req.query;
       const param = req.params.param;
+      
       let data;
       let episodes = [];
       let currentEpisode;
-      const user = await UserModel.findById(req.query.userId);
-      // const user = await UserModel.findById(req.user._id);
-      // if (!user) {
-      //   return res.status(404).json({ message: 'You must login to watch this movie' });
-      // }
+
+      const user = await UserModel.findById(req.user._id);
+      if (!user) {
+        return res.status(404).json({ message: 'You must login to watch this movie' });
+      }
 
       // await MovieModel.findByIdAndUpdate(param, { $inc: { views: 1 } })
       const populate = [
@@ -42,7 +43,8 @@ class MovieController extends BaseController {
           episodes = await EpisodeModel.find({
             $and: [{ movieId: data._id }, { season: season ? season : 1 }],
           }).sort({ number: 1 });
-          currentEpisode = episodes && episodes.find((episode) => episode.number === Number(number));
+          currentEpisode =
+            episodes && episodes.find((episode) => episode.number === Number(number));
           data.episodes = [...episodes];
           data.currentEpisode = currentEpisode;
         }
@@ -63,7 +65,7 @@ class MovieController extends BaseController {
       }
 
       // const isAllowed = data.isFree || data.requiredSubscriptions.includes(user?.subscription);
-      const isAllowed = data.isFree 
+      const isAllowed = data.isFree;
 
       res.status(200).json({
         data,
