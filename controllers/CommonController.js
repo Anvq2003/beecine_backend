@@ -49,7 +49,7 @@ class CommonController {
             {
               $project: {
                 title: 1,
-                viewsPerHour: {
+                viewsPerPeriod: {
                   $map: {
                     input: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     as: 'hourAgo',
@@ -69,7 +69,7 @@ class CommonController {
             },
             {
               $sort: {
-                'viewsPerHour.0': -1,
+                'viewsPerPeriod.0': -1,
               },
             },
             {

@@ -19,15 +19,28 @@ class GenreController extends BaseController {
 
       const countFields = counts ? counts.split(',') : [];
       const allData = await this.model.findWithDeleted();
+
+      const getKeyAndCount = countFields.map((value) => {
+        const [field, fieldValue] = value.split(':');
+        const count = allData.filter((item) => {
+          switch (typeof item[field]) {
+            case 'boolean':
+              return item[field] === Boolean(fieldValue);
+            case 'string':
+              return item[field].toLowerCase() === fieldValue.toLowerCase();
+            default:
+              return item[field] === fieldValue;
+          }
+        }).length;
+        return { [value]: count };
+      });
+
       const count = {
         all: _.filter(allData, (item) => !item.deleted && item.status).length,
         active: _.filter(allData, (item) => item.status && !item.deleted).length,
         inactive: _.filter(allData, (item) => !item.status && !item.deleted).length,
         deleted: _.filter(allData, (item) => item.deleted).length,
-        ..._.mapValues(_.keyBy(countFields), (value) => {
-          const [field, fieldValue] = value.split(':');
-          return _.filter(allData, (item) => item[field] === fieldValue).length;
-        }),
+        ...Object.assign({}, ...getKeyAndCount),
       };
 
       if (options.query && options.query.deleted) {
@@ -38,12 +51,12 @@ class GenreController extends BaseController {
           data,
         });
 
-        return res.status(200).json({ ...newData, count , options});
+        return res.status(200).json({ ...newData, count, options });
       }
 
       const data = await this.model.paginate(options.query || {}, options);
       const pageData = { ...data, count };
-      const newData = [...pageData.data]
+      const newData = [...pageData.data];
       for (let i = 0; i < newData.length; i++) {
         const movieCount = await MovieModel.countDocuments({ genres: newData[i]._id });
         newData[i].movieCount = movieCount;

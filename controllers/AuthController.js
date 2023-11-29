@@ -178,7 +178,7 @@ class AuthController {
           ...decodedToken,
           imageUrl: decodedToken.picture,
         };
-        user = await this.createUser(dataFirebase);
+        user = await this.createUser({ ...dataFirebase, allowChangePassword: false });
       }
 
       const { accessToken, refreshToken } = this.createTokens(user);

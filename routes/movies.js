@@ -39,7 +39,7 @@ router.get(
   bindController(MovieController, 'getByCountrySlug'),
 );
 router.get('/genre/:slug', paginationMiddleware, bindController(MovieController, 'getByGenreSlug'));
-router.get('/:param', verifyToken, bindController(MovieController, 'getByParam'));
+router.get('/:param', bindController(MovieController, 'getByParam'));
 router.post(
   '/store',
   upload,

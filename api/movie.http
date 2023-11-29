@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin?counts=isFree:true,isSeries:true
+GET {{baseUrl}}/admin?counts=isFree:true
 
 ###
 # @name GetHomepage
@@ -20,7 +20,7 @@ GET {{baseUrl}}/search?q=come-back-home
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/tran-thanh
+GET {{baseUrl}}/mrs-nu-s-house
 
 ###
 # @name GetbyId
