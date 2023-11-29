@@ -9,6 +9,32 @@ const historySchema = new mongoose.Schema({
   watchedAt: { type: Date, default: Date.now },
 });
 
+const checkInSchema = new mongoose.Schema(
+  {
+    points: { type: Number, default: 0 }, // Điểm tích lũy
+    lastCheckIn: { type: Date, default: null }, // Ngày điểm danh gần nhất
+    checkInStreak: { type: Number, default: 0 }, // Số ngày điểm danh liên tiếp
+    totalCheckIns: { type: Number, default: 0 }, // Tổng số lần điểm danh
+    checkInHistory: [
+      {
+        type: {
+          date: { type: Date, default: Date.now },
+          points: { type: Number, default: 0 },
+        },
+      },
+    ],
+  },
+  { _id: false },
+);
+
+const defaultCheckIn = {
+  points: 0,
+  lastCheckIn: null,
+  checkInStreak: 0,
+  totalCheckIns: 0,
+  checkInHistory: [],
+};
+
 const userSchema = new mongoose.Schema(
   {
     imageUrl: { type: String, default: null },
@@ -19,6 +45,7 @@ const userSchema = new mongoose.Schema(
     subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription', default: null },
     permissions: { type: [String], default: [] },
     allowChangePassword: { type: Boolean, default: true },
+    checkIn: { type: checkInSchema, default: defaultCheckIn },
     favoriteMovies: [
       {
         type: {
@@ -39,22 +66,6 @@ const userSchema = new mongoose.Schema(
       },
     ],
     status: { type: Boolean, default: true },
-    checkIn: {
-      type: {
-        points: { type: Number, default: 0 }, // Điểm tích lũy
-        lastCheckIn: { type: Date, default: null }, // Ngày điểm danh gần nhất
-        checkInStreak: { type: Number, default: 0 }, // Số ngày điểm danh liên tiếp
-        totalCheckIns: { type: Number, default: 0 }, // Tổng số lần điểm danh
-        checkInHistory: { type: [Date], default: [] }, // Lịch sử điểm danh
-      },
-      default: {
-        points: 0,
-        lastCheckIn: null,
-        checkInStreak: 0,
-        totalCheckIns: 0,
-        checkInHistory: [],
-      },
-    },
   },
   {
     timestamps: true,

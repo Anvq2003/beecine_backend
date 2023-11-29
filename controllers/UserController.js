@@ -9,24 +9,40 @@ class UserController extends BaseController {
     super(UserModel);
   }
 
-  getPoints(lastCheckIn) {
+  getPoints(stress) {
     // Check-in 1-3 ngày liên tiếp: 5 điểm/ngày
     // Check-in 4-6 ngày liên tiếp: 10 điểm/ngày
     // Check-in 7+ ngày liên tiếp: 15 điểm/ngày
     let pointsEarned = 5;
 
-    if (lastCheckIn >= 4 && lastCheckIn <= 6) {
+    if (stress >= 4 && stress <= 6) {
       pointsEarned = 10;
-    } else if (lastCheckIn >= 7) {
+    } else if (stress >= 7) {
       pointsEarned = 15;
     }
 
     return pointsEarned;
   }
 
+  getCurrentWeek() {
+    const currentWeek = [];
+
+    const start = new Date();
+    start.setDate(start.getDate() - start.getDay() + 1);
+
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(start);
+      day.setDate(day.getDate() + i);
+      currentWeek.push(day);
+    }
+
+    return currentWeek;
+  }
+
   async checkIn(req, res) {
     try {
-      const user = await UserModel.findById(req.user._id);
+      const user = await UserModel.findById(req.query.userId);
+      // const user = await UserModel.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
@@ -34,7 +50,7 @@ class UserController extends BaseController {
       const today = new Date();
       const checkIn = user.checkIn;
 
-      if (checkIn.lastCheckIn && checkIn.lastCheckIn.toDateString() === today.toDateString()) {
+      if (checkIn.lastCheckIn.toDateString() === today.toDateString()) {
         return res.json({ message: 'Already checked in today' });
       }
 
@@ -50,9 +66,11 @@ class UserController extends BaseController {
 
       checkIn.lastCheckIn = today;
       checkIn.totalCheckIns += 1;
-      checkIn.checkInHistory.push(today);
-
       checkIn.points += this.getPoints(checkIn.checkInStreak);
+      checkIn?.checkInHistory?.push({
+        date: today,
+        points: this.getPoints(checkIn.checkInStreak),
+      });
       await user.save();
       res.status(200).json(user);
     } catch (error) {
@@ -70,41 +88,29 @@ class UserController extends BaseController {
       }
 
       const checkIn = user.checkIn;
-      const checkInHistory = checkIn.checkInHistory;
-      const currentWeek = [];
+      const days = this.getCurrentWeek();
+      let streakTemp = checkIn.checkInStreak;
 
-      const startWeek = new Date(
-        new Date().setDate(new Date().getDate() - new Date().getDay() + 1),
-      );
-
-      for (let i = 0; i < 7; i++) {
-        const day = new Date(startWeek.setDate(startWeek.getDate() + i));
-        const dayName = day.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-        const checkInDay = checkInHistory.find(
-          (item) => item.toDateString() === day.toDateString(),
-        );
-
+      const currentWeek = days.reduce((acc, day) => {
+        const record = checkIn.checkInHistory?.find((r) => r.date.getDate() === day.getDate());
         let points = 0;
-        const passedDay = new Date() > day;
-        const missedDay = [...Array(7)].some((_, i) => {
-          const day = new Date(startWeek.setDate(startWeek.getDate() + i));
-          return day.toDateString() === new Date().toDateString();
-        });
 
-        if (checkInDay) {
-          points = this.getPoints(checkIn.checkInStreak);
-        } else if (passedDay) {
+        if (record) {
+          points = record.points;
+        } else if (day.getTime() < new Date().getTime()) {
           points = 0;
+          streakTemp = 0;
         } else {
-          points = this.getPoints(checkIn.checkInStreak + i);
+          streakTemp += 1;
+          points = this.getPoints(streakTemp);
         }
-
-        currentWeek.push({
-          label: dayName,
-          checkIn: checkInDay ? true : false,
+        acc.push({
+          label: new Date(day).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase(),
+          checkIn: record ? true : false,
           points: points,
         });
-      }
+        return acc;
+      }, []);
 
       res.status(200).json(currentWeek);
     } catch (error) {
