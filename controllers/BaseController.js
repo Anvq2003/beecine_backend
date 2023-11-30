@@ -24,11 +24,11 @@ class BaseController {
         const count = allData.filter((item) => {
           switch (typeof item[field]) {
             case 'boolean':
-              return item[field] === Boolean(fieldValue);
+              return item[field] === Boolean(fieldValue) && !item.deleted;
             case 'string':
-              return item[field].toLowerCase() === fieldValue.toLowerCase();
+              return item[field].toLowerCase() === fieldValue.toLowerCase() && !item.deleted;
             default:
-              return item[field] === fieldValue;
+              return item[field] === fieldValue && !item.deleted;
           }
         }).length;
         return { [value]: count };
