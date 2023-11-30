@@ -39,10 +39,32 @@ class UserController extends BaseController {
     return currentWeek;
   }
 
+  isCheckedInToday(lastCheckIn) {
+    if (!lastCheckIn) {
+      return false;
+    }
+    const today = new Date();
+
+    if (
+      lastCheckIn.getDate() === new Date().getDate() &&
+      lastCheckIn.getMonth() === new Date().getMonth()
+    ) {
+      return true;
+    }
+
+    if (
+      lastCheckIn &&
+      lastCheckIn.toDateString() === new Date(today.setDate(today.getDate() - 1)).toDateString()
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   async checkIn(req, res) {
     try {
-      const user = await UserModel.findById(req.query.userId);
-      // const user = await UserModel.findById(req.user._id);
+      const user = await UserModel.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
@@ -50,18 +72,16 @@ class UserController extends BaseController {
       const today = new Date();
       const checkIn = user.checkIn;
 
-      if (checkIn.lastCheckIn.toDateString() === today.toDateString()) {
-        return res.json({ message: 'Already checked in today' });
+      if (this.isCheckedInToday(checkIn.lastCheckIn)) {
+        return res.status(400).json({ message: 'You have already checked in today' });
       }
 
       if (
         checkIn.lastCheckIn &&
-        checkIn.lastCheckIn.toDateString() ===
+        checkIn.lastCheckIn.toDateString() !==
           new Date(today.setDate(today.getDate() - 1)).toDateString()
       ) {
-        checkIn.checkInStreak += 1;
-      } else {
-        checkIn.checkInStreak = 1;
+        checkIn.checkInStreak = 0;
       }
 
       checkIn.lastCheckIn = today;
@@ -80,9 +100,7 @@ class UserController extends BaseController {
 
   async getStatusCurrentWeek(req, res) {
     try {
-      const { userId } = req.query;
-      const user = await UserModel.findById(userId);
-      // const user = await UserModel.findById(req.user._id);
+      const user = await UserModel.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }

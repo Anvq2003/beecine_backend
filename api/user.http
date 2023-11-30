@@ -4,6 +4,23 @@
 
 # @name Getall
 GET {{baseUrl}}
+
+###
+
+# @name Update
+PUT {{baseUrl}}/update/65619f2eafdcc44945f1d667
+Content-Type: application/json
+
+{
+  "checkIn": {
+    "points": 0,
+    "lastCheckIn": null,
+    "checkInStreak": 0,
+    "totalCheckIns": 0,
+    "checkInHistory": []
+  }
+}
+
 ###
 # @name Checkin
 GET {{baseUrl}}/check-in?userId=65619f2eafdcc44945f1d667
@@ -16,7 +33,7 @@ GET {{baseUrl}}/check-email/@gmail.com
 
 ###
 # @name GetbyId
-GET {{baseUrl}}/6536044c0931fef24e8cc601
+GET {{baseUrl}}/65619f2eafdcc44945f1d667
 
 ###
 DELETE {{baseUrl}}/delete-many-type
@@ -104,22 +121,6 @@ Content-Type: application/json
   "name": "demo 2",
   "role": "ADMIN"
 }
-
-###
-
-# @name Update
-PUT {{baseUrl}}/update/6523c4ddc715d289a5532bf2
-Content-Type: application/json
-
-{
-  "imageUrl": "https://example.com/banners/banner1.jpg",
-  "name": "quoc an",
-  "email": "demo00092345673@gmail.com",
-  "uid": "1234",
-  "permissions": ["ADD", "EDIT", "DELETE"]
-}
-
-###
 
 # @name Delete
 DELETE {{baseUrl}}/delete/64c290ee173cda17c307a2fa
