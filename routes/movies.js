@@ -33,7 +33,7 @@ router.get(
   paginationMiddleware,
   bindController(MovieController, 'getByArtistSlug'),
 );
-router.get(
+router.get( 
   '/country/:slug',
   paginationMiddleware,
   bindController(MovieController, 'getByCountrySlug'),

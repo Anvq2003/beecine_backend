@@ -7,7 +7,7 @@ GET {{baseUrl}}/admin
 
 ###
 # @name GetHomepage
-GET {{baseUrl}}/upcoming
+GET {{baseUrl}}/655e155e6f7cd8ddc08b62e8?isSeries=true
 
 ###
 

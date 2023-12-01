@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin?filter
+GET {{baseUrl}}/admin
 
 
 ###

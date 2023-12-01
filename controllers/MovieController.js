@@ -17,46 +17,36 @@ class MovieController extends BaseController {
 
   async getByParam(req, res) {
     try {
-      const { season = 1, number = 1 } = req.query;
+      const { season = 1, number = 1, isSeries = false } = req.query;
       const param = req.params.param;
-      
+
       let data;
       let episodes = [];
       let currentEpisode;
 
-      const user = await UserModel.findById(req.user._id);
-      if (!user) {
-        return res.status(404).json({ message: 'You must login to watch this movie' });
-      }
-
-      // await MovieModel.findByIdAndUpdate(param, { $inc: { views: 1 } })
-      const populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
-      ];
-
       if (mongoose.Types.ObjectId.isValid(param)) {
-        data = await MovieModel.findById(param).populate(populate);
-        if (data?.isSeries) {
+        if (isSeries === 'true') {
           episodes = await EpisodeModel.find({
-            $and: [{ movieId: data._id }, { season: season ? season : 1 }],
-          }).sort({ number: 1 });
-          currentEpisode =
-            episodes && episodes.find((episode) => episode.number === Number(number));
-          data.episodes = [...episodes];
-          data.currentEpisode = currentEpisode;
+            $and: [{ movieId: param }, { season: season ? season : 1 }],
+          })
+            .populate('movieId')
+            .sort({ number: 1 });
+          currentEpisode = episodes.find((episode) => episode.number === Number(number));
+          data = currentEpisode.movieId;
+        } else {
+          data = await MovieModel.findById(param);
         }
       } else {
-        data = await MovieModel.findOne({ slug: param }).populate(populate);
-
-        if (data?.isSeries) {
+        if (isSeries === 'true') {
+          data = await MovieModel.findOne({ slug: param });
           episodes = await EpisodeModel.find({
             $and: [{ movieId: data._id }, { season: season ? season : 1 }],
-          }).sort({ number: 1 });
+          })
+            .populate('movieId')
+            .sort({ number: 1 });
           currentEpisode = episodes.find((episode) => episode.number === Number(number));
-          data.currentEpisode = currentEpisode;
+        } else {
+          data = await MovieModel.findOne({ slug: param });
         }
       }
 
@@ -64,8 +54,12 @@ class MovieController extends BaseController {
         return res.status(404).json({ message: 'Not found' });
       }
 
-      // const isAllowed = data.isFree || data.requiredSubscriptions.includes(user?.subscription);
-      const isAllowed = data.isFree;
+      const user = await UserModel.findById(req.user._id);
+      if (!user) {
+        return res.status(404).json({ message: 'You must login to watch this movie' });
+      }
+
+      const isAllowed = data.isFree || data?.requiredSubscriptions.includes(user?.subscription);
 
       res.status(200).json({
         data,
