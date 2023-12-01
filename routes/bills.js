@@ -4,6 +4,7 @@ const BillController = require('../controllers/BillController');
 const bindController = require('../helpers/controllerHelper');
 const { validateBillData } = require('../middlewares/validationMiddleware');
 const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
+const { verifyToken } = require('../middlewares/authMiddleware');
 
 // Routes
 router.get('/', paginationMiddleware, bindController(BillController, 'getQuery'));
@@ -11,7 +12,7 @@ router.get('/admin', paginationMiddleware, bindController(BillController, 'getAd
 router.get('/top', bindController(BillController, 'getTop'));
 router.get('/trash', bindController(BillController, 'getTrash'));
 router.get('/:param', bindController(BillController, 'getByParam'));
-router.post('/store', validateBillData, bindController(BillController, 'create'));
+router.post('/store', verifyToken, validateBillData, bindController(BillController, 'create'));
 router.put('/update/:id', validateBillData, bindController(BillController, 'update'));
 router.patch('/change-status/:id', bindController(BillController, 'changeStatus'));
 router.delete('/delete/:id', bindController(BillController, 'delete'));

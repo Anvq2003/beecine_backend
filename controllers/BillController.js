@@ -11,7 +11,8 @@ class BillController extends BaseController {
   }
 
   async create(req, res) {
-    const { userId, subscriptionId } = req.body;
+    const { subscriptionId } = req.body;
+    const userId = req.user._id;
     try {
       const subscription = await SubscriptionModel.findById(subscriptionId);
       if (!subscription) {
