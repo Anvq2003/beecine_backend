@@ -4,6 +4,7 @@ const SubscriptionModel = require('../models/subscription');
 const UserModel = require('../models/user');
 const BaseController = require('./BaseController');
 const { sendMail } = require('../helpers/sender');
+const generateOTP = require('../helpers/generateOTP');
 
 class BillController extends BaseController {
   constructor() {
@@ -11,27 +12,36 @@ class BillController extends BaseController {
   }
 
   async create(req, res) {
-    const { subscriptionId } = req.body;
+    const { subscriptionId, usedCoin = 0, paymentMethod = 'online' } = req.body;
     const userId = req.user._id;
     try {
       const subscription = await SubscriptionModel.findById(subscriptionId);
       if (!subscription) {
         return res.status(404).json({ message: 'Subscription not found' });
       }
+
       const user = await UserModel.findById(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
 
+      if (user?.checkIn.points < usedCoin) {
+        return res.status(400).json({ message: 'Not enough coin' });
+      }
+
       const oneDay = 24 * 60 * 60 * 1000;
       subscription.duration = parseInt(subscription.duration);
       const end = Date.now() + subscription.duration * oneDay;
+      const code = 'BEECINE' + generateOTP();
 
       const bill = {
+        code,
         userId,
         subscriptionId,
-        startDate: Date.now(),
+        usedCoin,
+        paymentMethod,
         endDate: end,
+        startDate: Date.now(),
         total: subscription.price,
       };
 
@@ -45,9 +55,13 @@ class BillController extends BaseController {
         text: `Bạn đã thanh toán thành công ${subscription?.name?.vi} với giá ${subscription.price} VNĐ`,
       };
       await BillModel.create(bill);
-      await UserModel.findByIdAndUpdate(userId, { subscription: subscriptionId });
-      await sendMail(info);
-      res.status(201).json({ message: 'Create bill successfully' });
+      const dataUser = await UserModel.findByIdAndUpdate(userId, {
+        subscription: subscriptionId,
+        $inc: { 'checkIn.points': -usedCoin },
+      });
+
+      // await sendMail(info);
+      res.status(201).json({ message: 'Create bill successfully', data: bill, user: dataUser });
     } catch (error) {
       res.status(500).json(error.message);
     }

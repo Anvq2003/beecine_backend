@@ -5,20 +5,20 @@
 # @name Getall
 GET {{baseUrl}}
 
-
 ###
 # @name GetbyId
-GET {{baseUrl}}/652a5cfa921f5083708545b7
+GET http://localhost:3000/api/users/65587af07664bae62ef04ca1
 
 ###
 
 # @name Create
-POST {{baseUrl}}/store
+POST {{baseUrl}}/store?userId=65587af07664bae62ef04ca1
 Content-Type: application/json
 
 {
-   "userId": "6525328cbc23bb7dad9e3cc4",
-   "subscriptionId": "652016e6c58e982ae6377690"
+   "subscriptionId": "6558814b7664bae62ef0501f",
+   "paymentMethod": "momo",
+   "usedCoin": 20
 }
 
 ###

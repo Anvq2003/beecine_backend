@@ -4,17 +4,19 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const billSchema = new mongoose.Schema(
   {
+    code: { type: String, required: true, unique: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     subscriptionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' },
     startDate: { type: Date, default: Date.now, required: true },
     endDate: { type: Date, required: true, default: null },
+    usedCoin: { type: Number, default: 0 },
+    total: { type: Number, required: true },
+    paymentMethod: { type: String, default: null },
     status: {
       type: String,
       enum: ['ACTIVE', 'EXPIRED', 'CANCELLED'],
-      default: 'ACTIVE'
+      default: 'ACTIVE',
     },
-    total: { type: Number, required: true },
-    paymentMethod: { type: String, default: null },
   },
   {
     timestamps: true,

@@ -8,12 +8,12 @@ GET {{baseUrl}}
 ###
 
 # @name Update
-PUT {{baseUrl}}/update/65619f2eafdcc44945f1d667
+PUT {{baseUrl}}/update/65587af07664bae62ef04ca1
 Content-Type: application/json
 
 {
   "checkIn": {
-    "points": 0,
+    "points": 100,
     "lastCheckIn": null,
     "checkInStreak": 0,
     "totalCheckIns": 0,
