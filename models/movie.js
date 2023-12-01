@@ -28,11 +28,13 @@ const movieSchema = new mongoose.Schema(
       default: null,
     },
     country: { type: mongoose.Schema.Types.ObjectId, ref: "Country", default: null },
-
     totalFavorites: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
     status: { type: Boolean, default: true },
     languages: { type: [String], default: ["en", "vi"] },
+
+    // series
+    totalEpisodes: { type: Number, default: 1 },
   },
   {
     timestamps: true,
