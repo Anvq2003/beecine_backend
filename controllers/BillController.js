@@ -11,6 +11,18 @@ class BillController extends BaseController {
     super(BillModel);
   }
 
+  async getByUser(req, res) {
+    const { id } = req.params;
+    try {
+      const options = req.paginateOptions;
+      options.populate = [{ path: 'userId' }, { path: 'subscriptionId' }];
+      const data = await BillModel.paginate({ userId: id }, options);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async create(req, res) {
     const { subscriptionId, usedCoin = 0, paymentMethod = 'online' } = req.body;
     const userId = req.user._id;

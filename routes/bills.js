@@ -9,6 +9,7 @@ const { verifyToken } = require('../middlewares/authMiddleware');
 // Routes
 router.get('/', paginationMiddleware, bindController(BillController, 'getQuery'));
 router.get('/admin', paginationMiddleware, bindController(BillController, 'getAdmin'));
+router.get('/user/:id', paginationMiddleware, bindController(BillController, 'getByUser'));
 router.get('/top', bindController(BillController, 'getTop'));
 router.get('/trash', bindController(BillController, 'getTrash'));
 router.get('/:param', bindController(BillController, 'getByParam'));

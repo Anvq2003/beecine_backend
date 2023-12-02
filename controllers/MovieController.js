@@ -15,42 +15,50 @@ class MovieController extends BaseController {
     super(MovieModel);
   }
 
+  getPopulateMain() {
+    return [
+      { path: 'genres', select: 'name slug' },
+      { path: 'cast', select: 'name slug' },
+      { path: 'directors', select: 'name slug' },
+      { path: 'country', select: 'name slug' },
+      { path: 'requiredSubscriptions', select: 'name slug' },
+    ];
+  }
+
   async getByParam(req, res) {
     try {
       const { season = 1, number = 1, isSeries = false } = req.query;
       const param = req.params.param;
 
-      let data;
+      let movie;
       let episodes = [];
       let currentEpisode;
+
+      const populate = this.getPopulateMain();
 
       if (mongoose.Types.ObjectId.isValid(param)) {
         if (isSeries === 'true') {
           episodes = await EpisodeModel.find({
             $and: [{ movieId: param }, { season: season ? season : 1 }],
-          })
-            .populate('movieId')
-            .sort({ number: 1 });
+          }).sort({ number: 1 });
           currentEpisode = episodes.find((episode) => episode.number === Number(number));
-          data = currentEpisode.movieId;
+          movie = await MovieModel.findById(param).populate(populate);
         } else {
-          data = await MovieModel.findById(param);
+          movie = await MovieModel.findById(param).populate(populate);
         }
       } else {
         if (isSeries === 'true') {
-          data = await MovieModel.findOne({ slug: param });
+          movie = await MovieModel.findOne({ slug: param }).populate(populate);
           episodes = await EpisodeModel.find({
-            $and: [{ movieId: data._id }, { season: season ? season : 1 }],
-          })
-            .populate('movieId')
-            .sort({ number: 1 });
+            $and: [{ movieId: movie._id }, { season: season ? season : 1 }],
+          }).sort({ number: 1 });
           currentEpisode = episodes.find((episode) => episode.number === Number(number));
         } else {
-          data = await MovieModel.findOne({ slug: param });
+          movie = await MovieModel.findOne({ slug: param }).populate(populate);
         }
       }
 
-      if (!data) {
+      if (!movie) {
         return res.status(404).json({ message: 'Not found' });
       }
 
@@ -59,10 +67,10 @@ class MovieController extends BaseController {
         return res.status(404).json({ message: 'You must login to watch this movie' });
       }
 
-      const isAllowed = data.isFree || data?.requiredSubscriptions.includes(user?.subscription);
+      const isAllowed = movie.isFree || movie?.requiredSubscriptions.includes(user?.subscription);
 
       res.status(200).json({
-        data,
+        movie,
         isAllowed,
         episodes,
         currentEpisode,
@@ -74,12 +82,7 @@ class MovieController extends BaseController {
 
   async getUpcoming(req, res) {
     try {
-      const populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
-      ];
+      const populate = this.getPopulateMain();
 
       const fromDate = new Date();
       const thirtyDays = 30 * 24 * 60 * 60 * 1000;
@@ -98,12 +101,8 @@ class MovieController extends BaseController {
 
   async getIsSeries(req, res) {
     try {
-      const data = await MovieModel.find({ isSeries: true }).populate([
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
-      ]);
+      const populate = this.getPopulateMain();
+      const data = await MovieModel.find({ isSeries: true }).populate(populate);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -116,17 +115,13 @@ class MovieController extends BaseController {
       const genres = await GenreModel.find({ isHome: true }).sort({ order: -1 });
 
       let data = [];
+      const populate = this.getPopulateMain();
 
       for (const genre of genres) {
         const movies = await MovieModel.find({
           genres: { $in: [genre._id] },
         })
-          .populate([
-            { path: 'genres', select: 'name slug' },
-            { path: 'cast', select: 'name slug' },
-            { path: 'directors', select: 'name slug' },
-            { path: 'country', select: 'name slug' },
-          ])
+          .populate(populate)
           .limit(limit);
 
         data.push({
@@ -144,12 +139,7 @@ class MovieController extends BaseController {
   async getQuery(req, res) {
     try {
       const options = req.paginateOptions;
-      options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
-      ];
+      options.populate = this.getPopulateMain();
       const data = await MovieModel.paginate({}, options);
       res.status(200).json(data);
     } catch (error) {
@@ -171,12 +161,7 @@ class MovieController extends BaseController {
     } = req.query;
 
     const options = req.paginateOptions;
-    options.populate = [
-      { path: 'genres', select: 'name slug' },
-      { path: 'cast', select: 'name slug' },
-      { path: 'directors', select: 'name slug' },
-      { path: 'country', select: 'name slug' },
-    ];
+    options.populate = this.getPopulateMain();
 
     try {
       let query = {};
@@ -222,36 +207,30 @@ class MovieController extends BaseController {
 
   async getRelated(req, res) {
     try {
-      const movieId = req.params.id;
-      if (!mongoose.Types.ObjectId.isValid(movieId)) {
-        return res.status(400).json({ message: 'Invalid movie id' });
-      }
-      const movie = await MovieModel.findById(movieId);
+      const slug = req.params.slug;
+      const populate = this.getPopulateMain();
+
+      const movie = await MovieModel.findOne({ slug }).populate(populate);
       if (!movie) {
         return res.status(404).json({ message: 'Not found' });
       }
 
       const query = {
         $or: [
-          { genres: { $elemMatch: { slug: { $in: movie.genres.map((genre) => genre.slug) } } } },
-          { cast: { $elemMatch: { slug: { $in: movie.cast.map((artist) => artist.slug) } } } },
+          { genres: { $in: movie.genres.map((genre) => genre._id) } },
+          { cast: { $in: movie.cast.map((artist) => artist._id) } },
           {
             directors: {
-              $elemMatch: { slug: { $in: movie.directors.map((artist) => artist.slug) } },
+              $elemMatch: { $in: movie.directors.map((artist) => artist._id) },
             },
           },
           { 'country.slug': movie.country.slug },
         ],
-        _id: { $ne: movieId },
+        _id: { $ne: movie._id },
       };
 
       const options = req.paginateOptions;
-      options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
-      ];
+      options.populate = this.getPopulateMain();
       const data = await MovieModel.paginate(query, options);
       res.status(200).json(data);
     } catch (error) {
@@ -263,12 +242,7 @@ class MovieController extends BaseController {
     try {
       const slug = req.params.slug;
       const options = req.paginateOptions;
-      options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
-      ];
+      options.populate = this.getPopulateMain();
 
       const artist = await ArtistModel.findOne({ slug });
       if (!artist) {
@@ -295,13 +269,7 @@ class MovieController extends BaseController {
     try {
       const slug = req.params.slug;
       const options = req.paginateOptions;
-      options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
-      ];
-
+      options.populate = this.getPopulateMain();
       const country = await CountryModel.findOne({ slug });
       if (!country) {
         return res.status(404).json({ message: 'Not found' });
@@ -322,12 +290,7 @@ class MovieController extends BaseController {
     try {
       const slug = req.params.slug;
       const options = req.paginateOptions;
-      options.populate = [
-        { path: 'genres', select: 'name slug' },
-        { path: 'cast', select: 'name slug' },
-        { path: 'directors', select: 'name slug' },
-        { path: 'country', select: 'name slug' },
-      ];
+      options.populate = this.getPopulateMain();
       const genre = await GenreModel.findOne({ slug });
       if (!genre) {
         return res.status(404).json({ message: 'Not found' });

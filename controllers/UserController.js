@@ -123,6 +123,7 @@ class UserController extends BaseController {
           points = this.getPoints(streakTemp);
         }
         acc.push({
+          date: day,
           label: new Date(day).toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase(),
           checkIn: record ? true : false,
           points: points,
