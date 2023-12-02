@@ -163,6 +163,7 @@ const episodeSchema = Joi.object({
 const movieSchema = Joi.object({
   _id: Joi.string(),
   videoUrl: Joi.optional().default(null),
+  totalEpisodes: Joi.number().default(1),
   genres: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   cast: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   directors: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
