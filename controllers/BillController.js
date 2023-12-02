@@ -52,7 +52,9 @@ class BillController extends BaseController {
         },
         to: user.email,
         subject: 'Hóa đơn thanh toán',
-        text: `Bạn đã thanh toán thành công ${subscription?.name?.vi} với giá ${subscription.price} VNĐ`,
+        text: `Bạn đã thanh toán thành công ${
+          subscription?.name?.vi
+        } với giá ${subscription?.price?.toLocaleString()} VNĐ`,
       };
       await BillModel.create(bill);
       const dataUser = await UserModel.findByIdAndUpdate(userId, {
@@ -60,7 +62,7 @@ class BillController extends BaseController {
         $inc: { 'checkIn.points': -usedCoin },
       });
 
-      // await sendMail(info);
+      await sendMail(info);
       res.status(201).json({ message: 'Create bill successfully', data: bill, user: dataUser });
     } catch (error) {
       res.status(500).json(error.message);

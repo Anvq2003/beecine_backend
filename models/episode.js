@@ -10,7 +10,7 @@ const episodeSchema = new mongoose.Schema(
     imageUrl: { type: imageSchema, required: true },
     videoUrl: { type: String, require: true },
     title: { type: languageSchema, required: true },
-    slug: { type: String, slug: ['title.en', 'season', 'number'], unique: true },
+    slug: { type: String, slug: ['title.vi', 'season', 'number'], unique: true },
     description: { type: languageSchema },
     season: { type: Number, default: 1, min: 1, max: 1000 },
     number: { type: Number, default: 1, min: 1, max: 1000 },

@@ -6,7 +6,7 @@ const { languageSchema, languageArraySchema } = require('./language');
 const countrySchema = new mongoose.Schema(
   {
     name: { type: languageSchema, required: true },
-    slug: { type: String, slug: 'name.en', unique: true },
+    slug: { type: String, slug: 'name.vi', unique: true },
     order: { type: Number, default: 0, min: 0, max: 1000 },
     languages: { type: [String], default: ['en', 'vi'] },
     movieCount: { type: Number, default: 0 },

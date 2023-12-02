@@ -169,6 +169,7 @@ class MovieController extends BaseController {
       isSeries,
       isFree,
     } = req.query;
+
     const options = req.paginateOptions;
     options.populate = [
       { path: 'genres', select: 'name slug' },
@@ -182,9 +183,9 @@ class MovieController extends BaseController {
       if (q) {
         query = {
           $or: [
+            { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
             { 'title.vi': { $regex: q, $options: 'iu' } },
             { 'title.en': { $regex: q, $options: 'iu' } },
-            { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
             { 'tags.vi': { $regex: q, $options: 'iu' } },
             { 'tags.en': { $regex: q, $options: 'iu' } },
           ],

@@ -7,7 +7,7 @@ const { languageSchema, languageArraySchema, imageSchema } = require("./language
 const movieSchema = new mongoose.Schema(
   {
     title: { type: languageSchema, required: true },
-    slug: { type: String, slug: "title.en", unique: true },
+    slug: { type: String, slug: "title.vi", unique: true },
     description: { type: languageSchema },
     imageUrl: { type: imageSchema, required: true },
     videoUrl: { type: String, default: null },

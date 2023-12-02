@@ -9,7 +9,7 @@ const genre = new mongoose.Schema(
     name: { type: languageSchema, required: true },
     description: { type: languageSchema, required: true },
     order: { type: Number, required: true, default: 0, min: 0, max: 1000 },
-    slug: { type: String, slug: 'name.en', unique: true },
+    slug: { type: String, slug: 'name.vi', unique: true },
     isChildren: { type: Boolean, required: true, default: false },
     movieCount: { type: Number, default: 0 },
     isHome: { type: Boolean, required: true, default: false },
