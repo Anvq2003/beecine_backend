@@ -1,7 +1,7 @@
-const multer = require("multer");
-const firebaseAdmin = require("firebase-admin");
-const { v4: uuidv4 } = require("uuid");
-const _ = require("lodash");
+const multer = require('multer');
+const firebaseAdmin = require('firebase-admin');
+const { v4: uuidv4 } = require('uuid');
+const _ = require('lodash');
 
 // Set multer upload image to firebase storage
 const uploadMulter = multer({
@@ -13,8 +13,8 @@ const uploadMulter = multer({
 // Base func
 const uploadFileToBucketAndGetPath = async (bucket, file) => {
   try {
-    const isImage = file.mimetype.startsWith("image/");
-    const folder = isImage ? "images" : "sounds";
+    const isImage = file.mimetype.startsWith('image/');
+    const folder = isImage ? 'images' : 'sounds';
 
     const filePath = `${folder}/${Date.now()}_${file.originalname}`;
     const uploadFile = bucket.file(filePath);
@@ -39,16 +39,16 @@ const deleteFileFromBucket = async (bucket, image) => {
   try {
     if (!image) return;
 
-    const imageParts = image.split("?alt=media&token=");
+    const imageParts = image.split('?alt=media&token=');
     const imagePath = decodeURIComponent(
-      imageParts[0].replace(`https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/`, ""),
+      imageParts[0].replace(`https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/`, ''),
     );
     const file = bucket.file(imagePath);
     const [exists] = await file.exists();
 
     if (exists) {
       await file.delete().catch((error) => {
-        console.error("Error deleting file:", error);
+        console.error('Error deleting file:', error);
       });
     }
   } catch (error) {
@@ -67,7 +67,7 @@ const handleUploadOrUpdateImage = async (req, res, next) => {
     req.body.imageUrl = await uploadFileToBucketAndGetPath(bucket, file);
     next();
   } catch (error) {
-    console.error("Error handling file upload:", error);
+    console.error('Error handling file upload:', error);
     next(error);
   }
 };
@@ -77,17 +77,25 @@ const handleUploadMultipleImages = async (req, res, next) => {
     const files = req?.files;
     if (_.isEmpty(files)) return next();
     const bucket = firebaseAdmin.storage().bucket();
+    const imageVi = files['imageUrl.vi']
+      ? await uploadFileToBucketAndGetPath(bucket, files['imageUrl.vi'][0])
+      : req.body.imageUrl.vi;
+    const imageEn = files['imageUrl.en']
+      ? await uploadFileToBucketAndGetPath(bucket, files['imageUrl.en'][0])
+      : req.body.imageUrl.en;
+
     const imageUrl = {
-      vi: await uploadFileToBucketAndGetPath(bucket, files['imageUrl.vi'][0]),
-      en: await uploadFileToBucketAndGetPath(bucket, files['imageUrl.en'][0]),
-    }
+      vi: imageVi,
+      en: imageEn,
+    };
+    
     req.body.imageUrl = imageUrl;
     next();
   } catch (error) {
-    console.error("Error handling file upload:", error);
+    console.error('Error handling file upload:', error);
     next(error);
   }
-}
+};
 
 const handleDeleteImage = async (req, res, next) => {
   try {
@@ -106,13 +114,15 @@ const handleDeleteMultipleImagesLanguage = async (req, res, next) => {
     if (!req.body.imageUrl) return next();
     const oldImage = req.body.imageUrl;
     const bucket = firebaseAdmin.storage().bucket();
-    const deletePromises = Object.values(oldImage).map((item) => deleteFileFromBucket(bucket, item));
+    const deletePromises = Object.values(oldImage).map((item) =>
+      deleteFileFromBucket(bucket, item),
+    );
     await Promise.all(deletePromises);
     next();
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const handleDeleteMultipleImages = async (req, res, next) => {
   try {
@@ -126,7 +136,6 @@ const handleDeleteMultipleImages = async (req, res, next) => {
     console.log(error);
   }
 };
-
 
 module.exports = {
   uploadMulter,
