@@ -37,7 +37,7 @@ class BaseController {
       
 
       const count = {
-        all: _.filter(allData, (item) => !item.deleted && item.status).length,
+        all: _.filter(allData, (item) => !item.deleted && item.deleted).length,
         active: _.filter(allData, (item) => item.status && !item.deleted).length,
         inactive: _.filter(allData, (item) => !item.status && !item.deleted).length,
         deleted: _.filter(allData, (item) => item.deleted).length,

@@ -35,7 +35,7 @@ const paginationMiddleware = (req, res, next) => {
     });
     options.query = filterObject;
   }
-
+  
   if (populate) {
     const populateArray = populate.split(',');
     options.populate = populateArray.join(' ');

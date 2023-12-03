@@ -15,34 +15,6 @@ class MovieController extends BaseController {
     super(MovieModel);
   }
 
-  async update(req, res) {
-    try {
-      const tags = req.body.tags;
-
-      const keywords = tags.map(async (tag) => {
-        const existKeyword = await KeywordModel.findOne({
-          $or: [{ keyword: tag }, { slug: handleConvertStringToSlug(tag) }],
-        });
-        if (existKeyword) return;
-        return { keyword: tag, slug: handleConvertStringToSlug(tag) };
-      });
-
-      await KeywordModel.insertMany(keywords, { ordered: false });
-
-      const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
-        (path) => path !== '_id' && path !== '__v',
-      );
-      const slug = req.body.title.vi;
-      req.body.slug = handleConvertStringToSlug(slug);
-      const data = await this.model
-        .findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-        .populate(pathsToPopulate);
-      res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error.message);
-    }
-  }
-
   getPopulateMain() {
     return [
       { path: 'genres', select: 'name slug' },
@@ -168,7 +140,7 @@ class MovieController extends BaseController {
     try {
       const options = req.paginateOptions;
       options.populate = this.getPopulateMain();
-      const data = await MovieModel.paginate({}, options);
+      const data = await MovieModel.paginate(options.query || {}, options);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
