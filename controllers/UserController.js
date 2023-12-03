@@ -225,7 +225,7 @@ class UserController extends BaseController {
 
       const watchedList = paginatedWatchedList.map((item) => {
         return _.merge(item.movieId, {
-          minutes: item.minutes,
+          time: item.time,
           createdItemAt: item.watchedAt,
           episodeInfo: item.episodeId,
         });
@@ -330,10 +330,10 @@ class UserController extends BaseController {
   }
 
   async createWatched(req, res) {
-    const { movieId, episodeId = null, userId, minutes = 0 } = req.body;
+    const { movieId, episodeId = null, userId, time = 0 } = req.body;
     try {
-      if (!movieId || !userId ) {
-        return res.status(400).json({ message: 'MovieId, episodeId, userId, minutes is required' });
+      if (!movieId || !userId) {
+        return res.status(400).json({ message: 'MovieId, episodeId, userId, time is required' });
       }
 
       const user = await UserModel.findById(userId);
@@ -345,13 +345,13 @@ class UserController extends BaseController {
       const index = user.watchedList.findIndex((item) => item.movieId == movieId);
       if (index !== -1) {
         user.watchedList[index].episodeId = episodeId;
-        user.watchedList[index].minutes = minutes;
+        user.watchedList[index].time = time;
         user.watchedList[index].watchedAt = Date.now();
       } else {
         user.watchedList.push({
           movieId: movieId,
           episodeId: episodeId,
-          minutes: minutes,
+          time: time,
           watchedAt: Date.now(),
         });
       }
