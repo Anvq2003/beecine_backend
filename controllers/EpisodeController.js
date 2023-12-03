@@ -6,6 +6,22 @@ class EpisodeController extends BaseController {
     super(EpisodeModel);
   }
 
+  async update(req, res) {
+    try {
+      const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
+        (path) => path !== '_id' && path !== '__v',
+      );
+      const slug = req.body.title.vi;
+      req.body.slug = handleConvertStringToSlug(slug);
+      const data = await this.model
+        .findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+        .populate(pathsToPopulate);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async getByMovieId(req, res) {
     try {
       const { id } = req.params;

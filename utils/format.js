@@ -2,7 +2,7 @@ const removeAccents = require('remove-accents');
 
 const handleConvertStringToSlug = (str) => {
   if (typeof str !== 'string') return '';
-  const newString = removeAccents(str.trim().split(' ').join('-'));
+  const newString = removeAccents(str.trim().toLocaleLowerCase().split(' ').join('-'));
   return newString;
 };
 
