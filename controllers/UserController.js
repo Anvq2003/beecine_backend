@@ -330,9 +330,9 @@ class UserController extends BaseController {
   }
 
   async createWatched(req, res) {
-    const { movieId, episodeId = null, userId, minutes } = req.body;
+    const { movieId, episodeId = null, userId, minutes = 0 } = req.body;
     try {
-      if (!movieId || !userId || !minutes) {
+      if (!movieId || !userId ) {
         return res.status(400).json({ message: 'MovieId, episodeId, userId, minutes is required' });
       }
 

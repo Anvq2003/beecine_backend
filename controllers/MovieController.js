@@ -17,6 +17,16 @@ class MovieController extends BaseController {
 
   async update(req, res) {
     try {
+      const tags = req.body.tags;
+      const existKeywords = await KeywordModel.find({ keyword: { $in: tags } });
+      const keywords = tags.map((tag) => {
+        const existKeyword = existKeywords.find((keyword) => keyword.keyword === tag);
+        if (existKeyword) return;
+        return { keyword: tag, slug: handleConvertStringToSlug(tag) };
+      });
+
+      await KeywordModel.insertMany(keywords, { ordered: false });
+
       const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
         (path) => path !== '_id' && path !== '__v',
       );
