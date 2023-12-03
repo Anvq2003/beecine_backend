@@ -18,9 +18,11 @@ class MovieController extends BaseController {
   async update(req, res) {
     try {
       const tags = req.body.tags;
-      const existKeywords = await KeywordModel.find({ keyword: { $in: tags } });
-      const keywords = tags.map((tag) => {
-        const existKeyword = existKeywords.find((keyword) => keyword.keyword === tag);
+
+      const keywords = tags.map(async (tag) => {
+        const existKeyword = await KeywordModel.findOne({
+          $or: [{ keyword: tag }, { slug: handleConvertStringToSlug(tag) }],
+        });
         if (existKeyword) return;
         return { keyword: tag, slug: handleConvertStringToSlug(tag) };
       });
