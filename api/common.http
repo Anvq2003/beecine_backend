@@ -6,7 +6,7 @@
 GET {{baseUrl}}/stats
 ###
 # @name Search
-GET {{baseUrl}}/top-movie
+GET {{baseUrl}}/top-movie?period=week
 ###
 # @name Search
 GET {{baseUrl}}/top-genre?period=year

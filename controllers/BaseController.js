@@ -23,21 +23,16 @@ class BaseController {
       const getKeyAndCount = countFields.map((value) => {
         const [field, fieldValue] = value.split(':');
         const count = allData.filter((item) => {
-          switch (typeof item[field]) {
-            case 'boolean':
-              return item[field] === Boolean(fieldValue) && !item.deleted;
-            case 'string':
-              return item[field].toLowerCase() === fieldValue.toLowerCase() && !item.deleted;
-            default:
-              return item[field] === fieldValue && !item.deleted;
+          if (fieldValue) {
+            return String(item[field]) === String(fieldValue) && !item.deleted;
           }
+          return !item.deleted;
         }).length;
         return { [value]: count };
       });
-      
 
       const count = {
-        all: _.filter(allData, (item) => !item.deleted && item.deleted).length,
+        all: _.filter(allData, (item) => !item.deleted).length,
         active: _.filter(allData, (item) => item.status && !item.deleted).length,
         inactive: _.filter(allData, (item) => !item.status && !item.deleted).length,
         deleted: _.filter(allData, (item) => item.deleted).length,
