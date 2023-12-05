@@ -85,6 +85,7 @@ class UserController extends BaseController {
       }
 
       checkIn.lastCheckIn = today;
+      checkIn.checkInStreak += 1;
       checkIn.totalCheckIns += 1;
       checkIn.points += this.getPoints(checkIn.checkInStreak);
       checkIn?.checkInHistory?.push({
