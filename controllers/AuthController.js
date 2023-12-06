@@ -99,7 +99,7 @@ class AuthController {
         },
         to: user.email,
         subject: 'Mã OTP',
-        text: `Mã OTP của bạn là ${otpCode} và sẽ hết hạn trong 10 phút`,
+        text: `Mã OTP của bạn là ${otpCode} và sẽ hết hạn trong 3 phút`,
       };
       await sendMail(info);
       res.status(200).json({ message: 'Send OTP successfully' });
