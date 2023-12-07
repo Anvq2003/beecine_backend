@@ -117,8 +117,6 @@ class BaseController {
       const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
         (path) => path !== '_id' && path !== '__v',
       );
-      const slug = req.body.title.vi;
-      req.body.slug = handleConvertStringToSlug(slug);
       const data = await this.model
         .findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         .populate(pathsToPopulate);
