@@ -45,17 +45,7 @@ class UserController extends BaseController {
     }
     const today = new Date();
 
-    if (
-      lastCheckIn.getDate() === new Date().getDate() &&
-      lastCheckIn.getMonth() === new Date().getMonth()
-    ) {
-      return true;
-    }
-
-    if (
-      lastCheckIn &&
-      lastCheckIn.toDateString() === new Date(today.setDate(today.getDate() - 1)).toDateString()
-    ) {
+    if (lastCheckIn.toDateString() === today.toDateString()) {
       return true;
     }
 
@@ -84,7 +74,7 @@ class UserController extends BaseController {
         checkIn.checkInStreak = 0;
       }
 
-      checkIn.lastCheckIn = today;
+      checkIn.lastCheckIn = new Date();
       checkIn.checkInStreak += 1;
       checkIn.totalCheckIns += 1;
       checkIn.points += this.getPoints(checkIn.checkInStreak);
@@ -111,7 +101,7 @@ class UserController extends BaseController {
       let streakTemp = checkIn.checkInStreak;
 
       const currentWeek = days.reduce((acc, day) => {
-        const record = checkIn.checkInHistory?.find((r) => r.date.getDate() === day.getDate());
+        const record = checkIn?.checkInHistory?.find((r) => r.date.getDate() === day.getDate());
         let points = 0;
 
         if (record) {

@@ -4,6 +4,7 @@ const { JWT_ACCESS_KEY, JWT_REFRESH_KEY, ACCESS_TOKEN_EXPIRATION, REFRESH_TOKEN_
 const admin = require('firebase-admin');
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
+const BillModel = require('../models/bill');
 const OTPModel = require('../models/otp');
 const RefreshTokenModel = require('../models/refreshToken');
 const { getMillisecondsInDuration } = require('../utils/format');
@@ -229,6 +230,15 @@ class AuthController {
     try {
       const { _id } = req.user;
       const user = await UserModel.findById(_id).populate('subscription');
+      if (user?.subscription) {
+        const expiredDate = user?.subscription?.expiredDate;
+        const now = Date.now();
+        if (expiredDate < now) {
+          await BillModel.updateOne({ _id: user?.subscription._id }, { status: 'EXPIRED' });
+          await UserModel.updateOne({ _id: user?._id }, { subscription: null });
+          user.subscription = null;
+        }
+      }
       if (!user) return res.status(404).json({ message: 'User not found' });
       res.status(200).json(user);
     } catch (error) {
