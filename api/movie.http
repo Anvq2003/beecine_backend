@@ -12,11 +12,11 @@ GET {{baseUrl}}/655e155e6f7cd8ddc08b62e8?isSeries=true
 ###
 
 # @name Related
-GET {{baseUrl}}/related/654e49282f9d04210aec3220
+GET {{baseUrl}}/
 ###
 
 # @name Search
-GET {{baseUrl}}/search?q=come-back-home
+GET {{baseUrl}}/search?sort=-createdAt
 
 ###
 # @name GetbyId

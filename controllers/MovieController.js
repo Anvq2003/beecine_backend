@@ -148,20 +148,16 @@ class MovieController extends BaseController {
   }
 
   async getByKeyword(req, res) {
-    const {
-      q,
-      type = 'less',
-      limit = 6,
-      years,
-      genres,
-      countries,
-      artists,
-      isSeries,
-      isFree,
-    } = req.query;
+    const { q, limit = 6, years, genres, countries, artists, isSeries, isFree } = req.query;
 
     const options = req.paginateOptions;
     options.populate = this.getPopulateMain();
+    options.limit = limit;
+
+    if (!q && !years && !genres && !countries && !artists && !isSeries && !isFree && !options.sort) {
+      options.sort = { views: -1 };
+      options.limit = 10;
+    }
 
     try {
       let query = {};
@@ -171,35 +167,36 @@ class MovieController extends BaseController {
             { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
             { 'title.vi': { $regex: q, $options: 'iu' } },
             { 'title.en': { $regex: q, $options: 'iu' } },
-            { 'tags.vi': { $regex: q, $options: 'iu' } },
-            { 'tags.en': { $regex: q, $options: 'iu' } },
+            { 'tags': { $regex: q, $options: 'iu' } },
           ],
         };
       }
 
-      if (years)
+      if (years) {
         query.releaseDate = { $gte: new Date(`${years}-01-01`), $lte: new Date(`${years}-12-31`) };
-      if (genres) query['genres.slug'] = { $in: genres.split(',') };
-      if (countries) query['country.slug'] = { $in: countries.split(',') };
+      }
+      if (genres) {
+        const genreIds = await GenreModel.find({ slug: { $in: genres.split(',') } }).select('_id');
+        query.genres = { $in: genreIds };
+      }
+      if (countries) {
+        const countryIds = await CountryModel.find({ slug: { $in: countries.split(',') } }).select(
+          '_id',
+        );
+        query['country._id'] = { $in: countryIds };
+      }
       if (artists) {
-        query['cast.slug'] = { $in: artists.split(',') };
-        query['directors.slug'] = { $in: artists.split(',') };
+        const artistIds = await ArtistModel.find({ slug: { $in: artists.split(',') } }).select(
+          '_id',
+        );
+        query['cast._id'] = { $in: artistIds };
+        query['directors._id'] = { $in: artistIds };
       }
       if (isSeries) query.isSeries = isSeries;
       if (isFree) query.isFree = isFree;
 
-      if (type === 'less') {
-        const movies = await MovieModel.find(query);
-        return res.status(200).json({
-          data: movies.slice(0, limit),
-          info: {
-            totalResults: movies.length,
-          },
-        });
-      } else if (type === 'more') {
-        const movies = await MovieModel.paginate(query, options);
-        return res.status(200).json(movies);
-      }
+      const data = await MovieModel.paginate(query, options);
+      res.status(200).json(data);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

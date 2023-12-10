@@ -20,7 +20,6 @@ class KeywordController extends BaseController {
 
   async getByKeyword(req, res) {
     const { q, limit = 6 } = req.query;
-    if (!q) return res.status(400).json({ message: 'q(query) is required' });
 
     try {
       const query = {
@@ -31,6 +30,14 @@ class KeywordController extends BaseController {
       };
 
       const keywords = await KeywordModel.find(query);
+      await KeywordModel.updateMany(
+        {
+          _id: { $in: keywords.map((keyword) => keyword._id) },
+        },
+        {
+          $inc: { frequency: 1000 },
+        },
+      );
       return res.status(200).json(keywords.slice(0, limit));
     } catch (error) {
       res.status(500).json({ error: error.message });
