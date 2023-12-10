@@ -154,7 +154,16 @@ class MovieController extends BaseController {
     options.populate = this.getPopulateMain();
     options.limit = limit;
 
-    if (!q && !years && !genres && !countries && !artists && !isSeries && !isFree && !options.sort) {
+    if (
+      !q &&
+      !years &&
+      !genres &&
+      !countries &&
+      !artists &&
+      !isSeries &&
+      !isFree &&
+      !options.sort
+    ) {
       options.sort = { views: -1 };
       options.limit = 10;
     }
@@ -167,9 +176,19 @@ class MovieController extends BaseController {
             { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
             { 'title.vi': { $regex: q, $options: 'iu' } },
             { 'title.en': { $regex: q, $options: 'iu' } },
-            { 'tags': { $regex: q, $options: 'iu' } },
+            { tags: { $regex: q, $options: 'iu' } },
           ],
         };
+
+        await KeywordModel.updateMany(
+          {
+            $or: [
+              { keyword: { $regex: q, $options: 'iu' } },
+              { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
+            ],
+          },
+          { $inc: { views: 1000 } },
+        );
       }
 
       if (years) {

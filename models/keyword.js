@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var slug = require('mongoose-slug-updater');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const keywordSchema = new mongoose.Schema(
   {
@@ -13,7 +14,9 @@ const keywordSchema = new mongoose.Schema(
   },
 );
 
+// Add plugin
 mongoose.plugin(slug);
+keywordSchema.plugin(mongoosePaginate);
 
 const Keyword = mongoose.model('Keyword', keywordSchema);
 

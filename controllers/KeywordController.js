@@ -9,15 +9,6 @@ class KeywordController extends BaseController {
     super(KeywordModel);
   }
 
-  async getQuery(req, res) {
-    try {
-      const keywords = await KeywordModel.find();
-      return res.status(200).json(keywords);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-
   async getByKeyword(req, res) {
     const { q, limit = 6 } = req.query;
 
