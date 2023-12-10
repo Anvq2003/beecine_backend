@@ -9,6 +9,16 @@ class KeywordController extends BaseController {
     super(KeywordModel);
   }
 
+  async getAdmin(req, res) {
+    try {
+      const options = req.paginateOptions;
+      const data = await this.model.paginate(options.query || {}, options);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async getByKeyword(req, res) {
     const { q, limit = 6 } = req.query;
 
@@ -17,6 +27,7 @@ class KeywordController extends BaseController {
         $or: [
           { keyword: { $regex: q, $options: 'iu' } },
           { slug: { $regex: handleConvertStringToSlug(q), $options: 'iu' } },
+          { relatedKeys: { $regex: q, $options: 'iu' } },
         ],
       };
 
