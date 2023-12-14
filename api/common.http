@@ -9,10 +9,10 @@ GET {{baseUrl}}/stats
 GET {{baseUrl}}/top-movie?period=week
 ###
 # @name Search
-GET {{baseUrl}}/top-genre?period=year
+GET {{baseUrl}}/top-genre?period=week
 ###
 # @name Search
-GET {{baseUrl}}/top-user
+GET {{baseUrl}}/top-user?period=
 ###
 # @name Search
-GET {{baseUrl}}/profit
+GET {{baseUrl}}/profit?period=year  

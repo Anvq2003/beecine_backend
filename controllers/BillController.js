@@ -68,6 +68,8 @@ class BillController extends BaseController {
           subscription?.name?.vi
         } với giá ${subscription?.price?.toLocaleString()} VNĐ`,
       };
+
+      await BillModel.updateMany({ userId }, { endDate: Date.now(), status: 'CANCELLED' });
       await BillModel.create(bill);
       const dataUser = await UserModel.findByIdAndUpdate(userId, {
         subscription: subscriptionId,
