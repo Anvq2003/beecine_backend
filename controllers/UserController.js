@@ -88,8 +88,7 @@ class UserController extends BaseController {
 
   async getStatusCurrentWeek(req, res) {
     try {
-      const user = await UserModel.findById(req.query.userId);
-      // const user = await UserModel.findById(req.user._id);
+      const user = await UserModel.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
