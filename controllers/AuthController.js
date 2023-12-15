@@ -99,8 +99,9 @@ class AuthController {
           address: process.env.EMAIL,
         },
         to: user.email,
-        subject: 'Mã OTP',
-        text: `Mã OTP của bạn là ${otpCode} và sẽ hết hạn trong 3 phút`,
+        subject: 'Mã OTP đổi mật khẩu',
+        text: `Mã OTP của bạn là ${otpCode} và sẽ hết hạn trong 3 phút. Vui lòng không chia sẻ mã này với bất kỳ ai khác.
+        `,
       };
       await sendMail(info);
       res.status(200).json({ message: 'Send OTP successfully' });

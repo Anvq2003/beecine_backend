@@ -57,17 +57,36 @@ class BillController extends BaseController {
         total: subscription.price,
       };
 
+      const html = `
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Thông tin chi tiết</th>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd;">
+                <p>Người dùng: <b>${user?.name}</b></p>
+                <p>Mã hóa đơn: <b>${code}</b></p>
+                <p>Gói dịch vụ: <b>${subscription?.name?.vi}</b></p>
+                <p>Giá: <b>${subscription?.price?.toLocaleString()} VNĐ</b></p>
+                <p>Số coin sử dụng: <b>${usedCoin}</b></p>
+                <p>Tổng tiền: <b>${subscription?.price?.toLocaleString()} VNĐ</b></p>
+                <p>Phương thức thanh toán: <b>${paymentMethod}</b></p>
+                <p>Ngày hết hạn: <b>${new Date(end).toLocaleDateString()}</b></p>
+              </td>
+            </tr>
+          </table>`;
+
       const info = {
         from: {
           name: 'Beecine',
           address: process.env.EMAIL,
         },
         to: user.email,
-        subject: 'Hóa đơn thanh toán',
-        text: `Bạn đã thanh toán thành công ${
-          subscription?.name?.vi
-        } với giá ${subscription?.price?.toLocaleString()} VNĐ`,
+        subject: 'Hóa đơn thanh toán Beecine',
+        text: `Chúc mừng bạn đã đăng ký thành công gói dịch vụ ${subscription?.name?.vi}`,
+        html: html,
       };
+      
 
       await BillModel.updateMany({ userId }, { endDate: Date.now(), status: 'CANCELLED' });
       await BillModel.create(bill);

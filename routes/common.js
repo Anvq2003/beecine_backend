@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const CommonController = require('../controllers/CommonController');
-const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
-const { sendMailMiddleware } = require('../middlewares/mailMiddleware');
 
 // Routes
 router.get('/stats', CommonController.stats);
