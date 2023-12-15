@@ -3,6 +3,7 @@ const UserModel = require('../models/user');
 const MovieModel = require('../models/movie');
 const _ = require('lodash');
 const admin = require('firebase-admin');
+const moment = require('moment');
 
 class UserController extends BaseController {
   constructor() {
@@ -25,31 +26,28 @@ class UserController extends BaseController {
   }
 
   getCurrentWeek() {
+    // lấy tuần hiện tại từ thứ 2 đến chủ nhật
+    const today = new Date();
     const currentWeek = [];
+    const dayOfWeek = today.getDay();
+    const startOfWeek = new Date(today);
+    const endOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - dayOfWeek + 1);
+    endOfWeek.setDate(today.getDate() - dayOfWeek + 7);
 
-    const start = new Date();
-    start.setDate(start.getDate() - start.getDay() + 1);
-
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(start);
-      day.setDate(day.getDate() + i);
-      currentWeek.push(day);
+    for (let i = startOfWeek.getDate(); i <= endOfWeek.getDate(); i++) {
+      currentWeek.push(new Date(startOfWeek.setDate(i)));
     }
 
     return currentWeek;
   }
 
   isCheckedInToday(lastCheckIn) {
-    if (!lastCheckIn) {
-      return false;
-    }
     const today = new Date();
-
-    if (lastCheckIn.toDateString() === today.toDateString()) {
-      return true;
-    }
-
-    return false;
+    return (
+      lastCheckIn &&
+      lastCheckIn.toDateString() === new Date(today.setDate(today.getDate())).toDateString()
+    );
   }
 
   async checkIn(req, res) {
@@ -59,31 +57,30 @@ class UserController extends BaseController {
         return res.status(404).json({ message: 'User not found' });
       }
 
-      const today = new Date();
       const checkIn = user.checkIn;
 
       if (this.isCheckedInToday(checkIn.lastCheckIn)) {
         return res.status(400).json({ message: 'You have already checked in today' });
-      }
-
-      if (
+      } else
+       if (
         checkIn.lastCheckIn &&
-        checkIn.lastCheckIn.toDateString() !==
-          new Date(today.setDate(today.getDate() - 1)).toDateString()
+        checkIn.lastCheckIn.toDateString() ===
+          new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()
       ) {
-        checkIn.checkInStreak = 0;
+        checkIn.checkInStreak += 1;
+      } else {
+        checkIn.checkInStreak = 1;
       }
 
       checkIn.lastCheckIn = new Date();
-      checkIn.checkInStreak += 1;
       checkIn.totalCheckIns += 1;
       checkIn.points += this.getPoints(checkIn.checkInStreak);
       checkIn?.checkInHistory?.push({
-        date: today,
+        date: new Date(),
         points: this.getPoints(checkIn.checkInStreak),
       });
       await user.save();
-      res.status(200).json(user);
+      res.status(200).json(user.checkIn);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -91,16 +88,17 @@ class UserController extends BaseController {
 
   async getStatusCurrentWeek(req, res) {
     try {
-      const user = await UserModel.findById(req.user._id);
+      const user = await UserModel.findById(req.query.userId);
+      // const user = await UserModel.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
 
       const checkIn = user.checkIn;
-      const days = this.getCurrentWeek();
+      const daysOfWeek = this.getCurrentWeek();
       let streakTemp = checkIn.checkInStreak;
 
-      const currentWeek = days.reduce((acc, day) => {
+      const currentWeek = daysOfWeek.reduce((acc, day) => {
         const record = checkIn?.checkInHistory?.find((r) => r.date.getDate() === day.getDate());
         let points = 0;
 
