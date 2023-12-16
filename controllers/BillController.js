@@ -98,7 +98,6 @@ class BillController extends BaseController {
         html: html,
       };
       
-
       await BillModel.updateMany({ userId }, { endDate: Date.now(), status: 'CANCELLED' });
       await BillModel.create(bill);
       const dataUser = await UserModel.findByIdAndUpdate(userId, {
