@@ -202,14 +202,16 @@ class MovieController extends BaseController {
         const countryIds = await CountryModel.find({ slug: { $in: countries.split(',') } }).select(
           '_id',
         );
-        query['country._id'] = { $in: countryIds };
+        query.country = { $in: countryIds };
       }
       if (artists) {
         const artistIds = await ArtistModel.find({ slug: { $in: artists.split(',') } }).select(
           '_id',
         );
-        query['cast._id'] = { $in: artistIds };
-        query['directors._id'] = { $in: artistIds };
+        query.$or = [
+          { cast: { $in: artistIds } },
+          { directors: { $elemMatch: { $in: artistIds } } },
+        ];
       }
       if (isSeries) query.isSeries = isSeries;
       if (isFree) query.isFree = isFree;
