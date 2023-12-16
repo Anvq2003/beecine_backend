@@ -3,17 +3,17 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}
+GET {{baseUrl}}/check-email-otp/voquocan99@gmail.com
 
 ###
 
 # @name Update
-PUT {{baseUrl}}/update/65619f2eafdcc44945f1d667
+PUT {{baseUrl}}/update/6560bb06d32c6d0cfe49c6f6
 Content-Type: application/json
 
 {
   "checkIn": {
-    "points": 0,
+    "points": 200,
     "lastCheckIn": null,
     "checkInStreak": 0,
     "totalCheckIns": 0,

@@ -20,6 +20,7 @@ router.get('/admin', paginationMiddleware, bindController(UserController, 'getAd
 router.get('/all', bindController(UserController, 'getAll'));
 router.get('/trash', bindController(UserController, 'getTrash'));
 router.get('/check-email/:email', bindController(UserController, 'checkEmail'));
+router.get('/check-email-otp/:email', bindController(UserController, 'checkEmailOtp'));
 router.get('/check-in',verifyToken, bindController(UserController, 'checkIn'));
 router.get('/current-week',verifyToken, bindController(UserController, 'getStatusCurrentWeek'));
 router.get('/:param', bindController(UserController, 'getByParam'));

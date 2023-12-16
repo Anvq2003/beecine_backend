@@ -24,7 +24,7 @@ class BillController extends BaseController {
   }
 
   async create(req, res) {
-    const { subscriptionId, usedCoin = 0, paymentMethod = 'online' } = req.body;
+    const { subscriptionId, usedCoin = 0, paymentMethod = 'MOMO' } = req.body;
     const userId = req.user._id;
     try {
       const subscription = await SubscriptionModel.findById(subscriptionId);
@@ -42,7 +42,12 @@ class BillController extends BaseController {
       }
 
       const oneDay = 24 * 60 * 60 * 1000;
+      
       subscription.duration = parseInt(subscription.duration);
+      // 1 coin = 50 VNĐ
+      const coinToMoney = usedCoin * 50;
+      const subTotal = subscription.price
+      const total = subscription.price - coinToMoney;
       const end = Date.now() + subscription.duration * oneDay;
       const code = 'BEECINE' + generateOTP();
 
@@ -54,27 +59,34 @@ class BillController extends BaseController {
         paymentMethod,
         endDate: end,
         startDate: Date.now(),
-        total: subscription.price,
+        subTotal,
+        coinToMoney,
+        total,
       };
 
       const html = `
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Thông tin chi tiết</th>
-            </tr>
-            <tr>
-              <td style="padding: 8px; border: 1px solid #ddd;">
-                <p>Người dùng: <b>${user?.name}</b></p>
-                <p>Mã hóa đơn: <b>${code}</b></p>
-                <p>Gói dịch vụ: <b>${subscription?.name?.vi}</b></p>
-                <p>Giá: <b>${subscription?.price?.toLocaleString()} VNĐ</b></p>
-                <p>Số coin sử dụng: <b>${usedCoin}</b></p>
-                <p>Tổng tiền: <b>${subscription?.price?.toLocaleString()} VNĐ</b></p>
-                <p>Phương thức thanh toán: <b>${paymentMethod}</b></p>
-                <p>Ngày hết hạn: <b>${new Date(end).toLocaleDateString()}</b></p>
-              </td>
-            </tr>
-          </table>`;
+         <div>
+            <h2>Cảm ơn bạn đã sử dụng dịch vụ của Beecine</h2>
+            <p>Chúng tôi đã nhận được yêu cầu thanh toán của bạn</p>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Thông tin chi tiết</th>
+              </tr>
+              <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;">
+                  <p>Mã hóa đơn: <b>${code}</b></p>
+                  <p>Gói dịch vụ: <b>${subscription?.name?.vi}</b></p>
+                  <p>Giá: <b>${subscription?.price?.toLocaleString()} VNĐ</b></p>
+                  <p>Số coin sử dụng: <b>${usedCoin}</b></p>
+                  <p>Giá trị coin: <b>${coinToMoney?.toLocaleString()} VNĐ</b></p>
+                  <p>Tổng tiền: <b>${total?.toLocaleString()} VNĐ</b></p>
+                  <p>Phương thức thanh toán: <b>${paymentMethod}</b></p>
+                  <p>Ngày hết hạn: <b>${new Date(end).toLocaleDateString()}</b></p>
+                </td>
+              </tr>
+            </table>
+         </div>
+          `;
 
       const info = {
         from: {
@@ -83,7 +95,6 @@ class BillController extends BaseController {
         },
         to: user.email,
         subject: 'Hóa đơn thanh toán Beecine',
-        text: `Chúc mừng bạn đã đăng ký thành công gói dịch vụ ${subscription?.name?.vi}`,
         html: html,
       };
       

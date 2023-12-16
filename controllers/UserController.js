@@ -434,6 +434,16 @@ class UserController extends BaseController {
     }
   }
 
+  async checkEmailOtp(req, res) {
+    try {
+      const email = req.params.email;
+      const user = await UserModel.findOne({ email: email });
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async createAdmin(req, res) {
     try {
       const { email, password, name } = req.body;

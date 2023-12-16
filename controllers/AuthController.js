@@ -77,6 +77,34 @@ class AuthController {
     }
   }
 
+  async signInWithGoogle(req, res) {
+    try {
+      const { token } = req.body;
+      const decodedToken = await this.verifyTokenFirebase(token);
+      if (!decodedToken) return res.status(404).json({ message: 'User not found' });
+
+      let user = await UserModel.findOne({ email: decodedToken.email });
+      if (!user) {
+        const dataFirebase = {
+          ...decodedToken,
+          imageUrl: decodedToken.picture,
+        };
+        user = await this.createUser({ ...dataFirebase, allowChangePassword: false });
+      }
+
+      const { accessToken, refreshToken } = this.createTokens(user);
+      const exitsRefreshToken = await RefreshTokenModel.findOne({ userId: user._id });
+      if (exitsRefreshToken) {
+        await RefreshTokenModel.deleteOne({ userId: user._id });
+      }
+      this.createNewRefreshToken(refreshToken, user._id);
+
+      res.status(200).json({ token: { accessToken, refreshToken } });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   async sendOtpToEmail(req, res) {
     try {
       const { email } = req.body;
@@ -168,33 +196,7 @@ class AuthController {
 
   async forgotPassword(req, res) {}
 
-  async signInWithGoogle(req, res) {
-    try {
-      const { token } = req.body;
-      const decodedToken = await this.verifyTokenFirebase(token);
-      if (!decodedToken) return res.status(404).json({ message: 'User not found' });
-
-      let user = await UserModel.findOne({ email: decodedToken.email });
-      if (!user) {
-        const dataFirebase = {
-          ...decodedToken,
-          imageUrl: decodedToken.picture,
-        };
-        user = await this.createUser({ ...dataFirebase, allowChangePassword: false });
-      }
-
-      const { accessToken, refreshToken } = this.createTokens(user);
-      const exitsRefreshToken = await RefreshTokenModel.findOne({ userId: user._id });
-      if (exitsRefreshToken) {
-        await RefreshTokenModel.deleteOne({ userId: user._id });
-      }
-      this.createNewRefreshToken(refreshToken, user._id);
-
-      res.status(200).json({ token: { accessToken, refreshToken } });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
+  
 
   async refreshToken(req, res) {
     try {
@@ -258,6 +260,8 @@ class AuthController {
         email: '',
         name: '',
         imageUrl: null,
+        role: 'USER',
+        allowChangePassword: true,
       },
       payload,
     );

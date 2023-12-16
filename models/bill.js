@@ -10,6 +10,8 @@ const billSchema = new mongoose.Schema(
     startDate: { type: Date, default: Date.now, required: true },
     endDate: { type: Date, required: true, default: null },
     usedCoin: { type: Number, default: 0 },
+    coinToMoney: { type: Number, default: 0 },
+    subTotal: { type: Number, default: 0 },
     total: { type: Number, required: true },
     paymentMethod: { type: String, default: null },
     status: {
