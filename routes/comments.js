@@ -7,6 +7,7 @@ const { paginationMiddleware } = require('../middlewares/paginationMiddleware');
 
 // Routes
 router.get('/', paginationMiddleware, bindController(CommentController, 'getQuery'));
+router.get('/admin/:id', paginationMiddleware, bindController(CommentController, 'getAdmin'));
 router.get(
   '/group-by-movie',
   paginationMiddleware,
@@ -23,9 +24,12 @@ router.post('/store-reply', validateReplyData, bindController(CommentController,
 router.patch('/update/:id', bindController(CommentController, 'update'));
 router.patch('/update-reply', bindController(CommentController, 'updateReply'));
 router.patch('/change-status/:id', bindController(CommentController, 'changeStatus'));
-router.delete('/delete/:id', bindController(CommentController, 'forceDelete'));
+router.patch('/change-status-reply/:commentId/:replyId', bindController(CommentController, 'changeStatusReply'));
+router.delete('/delete/:id', bindController(CommentController, 'delete'));
 router.delete('/delete-reply', bindController(CommentController, 'deleteReply'));
-router.delete('/delete-many', bindController(CommentController, 'forceDeleteMany'));
+router.delete('/delete-many', bindController(CommentController, 'deleteMany'));
+router.patch('/restore/:id', bindController(CommentController, 'restore'));
 router.patch('/restore-many', bindController(CommentController, 'restoreMany'));
-
+router.delete('/force/:id', bindController(CommentController, 'forceDelete'));
+router.delete('/force-many', bindController(CommentController, 'forceDeleteMany'));
 module.exports = router;
