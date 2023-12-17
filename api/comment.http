@@ -8,11 +8,11 @@ GET {{baseUrl}}
 ###
 
 # @name Getall
-GET {{baseUrl}}/group-by-movie
+GET {{baseUrl}}/group-by-movie?
 
 ###
 # @name Getall by id
-GET {{baseUrl}}/movie/655888fd7664bae62ef05bca
+GET {{baseUrl}}/movie/655888fd7664bae62ef05bca?populate=movieId
 
 
 ###

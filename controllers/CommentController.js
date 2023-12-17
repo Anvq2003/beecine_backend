@@ -1,8 +1,8 @@
 const CommentModel = require('../models/comment');
 const UserModel = require('../models/user');
 const BaseController = require('./BaseController');
+const paginationHelper = require('../helpers/Pagination');
 
-const _ = require('lodash');
 
 class CommentController extends BaseController {
   constructor() {
@@ -14,11 +14,18 @@ class CommentController extends BaseController {
     try {
       const comments = await CommentModel.aggregate([
         {
+          $match: {
+            status: true,
+          },
+        },
+        {
           $group: {
             _id: '$movieId',
+            createdAt: { $first: '$createdAt' },
             totalComments: { $sum: 1 },
             totalLikes: { $sum: { $size: '$likes' } },
             totalDislikes: { $sum: { $size: '$dislikes' } },
+            totalReplies: { $sum: { $size: '$replies' } },
           },
         },
         {
@@ -42,25 +49,27 @@ class CommentController extends BaseController {
               isSeries: 1,
               isFree: 1,
             },
+            createdAt: 1,
             totalComments: '$totalComments',
             totalLikes: '$totalLikes',
             totalDislikes: '$totalDislikes',
+            totalReplies: '$totalReplies',
           },
         },
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        }
       ]);
 
-      const skip = (options.page - 1) * options.limit;
-      const data = {
-        data: comments.slice( skip, skip + options.limit),
-        info: {
-          totalResults: comments.length,
-          limit: options.limit,
-          page: options.page,
-          totalPages: Math.ceil(comments.length / options.limit),
-        },
-      };
+      const newData = paginationHelper({
+        page: options.page,
+        limit: options.limit,
+        data: comments,
+      });
 
-      res.status(200).json(data);
+      res.status(200).json(newData);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -68,7 +77,7 @@ class CommentController extends BaseController {
 
   async getByMovieId(req, res) {
     const { id } = req.params;
-    const { replyId, limitReply = 6 } = req.query;
+    const { replyId, limitReply = 10 } = req.query;
 
     if (!id) return res.status(400).json({ message: 'Movie id is required' });
 
@@ -78,10 +87,12 @@ class CommentController extends BaseController {
         { path: 'userId', select: 'name imageUrl role' },
         { path: 'replies.userId', select: 'name imageUrl role' },
       ];
+
       if (!options.sort)
         options.sort = {
           createdAt: -1,
         };
+
       const data = await CommentModel.paginate({ movieId: id }, options);
 
       // Sort replies
