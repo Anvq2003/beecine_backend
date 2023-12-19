@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/check-email-otp/voquocan99@gmail.com
+GET {{baseUrl}}/
 
 ###
 
@@ -49,13 +49,13 @@ Content-Type: application/json
 }
 ###
 # @name GetFavorite
-GET {{baseUrl}}/favorite-movies/6536044c0931fef24e8cc601
+GET {{baseUrl}}/favorite-movies/655889f57664bae62ef05f78
 ###
 # @name GetWatched
-GET {{baseUrl}}/watched-list/6536044c0931fef24e8cc601
+GET {{baseUrl}}/watched-list/655889f57664bae62ef05f78
 ###
 # @name GetWatchLater
-GET {{baseUrl}}/watch-later-list/6536044c0931fef24e8cc601
+GET {{baseUrl}}/watch-later-list/655889f57664bae62ef05f78
 ###
 
 # @name Create favorite

@@ -3,7 +3,8 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}
+GET {{baseUrl}}/recommend
+
 
 ###
 # @name GetHomepage
@@ -12,7 +13,7 @@ GET {{baseUrl}}/655e155e6f7cd8ddc08b62e8?isSeries=true
 ###
 
 # @name Related
-GET {{baseUrl}}/
+GET {{baseUrl}}/related/dang-cap-thuong-luu
 ###
 
 # @name Search

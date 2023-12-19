@@ -245,6 +245,7 @@ class MovieController extends BaseController {
           { 'country.slug': movie.country.slug },
         ],
         _id: { $ne: movie._id },
+        isSeries: movie.isSeries,
       };
 
       const options = req.paginateOptions;
@@ -253,6 +254,40 @@ class MovieController extends BaseController {
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  }
+
+  async getRecommend(req, res) {
+    try {
+      const populate = this.getPopulateMain();
+      const user = await UserModel.findById(req.user._id)
+      if (!user) return res.status(404).json({ message: 'Not found' });
+      const favoriteMovies = user.favoriteMovies.map((movie) => movie.movieId);
+      const watchedList = user.watchedList.map((movie) => movie.movieId);
+      const watchLaterList = user.watchLaterList.map((movie) => movie.movieId);
+      const movies = await MovieModel.find({_id: { $in: [...favoriteMovies, ...watchedList, ...watchLaterList] }}).populate(populate);
+      const genres = _.uniqBy(_.flatten(movies.map((movie) => movie.genres)), '_id');
+      const cast = _.uniqBy(_.flatten(movies.map((movie) => movie.cast)), '_id');
+      const directors = _.uniqBy(_.flatten(movies.map((movie) => movie.directors)), '_id');
+      const countries = _.uniqBy(_.flatten(movies.map((movie) => movie.country)), '_id');
+
+      const query = {
+        $or: [
+          { genres: { $in: genres.map((genre) => genre._id) } },
+          { cast: { $in: cast.map((artist) => artist._id) } },
+          { directors: { $elemMatch: { $in: directors.map((artist) => artist._id) } }},
+          { country: { $in: countries.map((country) => country._id) } },
+        ],
+        _id: { $nin: [...favoriteMovies, ...watchedList, ...watchLaterList] },
+        isSeries: user.isSeries,
+      };
+
+      const options = req.paginateOptions;
+      options.populate = this.getPopulateMain();
+      const data = await MovieModel.paginate(query, options);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
     }
   }
 

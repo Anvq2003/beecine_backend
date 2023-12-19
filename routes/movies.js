@@ -27,6 +27,7 @@ router.get('/admin', paginationMiddleware, bindController(MovieController, 'getA
 router.get('/homepage', bindController(MovieController, 'getHomePage'));
 router.get('/trash', bindController(MovieController, 'getTrash'));
 router.get('/search', paginationMiddleware, bindController(MovieController, 'getByKeyword'));
+router.get('/recommend', verifyToken, paginationMiddleware, bindController(MovieController, 'getRecommend'));
 router.get('/related/:slug', paginationMiddleware, bindController(MovieController, 'getRelated'));
 router.get(
   '/artist/:slug',

@@ -12,6 +12,7 @@ const Banner = new mongoose.Schema(
     link: { type: String, required: true },
     order: { type: Number, default: 0, min: 0, max: 1000 },
     status: { type: Boolean, default: true },
+    languages: { type: [String], default: ['en', 'vi'] },
   },
   {
     timestamps: true,
