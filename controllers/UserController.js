@@ -396,23 +396,17 @@ class UserController extends BaseController {
 
       switch (type) {
         case 'FAVORITE':
-          user.favoriteMovies = user.favoriteMovies.filter(
-            (item) => !ids.includes(item.movieId.toString()),
-          );
+          user.favoriteMovies = user.favoriteMovies.filter((item) => !ids.includes(item.movieId));
           user.save();
           res.status(200).json(user.favoriteMovies);
           break;
         case 'WATCHED':
-          user.watchedList = user.watchedList.filter(
-            (item) => !ids.includes(item.movieId.toString()),
-          );
+          user.watchedList = user.watchedList.filter((item) => !ids.includes(item.movieId));
           user.save();
           res.status(200).json(user.watchedList);
           break;
         case 'WATCH_LATER':
-          user.watchLaterList = user.watchLaterList.filter(
-            (item) => !ids.includes(item.movieId.toString()),
-          );
+          user.watchLaterList = user.watchLaterList.filter((item) => !ids.includes(item.movieId));
           user.save();
           res.status(200).json(user.watchLaterList);
           break;
