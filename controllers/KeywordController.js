@@ -9,6 +9,16 @@ class KeywordController extends BaseController {
     super(KeywordModel);
   }
 
+  async getQuery(req, res) {
+    try {
+      const options = req.paginateOptions;
+      const data = await this.model.paginate(options.query || {}, options);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async getAdmin(req, res) {
     try {
       const options = req.paginateOptions;
