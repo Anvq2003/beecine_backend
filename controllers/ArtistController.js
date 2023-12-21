@@ -24,7 +24,7 @@ class ArtistController extends BaseController {
       };
 
       if (type === 'less') {
-        const movies = await ArtistModel.find(query);
+        const movies = await ArtistModel.find({ ...query, status: true })
         return res.status(200).json({
           data: movies.slice(0, limit),
           info: {
@@ -32,7 +32,7 @@ class ArtistController extends BaseController {
           },
         });
       } else if (type === 'more') {
-        const movies = await ArtistModel.paginate(query, options);
+        const movies = await ArtistModel.paginate({ ...query, status: true }, options);
         return res.status(200).json(movies);
       }
     } catch (error) {

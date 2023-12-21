@@ -40,22 +40,22 @@ class MovieController extends BaseController {
       if (mongoose.Types.ObjectId.isValid(param)) {
         if (isSeries === 'true') {
           episodes = await EpisodeModel.find({
-            $and: [{ movieId: param }, { season: season ? season : 1 }],
+            $and: [{ movieId: param }, { season: season ? season : 1 }, { status: true }],
           }).sort({ number: 1 });
           currentEpisode = episodes.find((episode) => episode.number === Number(number));
-          movie = await MovieModel.findById(param).populate(populate);
+          movie = await MovieModel.findOne({ _id: param, status: true }).populate(populate);
         } else {
-          movie = await MovieModel.findById(param).populate(populate);
+          movie = await MovieModel.findOne({ _id: param, status: true }).populate(populate);
         }
       } else {
         if (isSeries === 'true') {
-          movie = await MovieModel.findOne({ slug: param }).populate(populate);
+          movie = await MovieModel.findOne({ slug: param, status: true }).populate(populate);
           episodes = await EpisodeModel.find({
-            $and: [{ movieId: movie._id }, { season: season ? season : 1 }],
+            $and: [{ movieId: movie._id }, { season: season ? season : 1 }, { status: true }],
           }).sort({ number: 1 });
           currentEpisode = episodes.find((episode) => episode.number === Number(number));
         } else {
-          movie = await MovieModel.findOne({ slug: param }).populate(populate);
+          movie = await MovieModel.findOne({ slug: param, status: true }).populate(populate);
         }
       }
 
@@ -69,7 +69,9 @@ class MovieController extends BaseController {
       }
 
       const isAllowed = movie.isFree || movie?.requiredSubscriptions.includes(user?.subscription);
-      const subscriptionsCanWatch = await SubscriptionModel.find({ _id: { $in: movie.requiredSubscriptions } });
+      const subscriptionsCanWatch = await SubscriptionModel.find({
+        _id: { $in: movie.requiredSubscriptions },
+      });
 
       res.status(200).json({
         movie,
@@ -105,7 +107,7 @@ class MovieController extends BaseController {
   async getIsSeries(req, res) {
     try {
       const populate = this.getPopulateMain();
-      const data = await MovieModel.find({ isSeries: true }).populate(populate);
+      const data = await MovieModel.find({ isSeries: true , status: true}).populate(populate);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -143,7 +145,7 @@ class MovieController extends BaseController {
     try {
       const options = req.paginateOptions;
       options.populate = this.getPopulateMain();
-      const data = await MovieModel.paginate(options.query || {}, options);
+      const data = await MovieModel.paginate({ ...options.query, status: true }, options);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -156,6 +158,7 @@ class MovieController extends BaseController {
     const options = req.paginateOptions;
     options.populate = this.getPopulateMain();
     options.limit = limit;
+    options.query = { status: true };
 
     if (
       !q &&
@@ -231,7 +234,7 @@ class MovieController extends BaseController {
       const slug = req.params.slug;
       const populate = this.getPopulateMain();
 
-      const movie = await MovieModel.findOne({ slug }).populate(populate);
+      const movie = await MovieModel.findOne({ slug , status: true}).populate(populate);
       if (!movie) {
         return res.status(404).json({ message: 'Not found' });
       }
@@ -263,12 +266,17 @@ class MovieController extends BaseController {
   async getRecommend(req, res) {
     try {
       const populate = this.getPopulateMain();
-      const user = await UserModel.findById(req.user._id)
+      const user = await UserModel.findById(req.user._id);
       if (!user) return res.status(404).json({ message: 'Not found' });
-      const favoriteMovies = user.favoriteMovies.map((movie) => movie.movieId);
-      const watchedList = user.watchedList.map((movie) => movie.movieId);
-      const watchLaterList = user.watchLaterList.map((movie) => movie.movieId);
-      const movies = await MovieModel.find({_id: { $in: [...favoriteMovies, ...watchedList, ...watchLaterList] }}).populate(populate);
+      
+      const favoriteMovies = user.favoriteMovies.map((movie) => movie?.movieId);
+      const watchedList = user.watchedList.map((movie) => movie?.movieId);
+      const watchLaterList = user.watchLaterList.map((movie) => movie?.movieId);
+
+      const movies = await MovieModel.find({
+        _id: { $in: [...favoriteMovies, ...watchedList, ...watchLaterList] },
+      }).populate(populate);
+
       const genres = _.uniqBy(_.flatten(movies.map((movie) => movie.genres)), '_id');
       const cast = _.uniqBy(_.flatten(movies.map((movie) => movie.cast)), '_id');
       const directors = _.uniqBy(_.flatten(movies.map((movie) => movie.directors)), '_id');
@@ -278,7 +286,7 @@ class MovieController extends BaseController {
         $or: [
           { genres: { $in: genres.map((genre) => genre._id) } },
           { cast: { $in: cast.map((artist) => artist._id) } },
-          { directors: { $elemMatch: { $in: directors.map((artist) => artist._id) } }},
+          { directors: { $in : directors.map((artist) => artist._id) } },
           { country: { $in: countries.map((country) => country._id) } },
         ],
         _id: { $nin: [...favoriteMovies, ...watchedList, ...watchLaterList] },

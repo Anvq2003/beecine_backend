@@ -11,8 +11,6 @@ class EpisodeController extends BaseController {
       const pathsToPopulate = Object.keys(this.model.schema.paths).filter(
         (path) => path !== '_id' && path !== '__v',
       );
-      const slug = req.body.title.vi;
-      req.body.slug = handleConvertStringToSlug(slug);
       const data = await this.model
         .findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         .populate(pathsToPopulate);
@@ -28,7 +26,7 @@ class EpisodeController extends BaseController {
       const { season = 1 } = req.query;
       if (!id) return res.status(400).json('Movie id is required');
 
-      const episode = await EpisodeModel.find({ movieId: id, season });
+      const episode = await EpisodeModel.find({ movieId: id, season, status: true });
       if (!episode) return res.status(404).json('Episode not found');
       res.status(200).json(episode);
     } catch (error) {

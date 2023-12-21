@@ -8,14 +8,14 @@ GET {{baseUrl}}/recommend
 
 ###
 # @name GetHomepage
-GET {{baseUrl}}/655e155e6f7cd8ddc08b62e8?isSeries=true&userId=65587ebc7664bae62ef04e71
+GET {{baseUrl}}/bay-ngot-ngao
 
 ###
 
 # @name Related
 GET {{baseUrl}}/related/dang-cap-thuong-luu
 ###
-
+ 
 # @name Search
 GET {{baseUrl}}/search?sort=-createdAt
 

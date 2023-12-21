@@ -60,7 +60,7 @@ class BaseController {
 
   async getAll(req, res) {
     try {
-      const data = await this.model.find();
+      const data = await this.model.find({ status: true });
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -70,7 +70,7 @@ class BaseController {
   async getQuery(req, res) {
     try {
       const options = req.paginateOptions;
-      const data = await this.model.paginate({}, options);
+      const data = await this.model.paginate({status: true, ...options.query}, options);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -83,9 +83,9 @@ class BaseController {
       let data;
 
       if (mongoose.Types.ObjectId.isValid(param)) {
-        data = await this.model.findById(param);
+        data = await this.model.findOne({ _id: param , status: true});
       } else {
-        data = await this.model.findOne({ slug: param });
+        data = await this.model.findOne({ slug: param , status: true});
       }
 
       if (!data) {
