@@ -19,8 +19,8 @@ class MovieController extends BaseController {
   getPopulateMain() {
     return [
       { path: 'genres', select: 'name slug' },
-      { path: 'cast', select: 'name slug' },
-      { path: 'directors', select: 'name slug' },
+      { path: 'cast', select: 'name slug imageUrl' },
+      { path: 'directors', select: 'name slug imageUrl' },
       { path: 'country', select: 'name slug' },
       { path: 'requiredSubscriptions', select: 'name slug' },
     ];
@@ -37,48 +37,54 @@ class MovieController extends BaseController {
 
       const populate = this.getPopulateMain();
 
-      if (mongoose.Types.ObjectId.isValid(param)) {
-        if (isSeries === 'true') {
-          episodes = await EpisodeModel.find({
-            $and: [{ movieId: param }, { season: season ? season : 1 }, { status: true }],
-          }).sort({ number: 1 });
-          currentEpisode = episodes.find((episode) => episode.number === Number(number));
-          movie = await MovieModel.findOne({ _id: param, status: true }).populate(populate);
-        } else {
-          movie = await MovieModel.findOne({ _id: param, status: true }).populate(populate);
-        }
-      } else {
-        if (isSeries === 'true') {
-          movie = await MovieModel.findOne({ slug: param, status: true }).populate(populate);
-          episodes = await EpisodeModel.find({
-            $and: [{ movieId: movie._id }, { season: season ? season : 1 }, { status: true }],
-          }).sort({ number: 1 });
-          currentEpisode = episodes.find((episode) => episode.number === Number(number));
-        } else {
-          movie = await MovieModel.findOne({ slug: param, status: true }).populate(populate);
-        }
-      }
+      // if (mongoose.Types.ObjectId.isValid(param)) {
+      //   movie = await MovieModel.findById(param).populate(populate);
+      //   const isSeries = movie?.isSeries || false;
+      //   if (isSeries) {
+      //     episodes = await EpisodeModel.find({ movieId: param }).sort({ number: 1 });
+      //     currentEpisode = episodes.find((episode) => episode.number === Number(number));
+      //   }
+      // } else {
+      // }
+      movie = await MovieModel.findOne({ slug: param }).populate(populate);
+      console.debug("🚀 ~ movie:", movie._id);
+      // const isSeries = movie?.isSeries || false;
+      // if (isSeries) {
+        // episodes = await EpisodeModel.find({ movieId: movie._id.toString() }).sort({ number: 1 });
+        // currentEpisode = episodes.find((episode) => episode.number === Number(number));
+      // }
+      return res.status(200).json(movie);
+
+      return res.status(200).json(episodes);
 
       if (!movie) {
         return res.status(404).json({ message: 'Not found' });
       }
 
-      const user = await UserModel.findById(req.user._id);
-      if (!user) {
-        return res.status(404).json({ message: 'You must login to watch this movie' });
-      }
+      // const user = await UserModel.findById(req.user._id);
+      // if (!user) {
+      //   return res.status(404).json({ message: 'You must login to watch this movie' });
+      // }
 
-      const isAllowed = movie.isFree || movie?.requiredSubscriptions.includes(user?.subscription);
-      const subscriptionsCanWatch = await SubscriptionModel.find({
-        _id: { $in: movie.requiredSubscriptions },
-      });
+      // const subscriptions = await SubscriptionModel.find({ status: true });
+      // const currentSubscription = subscriptions.find((subscription) =>
+      //   subscription._id.equals(user.subscription),
+      // );
+      // const isAllowed =
+      //   movie.isFree ||
+      //   currentSubscription.isFeatured ||
+      //   movie?.requiredSubscriptions.includes(user?.subscription);
+      // const subscriptionsCanWatch = subscriptions.filter(
+      //   (subscription) =>
+      //     subscription.isFeatured || movie?.requiredSubscriptions.includes(subscription._id),
+      // );
 
       res.status(200).json({
         movie,
-        isAllowed,
         episodes,
         currentEpisode,
-        subscriptionsCanWatch,
+        // isAllowed,
+        // subscriptionsCanWatch,
       });
     } catch (error) {
       res.status(500).json(error.message);
@@ -107,7 +113,7 @@ class MovieController extends BaseController {
   async getIsSeries(req, res) {
     try {
       const populate = this.getPopulateMain();
-      const data = await MovieModel.find({ isSeries: true , status: true}).populate(populate);
+      const data = await MovieModel.find({ isSeries: true, status: true }).populate(populate);
       res.status(200).json(data);
     } catch (error) {
       res.status(500).json(error.message);
@@ -234,7 +240,7 @@ class MovieController extends BaseController {
       const slug = req.params.slug;
       const populate = this.getPopulateMain();
 
-      const movie = await MovieModel.findOne({ slug , status: true}).populate(populate);
+      const movie = await MovieModel.findOne({ slug, status: true }).populate(populate);
       if (!movie) {
         return res.status(404).json({ message: 'Not found' });
       }
@@ -268,7 +274,7 @@ class MovieController extends BaseController {
       const populate = this.getPopulateMain();
       const user = await UserModel.findById(req.user._id);
       if (!user) return res.status(404).json({ message: 'Not found' });
-      
+
       const favoriteMovies = user.favoriteMovies.map((movie) => movie?.movieId);
       const watchedList = user.watchedList.map((movie) => movie?.movieId);
       const watchLaterList = user.watchLaterList.map((movie) => movie?.movieId);
@@ -286,7 +292,7 @@ class MovieController extends BaseController {
         $or: [
           { genres: { $in: genres.map((genre) => genre._id) } },
           { cast: { $in: cast.map((artist) => artist._id) } },
-          { directors: { $in : directors.map((artist) => artist._id) } },
+          { directors: { $in: directors.map((artist) => artist._id) } },
           { country: { $in: countries.map((country) => country._id) } },
         ],
         _id: { $nin: [...favoriteMovies, ...watchedList, ...watchLaterList] },

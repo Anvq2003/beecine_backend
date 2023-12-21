@@ -8,7 +8,7 @@ GET {{baseUrl}}/recommend
 
 ###
 # @name GetHomepage
-GET {{baseUrl}}/bay-ngot-ngao
+GET {{baseUrl}}/dang-cap-thuong-luu
 
 ###
 

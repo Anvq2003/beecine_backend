@@ -5,7 +5,8 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const historySchema = new mongoose.Schema({
   movieId: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
   episodeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Episode', default: null },
-  minutes: { type: Number, required: true },
+  time: { type: Number, default: 0 },
+  duration: { type: Number, default: 0 },
   watchedAt: { type: Date, default: Date.now },
 });
 

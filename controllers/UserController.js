@@ -61,8 +61,7 @@ class UserController extends BaseController {
 
       if (this.isCheckedInToday(checkIn.lastCheckIn)) {
         return res.status(400).json({ message: 'You have already checked in today' });
-      } else
-       if (
+      } else if (
         checkIn.lastCheckIn &&
         checkIn.lastCheckIn.toDateString() ===
           new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()
@@ -214,6 +213,7 @@ class UserController extends BaseController {
       const watchedList = paginatedWatchedList.map((item) => {
         return _.merge(item.movieId, {
           time: item.time,
+          duration: item.duration,
           createdItemAt: item.watchedAt,
           episodeInfo: item.episodeId,
         });
@@ -320,7 +320,7 @@ class UserController extends BaseController {
   }
 
   async createWatched(req, res) {
-    const { movieId, episodeId = null, userId, time = 0 } = req.body;
+    const { movieId, episodeId = '', userId, time = 0, duration = 0 } = req.body;
     try {
       if (!movieId || !userId) {
         return res.status(400).json({ message: 'MovieId, episodeId, userId, time is required' });
@@ -332,16 +332,20 @@ class UserController extends BaseController {
       const movie = MovieModel.findById(movieId);
       if (!movie) return res.status(404).json({ message: 'Movie not found' });
 
-      const index = user.watchedList.findIndex((item) => item.movieId == movieId);
+      const index = user.watchedList.findIndex(
+        (item) => item.movieId.toString() === movieId.toString(),
+      );
       if (index !== -1) {
         user.watchedList[index].episodeId = episodeId;
         user.watchedList[index].time = time;
+        user.watchedList[index].duration = duration;
         user.watchedList[index].watchedAt = Date.now();
       } else {
         user.watchedList.push({
           movieId: movieId,
           episodeId: episodeId,
           time: time,
+          duration: duration,
           watchedAt: Date.now(),
         });
       }
@@ -398,17 +402,26 @@ class UserController extends BaseController {
 
       switch (type) {
         case 'FAVORITE':
-          user.favoriteMovies = _.remove(user.favoriteMovies, (item) => !_.includes(ids, item.movieId.toString()));
+          user.favoriteMovies = _.remove(
+            user.favoriteMovies,
+            (item) => !_.includes(ids, item.movieId.toString()),
+          );
           user.save();
           res.status(200).json(user.favoriteMovies);
           break;
         case 'WATCHED':
-          user.watchedList = _.remove(user.watchedList, (item) => !_.includes(ids, item.movieId.toString()));
+          user.watchedList = _.remove(
+            user.watchedList,
+            (item) => !_.includes(ids, item.movieId.toString()),
+          );
           user.save();
           res.status(200).json(user.watchedList);
           break;
         case 'WATCH_LATER':
-          user.watchLaterList = _.remove(user.watchLaterList, (item) => !_.includes(ids, item.movieId.toString()));
+          user.watchLaterList = _.remove(
+            user.watchLaterList,
+            (item) => !_.includes(ids, item.movieId.toString()),
+          );
           user.save();
           res.status(200).json(user.watchLaterList);
           break;
