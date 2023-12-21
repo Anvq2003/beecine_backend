@@ -11,6 +11,17 @@ class BillController extends BaseController {
     super(BillModel);
   }
 
+  async getQuery(req, res) {
+    try {
+      const options = req.paginateOptions;
+      options.populate = [{ path: 'userId' }, { path: 'subscriptionId' }];
+      const data = await this.model.paginate(options.query || {}, options);
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
   async getByUser(req, res) {
     const { id } = req.params;
     try {
@@ -42,11 +53,11 @@ class BillController extends BaseController {
       }
 
       const oneDay = 24 * 60 * 60 * 1000;
-      
+
       subscription.duration = parseInt(subscription.duration);
-      // 1 coin = 50 VNĐ
-      const coinToMoney = usedCoin * 50;
-      const subTotal = subscription.price
+      // 1 coin = 100 VND
+      const coinToMoney = usedCoin * 100;
+      const subTotal = subscription.price;
       const total = subscription.price - coinToMoney;
       const end = Date.now() + subscription.duration * oneDay;
       const code = 'BEECINE' + generateOTP();
@@ -97,7 +108,7 @@ class BillController extends BaseController {
         subject: 'Hóa đơn thanh toán Beecine',
         html: html,
       };
-      
+
       await BillModel.updateMany({ userId }, { endDate: Date.now(), status: 'CANCELLED' });
       await BillModel.create(bill);
       const dataUser = await UserModel.findByIdAndUpdate(userId, {

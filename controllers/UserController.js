@@ -301,6 +301,8 @@ class UserController extends BaseController {
         return res.status(404).json({ message: 'Movie not found' });
       }
 
+      await MovieModel.findByIdAndUpdate(movieId, { $inc: { favoriteCount: 1 } });
+
       const exist = user.favoriteMovies.find((item) => item.movieId == movieId);
       if (exist) {
         user.favoriteMovies = user.favoriteMovies.filter((item) => item.movieId != movieId);
