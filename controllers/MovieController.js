@@ -4,6 +4,7 @@ const MovieModel = require('../models/movie');
 const EpisodeModel = require('../models/episode');
 const UserModel = require('../models/user');
 const ArtistModel = require('../models/artist');
+const SubscriptionModel = require('../models/subscription');
 const KeywordModel = require('../models/keyword');
 const CountryModel = require('../models/country');
 const GenreModel = require('../models/genre');
@@ -68,12 +69,14 @@ class MovieController extends BaseController {
       }
 
       const isAllowed = movie.isFree || movie?.requiredSubscriptions.includes(user?.subscription);
+      const subscriptionsCanWatch = await SubscriptionModel.find({ _id: { $in: movie.requiredSubscriptions } });
 
       res.status(200).json({
         movie,
         isAllowed,
         episodes,
         currentEpisode,
+        subscriptionsCanWatch,
       });
     } catch (error) {
       res.status(500).json(error.message);
