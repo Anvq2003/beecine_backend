@@ -214,6 +214,7 @@ class CommonController {
       // [label] = 'Tuần ' + [week] + ' - ' + [month]
       // subscription : { _id, name, price, duration, benefits, isFeatured, languages, status }
       // bill:  { _id, userId ,subscriptionId ,startDate, endDate , total
+
       let pipeline = [];
       switch (period) {
         case 'week':
@@ -251,7 +252,7 @@ class CommonController {
             {
               $group: {
                 _id: {
-                  week: { $isoWeek: '$startDate' },
+                  week: { $week: '$startDate' },
                   month: { $month: '$startDate' },
                   year: { $year: '$startDate' },
                 },
@@ -274,6 +275,7 @@ class CommonController {
             },
             { $sort: { label: -1 } },
           ];
+            
           break;
         case 'month':
           pipeline = [

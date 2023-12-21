@@ -6,6 +6,15 @@ class SeoController extends BaseController {
     super(SeoModel);
   }
 
+  async getAll (req, res) {
+    try {
+      const data = await SeoModel.find({});
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
   async update(req, res) {
     try {
       const _id = req?.body?._id;
