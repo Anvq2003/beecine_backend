@@ -27,20 +27,25 @@ router.get('/admin', paginationMiddleware, bindController(MovieController, 'getA
 router.get('/homepage', bindController(MovieController, 'getHomePage'));
 router.get('/trash', bindController(MovieController, 'getTrash'));
 router.get('/search', paginationMiddleware, bindController(MovieController, 'getByKeyword'));
-router.get('/recommend', verifyToken, paginationMiddleware, bindController(MovieController, 'getRecommend'));
+router.get(
+  '/recommend',
+  verifyToken,
+  paginationMiddleware,
+  bindController(MovieController, 'getRecommend'),
+);
 router.get('/related/:slug', paginationMiddleware, bindController(MovieController, 'getRelated'));
 router.get(
   '/artist/:slug',
   paginationMiddleware,
   bindController(MovieController, 'getByArtistSlug'),
 );
-router.get( 
+router.get(
   '/country/:slug',
   paginationMiddleware,
   bindController(MovieController, 'getByCountrySlug'),
 );
 router.get('/genre/:slug', paginationMiddleware, bindController(MovieController, 'getByGenreSlug'));
-router.get('/:param', bindController(MovieController, 'getByParam'));
+router.get('/:param', verifyToken, bindController(MovieController, 'getByParam'));
 router.post(
   '/store',
   upload,

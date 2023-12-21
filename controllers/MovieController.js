@@ -37,54 +37,50 @@ class MovieController extends BaseController {
 
       const populate = this.getPopulateMain();
 
-      // if (mongoose.Types.ObjectId.isValid(param)) {
-      //   movie = await MovieModel.findById(param).populate(populate);
-      //   const isSeries = movie?.isSeries || false;
-      //   if (isSeries) {
-      //     episodes = await EpisodeModel.find({ movieId: param }).sort({ number: 1 });
-      //     currentEpisode = episodes.find((episode) => episode.number === Number(number));
-      //   }
-      // } else {
-      // }
-      movie = await MovieModel.findOne({ slug: param }).populate(populate);
-      console.debug("🚀 ~ movie:", movie._id);
-      // const isSeries = movie?.isSeries || false;
-      // if (isSeries) {
-        // episodes = await EpisodeModel.find({ movieId: movie._id.toString() }).sort({ number: 1 });
-        // currentEpisode = episodes.find((episode) => episode.number === Number(number));
-      // }
-      return res.status(200).json(movie);
-
-      return res.status(200).json(episodes);
+      if (mongoose.Types.ObjectId.isValid(param)) {
+        const movie = await MovieModel.findById(param).populate(populate);
+        const isSeries = movie.isSeries;
+        if (isSeries) {
+          episodes = await EpisodeModel.find({ movieId: param }).sort({ number: 1 });
+          currentEpisode = episodes.find((episode) => episode.number === Number(number));
+        }
+      } else {
+        const movie = await MovieModel.findOne({ slug: param }).populate(populate);
+        const isSeries = movie?.isSeries;
+        if (isSeries) {
+          episodes = await EpisodeModel.find({ movieId: movie._id }).sort({ number: 1 });
+          currentEpisode = episodes.find((episode) => episode.number === Number(number));
+        }
+      }
 
       if (!movie) {
         return res.status(404).json({ message: 'Not found' });
       }
 
-      // const user = await UserModel.findById(req.user._id);
-      // if (!user) {
-      //   return res.status(404).json({ message: 'You must login to watch this movie' });
-      // }
+      const user = await UserModel.findById(req.user._id);
+      if (!user) {
+        return res.status(404).json({ message: 'You must login to watch this movie' });
+      }
 
-      // const subscriptions = await SubscriptionModel.find({ status: true });
-      // const currentSubscription = subscriptions.find((subscription) =>
-      //   subscription._id.equals(user.subscription),
-      // );
-      // const isAllowed =
-      //   movie.isFree ||
-      //   currentSubscription.isFeatured ||
-      //   movie?.requiredSubscriptions.includes(user?.subscription);
-      // const subscriptionsCanWatch = subscriptions.filter(
-      //   (subscription) =>
-      //     subscription.isFeatured || movie?.requiredSubscriptions.includes(subscription._id),
-      // );
+      const subscriptions = await SubscriptionModel.find({ status: true });
+      const currentSubscription = subscriptions.find((subscription) =>
+        subscription._id.equals(user.subscription),
+      );
+      const isAllowed =
+        movie.isFree ||
+        currentSubscription.isFeatured ||
+        movie?.requiredSubscriptions.includes(user?.subscription);
+      const subscriptionsCanWatch = subscriptions.filter(
+        (subscription) =>
+          subscription.isFeatured || movie?.requiredSubscriptions.includes(subscription._id),
+      );
 
       res.status(200).json({
         movie,
+        isAllowed,
         episodes,
         currentEpisode,
-        // isAllowed,
-        // subscriptionsCanWatch,
+        subscriptionsCanWatch,
       });
     } catch (error) {
       res.status(500).json(error.message);

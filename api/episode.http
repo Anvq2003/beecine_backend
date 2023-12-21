@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/admin
+GET {{baseUrl}}
 
 
 ###
@@ -12,7 +12,7 @@ GET {{baseUrl}}/6520152dc58e982ae637764e
 
 ###
 # @name GetbyMovieId
-GET {{baseUrl}}/movie/654e49282f9d04210aec3220
+GET {{baseUrl}}/movie/6558861d7664bae62ef05769
 
 ###
 
