@@ -3,7 +3,7 @@
 # User API
 
 # @name Getall
-GET {{baseUrl}}/
+GET {{baseUrl}}/655889f57664bae62ef05f78
 
 ###
 
@@ -21,7 +21,23 @@ Content-Type: application/json
   }
 }
 
+
+# userId, type, ids
 ###
+DELETE {{baseUrl}}/delete-many-type
+Content-Type: application/json
+
+{
+    "userId": "655889f57664bae62ef05f78",
+    "type": "WATCHED",
+    "ids": [
+        "6558832f7664bae62ef05208",
+        "655886ca7664bae62ef0589b"
+        ]
+        
+}
+###
+
 # @name Checkin
 GET {{baseUrl}}/check-in?userId=65619f2eafdcc44945f1d667
 ###
@@ -35,19 +51,6 @@ GET {{baseUrl}}/check-email/@gmail.com
 # @name GetbyId
 GET {{baseUrl}}/65619f2eafdcc44945f1d667
 
-###
-DELETE {{baseUrl}}/delete-many-type
-Content-Type: application/json
-
-{
-    "userId": "6533cdd989ac42618a10014b",
-    "type": "WATCH_LATER",
-    "ids": [
-        "65329d4fd207a51351bc1cea"
-        ]
-        
-}
-###
 # @name GetFavorite
 GET {{baseUrl}}/favorite-movies/655889f57664bae62ef05f78
 ###
