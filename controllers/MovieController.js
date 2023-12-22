@@ -38,14 +38,73 @@ class MovieController extends BaseController {
       const populate = this.getPopulateMain();
 
       if (mongoose.Types.ObjectId.isValid(param)) {
-        const movie = await MovieModel.findById(param).populate(populate);
+        if (isSeries === 'true') {
+          episodes = await EpisodeModel.find({
+            $and: [{ movieId: param }, { season: season ? season : 1 }, { status: true }],
+          }).sort({ number: 1 });
+          currentEpisode = episodes.find((episode) => episode.number === Number(number));
+          movie = await MovieModel.findOne({ _id: param, status: true }).populate(populate);
+        } else {
+          movie = await MovieModel.findOne({ _id: param, status: true }).populate(populate);
+        }
+      } else {
+        if (isSeries === 'true') {
+          movie = await MovieModel.findOne({ slug: param, status: true }).populate(populate);
+          episodes = await EpisodeModel.find({
+            $and: [{ movieId: movie._id }, { season: season ? season : 1 }, { status: true }],
+          }).sort({ number: 1 });
+          currentEpisode = episodes.find((episode) => episode.number === Number(number));
+        } else {
+          movie = await MovieModel.findOne({ slug: param, status: true }).populate(populate);
+        }
+      }
+
+      if (!movie) {
+        return res.status(404).json({ message: 'Not found' });
+      }
+
+      const user = await UserModel.findById(req.user._id);
+      if (!user) {
+        return res.status(404).json({ message: 'You must login to watch this movie' });
+      }
+
+      const isAllowed = movie.isFree || movie?.requiredSubscriptions.includes(user?.subscription);
+      const subscriptionsCanWatch = await SubscriptionModel.find({
+        _id: { $in: movie.requiredSubscriptions },
+      });
+
+      res.status(200).json({
+        movie,
+        isAllowed,
+        episodes,
+        currentEpisode,
+        subscriptionsCanWatch,
+      });
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async getByParam(req, res) {
+    try {
+      const { season = 1, number = 1, isSeries = false } = req.query;
+      const param = req.params.param;
+
+      let movie;
+      let episodes = [];
+      let currentEpisode;
+
+      const populate = this.getPopulateMain();
+
+      if (mongoose.Types.ObjectId.isValid(param)) {
+        movie = await MovieModel.findById(param).populate(populate);
         const isSeries = movie.isSeries;
         if (isSeries) {
           episodes = await EpisodeModel.find({ movieId: param }).sort({ number: 1 });
           currentEpisode = episodes.find((episode) => episode.number === Number(number));
         }
       } else {
-        const movie = await MovieModel.findOne({ slug: param }).populate(populate);
+        movie = await MovieModel.findOne({ slug: param }).populate(populate);
         const isSeries = movie?.isSeries;
         if (isSeries) {
           episodes = await EpisodeModel.find({ movieId: movie._id }).sort({ number: 1 });
@@ -66,12 +125,13 @@ class MovieController extends BaseController {
       const currentSubscription = subscriptions.find((subscription) =>
         subscription._id.equals(user.subscription),
       );
+
       const isAllowed =
         movie.isFree ||
         currentSubscription.isFeatured ||
         movie?.requiredSubscriptions.includes(user?.subscription);
-      const subscriptionsCanWatch = subscriptions.filter(
-        (subscription) =>
+
+      const subscriptionsCanWatch = subscriptions.filter((subscription) =>
           subscription.isFeatured || movie?.requiredSubscriptions.includes(subscription._id),
       );
 
